@@ -141,6 +141,17 @@ main { overflow-x: hidden; padding: 16px calc(16px + env(safe-area-inset-right))
 .check-bar .feedback { font-size: 18px; font-weight: 800; }
 .btn:disabled { box-shadow: 0 5px 0 #d0d0d0; }
 .exercise-pad { height: 110px; flex: none; }
+/* levels + match */
+.node { position: relative; }
+.node.progress { box-shadow: 0 6px 0 rgba(0,0,0,.22); }
+.lv-badge { position: absolute; right: -8px; bottom: -6px; background: #fff; color: #4b4b4b; border: 2px solid #e5e5e5; border-radius: 10px; font-size: 12px; font-weight: 900; padding: 0 6px; line-height: 18px; }
+.lv-badge.gold { border-color: #ffc800; color: #cd9a00; }
+.lvl-line { color: #777; font-weight: 800; margin-bottom: 6px; }
+.match { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.option.mt { justify-content: center; text-align: center; padding: 10px 8px; font-size: 17px; overflow-wrap: anywhere; min-height: 64px; }
+.option.mt.matched { color: #c4c4c4; border-color: #eee; background: #f7f7f7; }
+.option.mt.flash-bad { animation: flashbad .5s; }
+@keyframes flashbad { 0%,100% { } 30% { border-color: #ff4b4b; background: #ffdfe0; color: #ea2b2b; transform: translateX(-4px); } 60% { transform: translateX(4px); } }
 </style>
 </head>
 <body>
@@ -162,10 +173,14 @@ const state = {
   hearts: ls.getItem("valencia_hearts") === null ? MAX_HEARTS : +ls.getItem("valencia_hearts"),
   heartTs: +(ls.getItem("valencia_heartts") || Date.now()),
 };
-state.completed = state.completed.filter(id => ALL.some(l => l.id === id));
+// progress per lesson: 0..3 levels done. Migrate old "completed" list (= level 1 done).
+state.levels = JSON.parse(ls.getItem("valencia_levels") || "null");
+if (!state.levels) { state.levels = {}; state.completed.forEach(id => { state.levels[id] = 1; }); }
+Object.keys(state.levels).forEach(id => { if (!ALL.some(l => l.id === id)) delete state.levels[id]; });
+const lvlOf = id => state.levels[id] || 0;
 function save() {
   ls.setItem("valencia_xp", state.xp); ls.setItem("valencia_streak", state.streak); ls.setItem("valencia_lastday", state.lastDay);
-  ls.setItem("valencia_completed", JSON.stringify(state.completed)); ls.setItem("valencia_hearts", state.hearts); ls.setItem("valencia_heartts", state.heartTs);
+  ls.setItem("valencia_levels", JSON.stringify(state.levels)); ls.setItem("valencia_completed", JSON.stringify(Object.keys(state.levels))); ls.setItem("valencia_hearts", state.hearts); ls.setItem("valencia_heartts", state.heartTs);
 }
 function regen() {
   if (state.hearts >= MAX_HEARTS) { state.heartTs = Date.now(); return; }
@@ -179,7 +194,7 @@ function updateHeader() {
   document.getElementById("streak").textContent = "🔥 " + state.streak;
   document.getElementById("hearts").textContent = "❤️ " + state.hearts;
 }
-const currentIndex = () => { const i = ALL.findIndex(l => !state.completed.includes(l.id)); return i; };
+const currentIndex = () => ALL.findIndex(l => lvlOf(l.id) === 0);
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 function toast(msg) { const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 1800); }
@@ -217,15 +232,17 @@ function showHome() {
   if (state.streak === 0 || state.lastDay !== today) h += `<div class="sleep-card">${mascot("sleep", "m-idle")}<span>${state.streak === 0 ? "Zzz… ¡Despiértame con tu primera lección!" : "Hoy aún no has practicado. ¡Mantén tu racha de " + state.streak + " 🔥!"}</span></div>`;
   let idx = 0;
   COURSE.forEach(lv => {
-    const lessons = lv.units.flatMap(u => u.lessons), done = lessons.filter(l => state.completed.includes(l.id)).length;
-    h += `<div class="level-head"><h2>${lv.id} · ${esc(lv.title)}</h2><div class="sub">${done} / ${lessons.length} lecciones</div><div class="pbar"><div class="pfill" style="width:${done / lessons.length * 100}%"></div></div></div>`;
+    const lessons = lv.units.flatMap(u => u.lessons), done = lessons.filter(l => lvlOf(l.id) > 0).length, crowns = lessons.reduce((a, l) => a + lvlOf(l.id), 0);
+    h += `<div class="level-head"><h2>${lv.id} · ${esc(lv.title)}</h2><div class="sub">${done} / ${lessons.length} lecciones · 👑 ${crowns} / ${lessons.length * 3}</div><div class="pbar"><div class="pfill" style="width:${crowns / (lessons.length * 3) * 100}%"></div></div></div>`;
     lv.units.forEach((u, ui) => {
       h += `<div class="unit-banner" style="background:${u.color}"><div class="u">${lv.id} · Unidad ${ui + 1}</div><div class="t">${esc(u.title)}</div></div><div class="path">`;
       u.lessons.forEach((l, li) => {
-        const i = idx++, done = state.completed.includes(l.id), isCur = i === cur, x = Math.round(Math.sin(i * 0.9) * 70);
-        const cls = done ? "done" : isCur ? "current" : "locked";
-        const icon = done ? "👑" : isCur ? "★" : "🔒";
-        h += `<div class="node-wrap" style="transform:translateX(${x}px)" ${isCur ? 'id="current"' : ""}>${isCur ? '<div class="bubble">Empezar</div>' + mascot("neutral", "m-idle").replace('class="m', `style="${x > 0 ? "left" : "right"}:-62px" class="m`) : ""}<button class="node ${cls}" style="${isCur ? "background:" + u.color : ""}" onclick="tapNode(${i})" aria-label="${esc(l.title)}">${icon}</button><div class="node-title">${esc(l.title)}</div></div>`;
+        const i = idx++, n = lvlOf(l.id), isCur = i === cur, x = Math.round(Math.sin(i * 0.9) * 70);
+        const open = n > 0 || isCur, done = n >= 3;
+        const cls = done ? "done" : isCur ? "current" : n > 0 ? "progress" : "locked";
+        const icon = done ? "👑" : isCur || n > 0 ? "★" : "🔒";
+        const badge = open ? `<span class="lv-badge${done ? " gold" : ""}">${n}/3</span>` : "";
+        h += `<div class="node-wrap" style="transform:translateX(${x}px)" ${isCur ? 'id="current"' : ""}>${isCur ? '<div class="bubble">Empezar</div>' + mascot("neutral", "m-idle").replace('class="m', `style="${x > 0 ? "left" : "right"}:-62px" class="m`) : ""}<button class="node ${cls}" style="${!done && open ? "background:" + u.color : ""}" onclick="tapNode(${i})" aria-label="${esc(l.title)}, nivel ${n} de 3">${icon}${badge}</button><div class="node-title">${esc(l.title)}</div></div>`;
       });
       h += `</div>`;
     });
@@ -238,22 +255,29 @@ function tapNode(i) {
   const cur = currentIndex();
   if (cur !== -1 && i > cur) { toast("🔒 Completa las lecciones anteriores para desbloquearla"); return; }
   if (state.hearts <= 0) { toast("Sin vidas: recárgalas para seguir"); showHome(); return; }
-  startLesson(ALL[i].id);
+  const l = ALL[i]; startLesson(l.id, Math.min(3, lvlOf(l.id) + 1));
 }
-function startLesson(id) {
+function startLesson(id, level) {
   const lesson = ALL.find(l => l.id === id); if (!lesson) return;
-  Object.assign(state, { currentLesson: lesson, currentExercise: 0, correctInLesson: 0 });
+  level = level || Math.min(3, lvlOf(id) + 1);
+  Object.assign(state, { currentLesson: lesson, playLevel: level, session: lesson.levels[level - 1], currentExercise: 0, correctInLesson: 0 });
   window.scrollTo(0, 0); showExercise();
 }
 function showExercise() {
-  const lesson = state.currentLesson, ex = lesson.exercises[state.currentExercise];
-  let h = `<div class="ex"><div class="top-row"><button class="back-btn" onclick="showHome()" aria-label="Salir">✕</button><div class="pbar"><div class="pfill" style="width:${state.currentExercise / lesson.exercises.length * 100}%"></div></div></div>`;
+  const lesson = state.currentLesson, ex = state.session[state.currentExercise];
+  let h = `<div class="ex"><div class="top-row"><button class="back-btn" onclick="showHome()" aria-label="Salir">✕</button><div class="pbar"><div class="pfill" style="width:${state.currentExercise / state.session.length * 100}%"></div></div></div>`;
   if (ex.type === "learn") {
     h += `<div class="question">${ex.label || "Palabra nueva"}</div><div class="ex-body"><div class="learn-card"><div class="learn-word">${esc(ex.word)}</div><div class="learn-meaning">${esc(ex.meaning)}</div>${ex.note ? `<div class="hint">${esc(ex.note)}</div>` : ""}</div></div>`;
   } else {
     h += `<div class="q-row">${mascot(ex.type === "mc" ? "think" : "neutral", "m-idle")}<div class="question">${esc(ex.question)}</div></div><div class="ex-body">`;
     if (ex.type === "mc") h += `<div class="options">${ex.options.map((o, i) => `<button class="option" data-i="${i}" onclick="selectOption(${i})">${esc(o)}</button>`).join("")}</div>`;
-    else if (ex.type === "type") h += `<textarea rows="3" class="input-answer" id="answerInput" placeholder="Escribe en valenciano…" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="$('checkBtn').disabled=!this.value.trim()" enterkeyhint="done" onkeydown="if(event.key==='Enter'){event.preventDefault();if(this.value.trim())onCheck()}"></textarea>`;
+    else if (ex.type === "match") {
+      const L = ex.pairs.map((p, i) => i), Rr = ex.pairs.map((p, i) => i);
+      for (const a of [L, Rr]) for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; }
+      state.match = { sel: null, done: 0, miss: false };
+      h += `<div class="match">${L.map((pi, r) => `<button class="option mt" data-side="0" data-p="${pi}" onclick="tapMatch(this)">${esc(ex.pairs[pi][0])}</button><button class="option mt" data-side="1" data-p="${Rr[r]}" onclick="tapMatch(this)">${esc(ex.pairs[Rr[r]][1])}</button>`).join("")}</div>`;
+    }
+    else if (ex.type === "type") h += `<textarea rows="3" class="input-answer" id="answerInput" placeholder="${ex.lang === "es" ? "Escribe en castellano…" : "Escribe en valenciano…"}" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="$('checkBtn').disabled=!this.value.trim()" enterkeyhint="done" onkeydown="if(event.key==='Enter'){event.preventDefault();if(this.value.trim())onCheck()}"></textarea>`;
     else if (ex.type === "order") {
       const bank = ex.words.concat(ex.distractors).map((w, i) => ({ w, i }));
       for (let i = bank.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bank[i], bank[j]] = [bank[j], bank[i]]; }
@@ -268,6 +292,22 @@ function showExercise() {
   if (ex.type === "learn") { const b = $("checkBtn"); b.disabled = false; b.textContent = "Continuar"; state.answered = true; }
   if (document.activeElement) document.activeElement.blur();
   updateHeader();
+}
+function tapMatch(b) {
+  const m = state.match; if (state.answered || b.disabled) return;
+  if (!m.sel || m.sel.dataset.side === b.dataset.side) {
+    if (m.sel) m.sel.classList.remove("selected");
+    m.sel = m.sel === b ? null : b; if (m.sel) b.classList.add("selected"); return;
+  }
+  const a = m.sel; m.sel = null; a.classList.remove("selected");
+  if (a.dataset.p === b.dataset.p) {
+    [a, b].forEach(x => { x.classList.add("matched"); x.disabled = true; });
+    buzz(15);
+    if (++m.done === state.session[state.currentExercise].pairs.length) { $("checkBtn").disabled = false; onCheck(); }
+  } else {
+    m.miss = true; buzz([40, 30, 40]);
+    [a, b].forEach(x => { x.classList.remove("flash-bad"); void x.offsetWidth; x.classList.add("flash-bad"); });
+  }
 }
 function selectOption(i) {
   if (state.answered) return; state.selected = i;
@@ -287,7 +327,7 @@ function renderLine() {
 const norm = t => t.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’]/g, "'").replace(/[.!?¿¡,«»]/g, "").replace(/\s+/g, " ");
 function onCheck() {
   if (state.answered) { next(); return; }
-  const ex = state.currentLesson.exercises[state.currentExercise];
+  const ex = state.session[state.currentExercise];
   let ok;
   if (ex.type === "mc") {
     if (state.selected === null) return;
@@ -296,6 +336,9 @@ function onCheck() {
       b.disabled = true; b.classList.remove("selected");
       if (ex.options[+b.dataset.i] === ex.answer) b.classList.add("correct"); else if (+b.dataset.i === state.selected) b.classList.add("wrong");
     });
+  } else if (ex.type === "match") {
+    if (state.match.done < ex.pairs.length) return;
+    ok = !state.match.miss;
   } else if (ex.type === "type") {
     const input = $("answerInput"), user = norm(input.value); if (!user) return;
     ok = (ex.accept || [ex.answer]).map(norm).includes(user); input.disabled = true;
@@ -307,6 +350,7 @@ function onCheck() {
   const bar = $("checkBar"), fb = $("feedback");
   bar.insertAdjacentHTML("afterbegin", mascot(ok ? "cheer" : "sad", "fb-mascot " + (ok ? "m-pop" : "m-shake")));
   if (ok) { fb.innerHTML = "✅ ¡Correcto! " + esc(ex.explanation || ""); state.correctInLesson++; bar.classList.add("ok"); buzz(30); }
+  else if (ex.type === "match") { fb.innerHTML = "👍 ¡Hecho! Repasa los pares que fallaste."; bar.classList.add("ok"); }
   else {
     fb.innerHTML = "❌ Solución: <strong>" + esc(ex.answer) + "</strong>" + (ex.explanation ? "<br>" + esc(ex.explanation) : "");
     if (state.hearts === MAX_HEARTS) state.heartTs = Date.now();
@@ -318,22 +362,24 @@ function onCheck() {
 }
 function next() {
   if (state.hearts <= 0) {
-    $("main").innerHTML = `<div class="done-screen">${mascot("sad", "m-shake")}<h2>💔 Sin vidas</h2><p>Se recupera 1 ❤️ cada 20 minutos, o recárgalas ahora.</p><button class="btn secondary" onclick="refill();startLesson('${state.currentLesson.id}')">Recargar y reintentar</button><button class="btn" onclick="showHome()">Volver al camino</button></div>`;
+    $("main").innerHTML = `<div class="done-screen">${mascot("sad", "m-shake")}<h2>💔 Sin vidas</h2><p>Se recupera 1 ❤️ cada 20 minutos, o recárgalas ahora.</p><button class="btn secondary" onclick="refill();startLesson('${state.currentLesson.id}', ${state.playLevel})">Recargar y reintentar</button><button class="btn" onclick="showHome()">Volver al camino</button></div>`;
     return;
   }
   state.currentExercise++;
-  if (state.currentExercise >= state.currentLesson.exercises.length) finishLesson(); else showExercise();
+  if (state.currentExercise >= state.session.length) finishLesson(); else showExercise();
 }
 function finishLesson() {
-  const lesson = state.currentLesson, graded = lesson.exercises.filter(e => e.type !== "learn").length;
+  const lesson = state.currentLesson, graded = state.session.filter(e => e.type !== "learn").length;
   const earned = Math.max(1, Math.round(lesson.xp * state.correctInLesson / graded));
   state.xp += earned;
+  const prevLvl = lvlOf(lesson.id);
+  state.levels[lesson.id] = Math.max(prevLvl, state.playLevel);
   if (!state.completed.includes(lesson.id)) state.completed.push(lesson.id);
   const today = new Date().toDateString(), yest = new Date(Date.now() - 864e5).toDateString();
   const before = state.streak;
   if (state.lastDay !== today) { state.streak = state.lastDay === yest ? state.streak + 1 : 1; state.lastDay = today; }
   save();
-  $("main").innerHTML = `<div class="done-screen">${mascot("trophy", "m-jump")}<h2>¡Lección completada!</h2><div class="xp-count" id="xpCount">+0 XP</div>${state.streak > before ? `<div class="streak-gain">${mascot("jump", "m-jump")}<span class="flame">🔥</span> ¡Racha de ${state.streak} día${state.streak > 1 ? "s" : ""}!</div>` : ""}<p>Aciertos: ${state.correctInLesson} / ${graded}</p><button class="btn" id="finishBtn" onclick="showHome()">Continuar</button></div>`;
+  $("main").innerHTML = `<div class="done-screen">${mascot("trophy", "m-jump")}<h2>¡Nivel ${state.playLevel} completado!</h2><div class="lvl-line">${esc(lesson.title)} · Nivel ${state.playLevel} de 3 ${"👑".repeat(state.levels[lesson.id])}</div><div class="xp-count" id="xpCount">+0 XP</div>${state.streak > before ? `<div class="streak-gain">${mascot("jump", "m-jump")}<span class="flame">🔥</span> ¡Racha de ${state.streak} día${state.streak > 1 ? "s" : ""}!</div>` : ""}<p>Aciertos: ${state.correctInLesson} / ${graded}</p><button class="btn" id="finishBtn" onclick="showHome()">Continuar</button></div>`;
   updateHeader(); countUp($("xpCount"), earned); confetti(); buzz([40, 60, 40]);
 }
 // keep the check bar above the iOS keyboard
