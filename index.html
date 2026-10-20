@@ -63,7 +63,18 @@ main { padding: 20px; }
   font-size: 1rem;
   transition: all .15s;
 }
-.option:hover { border-color: #58cc02; background: #f8fff8; }
+.option { -webkit-tap-highlight-color: transparent; color: #1cb0f6; font-weight: 600; }
+@media (hover: hover) { .option:not(:disabled):hover { background: #f7f7f7; } }
+.option.selected { border-color: #1cb0f6; background: #ddf4ff; box-shadow: 0 2px 0 #1cb0f6; }
+.option:disabled { cursor: default; }
+.check-bar { position: fixed; left: 0; right: 0; bottom: 0; padding: 14px 20px calc(14px + env(safe-area-inset-bottom)); background: #fff; border-top: 2px solid #eee; }
+.check-bar.ok { background: #d7ffb8; border-top-color: #d7ffb8; }
+.check-bar.bad { background: #ffdfe0; border-top-color: #ffdfe0; }
+.check-bar .feedback { margin: 0 0 10px; text-align: left; }
+.check-bar .feedback:empty { display: none; }
+.check-bar .btn { margin-top: 0; }
+.check-bar.bad .btn { background: #ff4b4b; }
+.exercise-pad { height: 170px; }
 .option.correct { border-color: #58cc02; background: #d4edda; }
 .option.wrong { border-color: #ff4b4b; background: #f8d7da; }
 .feedback { text-align: center; margin: 16px 0; font-weight: 600; min-height: 24px; }
@@ -251,64 +262,66 @@ function showExercise() {
 
   if (ex.type === "mc") {
     html += `<div class="options">`;
-    ex.options.forEach(opt => {
-      html += `<button class="option" onclick="checkAnswer('${opt.replace(/'/g, "\\'")}', '${ex.answer.replace(/'/g, "\\'")}')">${opt}</button>`;
+    ex.options.forEach((opt, i) => {
+      html += `<button class="option" data-i="${i}" onclick="selectOption(${i})">${opt}</button>`;
     });
     html += `</div>`;
   } else if (ex.type === "type") {
-    html += `<input class="input-answer" id="answerInput" placeholder="Escribe en valenciano…" onkeypress="if(event.key==='Enter')checkType()">`;
-    html += `<button class="btn" onclick="checkType()">Comprobar</button>`;
+    html += `<input class="input-answer" id="answerInput" placeholder="Escribe en valenciano…" oninput="document.getElementById('checkBtn').disabled=!this.value.trim()" onkeypress="if(event.key==='Enter'&&this.value.trim())onCheck()">`;
   }
-
-  html += `<div class="feedback" id="feedback"></div>`;
+  html += `<div class="exercise-pad"></div>`;
+  html += `<div class="check-bar" id="checkBar"><div class="feedback" id="feedback"></div><button class="btn" id="checkBtn" disabled onclick="onCheck()">Comprobar</button></div>`;
+  state.selected = null; state.answered = false;
   main.innerHTML = html;
+  if (document.activeElement) document.activeElement.blur();
   updateHeader();
 }
 
-function checkAnswer(selected, correct) {
-  const feedback = document.getElementById("feedback");
-  const buttons = document.querySelectorAll(".option");
-  buttons.forEach(b => b.disabled = true);
-
-  if (selected === correct) {
-    feedback.innerHTML = "✅ Correcto! " + (state.currentLesson.exercises[state.currentExercise].explanation || "");
-    feedback.style.color = "#58cc02";
-    state.correctInLesson++;
-    buttons.forEach(b => {
-      if (b.textContent === correct) b.classList.add("correct");
-    });
-  } else {
-    feedback.innerHTML = "❌ Incorrecto. La respuesta es: <strong>" + correct + "</strong><br>" + (state.currentLesson.exercises[state.currentExercise].explanation || "");
-    feedback.style.color = "#ff4b4b";
-    state.hearts--;
-    buttons.forEach(b => {
-      if (b.textContent === selected) b.classList.add("wrong");
-      if (b.textContent === correct) b.classList.add("correct");
-    });
-  }
-
-  setTimeout(next, 1400);
+function selectOption(i) {
+  if (state.answered) return;
+  state.selected = i;
+  document.querySelectorAll(".option").forEach(b => b.classList.toggle("selected", +b.dataset.i === i));
+  document.getElementById("checkBtn").disabled = false;
 }
 
-function checkType() {
-  const input = document.getElementById("answerInput");
-  if (!input) return;
-  const user = input.value.trim().toLowerCase();
+function onCheck() {
+  if (state.answered) { next(); return; }
   const ex = state.currentLesson.exercises[state.currentExercise];
-  const accepts = (ex.accept || [ex.answer]).map(a => a.toLowerCase());
   const feedback = document.getElementById("feedback");
-
-  if (accepts.includes(user)) {
-    feedback.innerHTML = "✅ Correcto! " + (ex.explanation || "");
-    feedback.style.color = "#58cc02";
-    state.correctInLesson++;
+  const bar = document.getElementById("checkBar");
+  let ok;
+  if (ex.type === "mc") {
+    if (state.selected === null) return;
+    const sel = ex.options[state.selected];
+    ok = sel === ex.answer;
+    document.querySelectorAll(".option").forEach(b => {
+      b.disabled = true; b.classList.remove("selected");
+      const t = ex.options[+b.dataset.i];
+      if (t === ex.answer) b.classList.add("correct");
+      else if (+b.dataset.i === state.selected) b.classList.add("wrong");
+    });
   } else {
-    feedback.innerHTML = "❌ Incorrecto. Respuesta: <strong>" + ex.answer + "</strong><br>" + (ex.explanation || "");
-    feedback.style.color = "#ff4b4b";
-    state.hearts--;
+    const input = document.getElementById("answerInput");
+    const user = input.value.trim().toLowerCase();
+    if (!user) return;
+    ok = (ex.accept || [ex.answer]).map(a => a.toLowerCase()).includes(user);
+    input.disabled = true;
   }
-  input.disabled = true;
-  setTimeout(next, 1600);
+  state.answered = true;
+  if (ok) {
+    feedback.innerHTML = "✅ ¡Correcto! " + (ex.explanation || "");
+    feedback.style.color = "#58a700";
+    state.correctInLesson++;
+    bar.classList.add("ok");
+  } else {
+    feedback.innerHTML = "❌ La respuesta es: <strong>" + ex.answer + "</strong><br>" + (ex.explanation || "");
+    feedback.style.color = "#ea2b2b";
+    state.hearts--;
+    bar.classList.add("bad");
+  }
+  updateHeader();
+  const btn = document.getElementById("checkBtn");
+  btn.textContent = "Continuar"; btn.disabled = false;
 }
 
 function next() {
