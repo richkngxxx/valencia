@@ -110,6 +110,13 @@ main { padding: 20px; }
 .learn-meaning { font-size: 1.2rem; margin-top: 8px; color: #4b4b4b; }
 .hint { font-size: .9rem; color: #666; text-align: center; margin-top: 8px; }
   </style>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#58cc02">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Valencià">
+  <link rel="apple-touch-icon" href="icon-180.png">
 </head>
 <body>
   <div id="app">
@@ -397,5 +404,6 @@ function finishLesson() {
 
 showHome();
   </script>
+<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');</script>
 </body>
 </html>
