@@ -13,7 +13,7 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { overflow-x: hidden; }
+html, body { overflow-x: clip; }
 body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: #f0f4f8; color: #1a1a1a; line-height: 1.5; -webkit-text-size-adjust: 100%; }
 #app { max-width: 480px; margin: 0 auto; min-height: 100vh; min-height: 100dvh; background: #fff; box-shadow: 0 0 20px rgba(0,0,0,.1); }
 header { position: sticky; top: 0; z-index: 20; background: #58cc02; color: #fff; padding: calc(10px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) 10px calc(14px + env(safe-area-inset-left)); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
@@ -32,7 +32,7 @@ main { padding: 16px calc(16px + env(safe-area-inset-right)) calc(24px + env(saf
 .unit-banner .u { font-size: .8rem; font-weight: 700; opacity: .9; text-transform: uppercase; letter-spacing: .04em; }
 .unit-banner .t { font-size: 1.1rem; font-weight: 800; }
 .path { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 10px 0; }
-.node-wrap { position: relative; display: flex; flex-direction: column; align-items: center; }
+.node-wrap { scroll-margin-top: 140px; position: relative; display: flex; flex-direction: column; align-items: center; }
 .node { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 1.7rem; color: #fff; cursor: pointer; background: #e5e5e5; box-shadow: 0 6px 0 #c4c4c4; touch-action: manipulation; }
 .node:active { transform: translateY(4px); box-shadow: 0 2px 0 #c4c4c4; }
 .node.done { background: #ffc800; box-shadow: 0 6px 0 #d9a800; }
@@ -42,6 +42,38 @@ main { padding: 16px calc(16px + env(safe-area-inset-right)) calc(24px + env(saf
 .bubble { background: #fff; border: 2px solid #e5e5e5; color: #58cc02; font-weight: 800; padding: 4px 12px; border-radius: 12px; margin-bottom: 8px; text-transform: uppercase; font-size: .85rem; animation: bob 1.2s infinite ease-in-out; }
 @keyframes bob { 50% { transform: translateY(-4px); } }
 .toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: #333; color: #fff; padding: 10px 16px; border-radius: 12px; z-index: 50; font-size: .9rem; max-width: 90vw; }
+/* mascot */
+.m { display: block; pointer-events: none; user-select: none; -webkit-user-select: none; }
+.m-idle { animation: bob 2.4s ease-in-out infinite; }
+.q-row { display: flex; align-items: center; gap: 10px; margin: 18px 0; }
+.q-row .question { margin: 0; flex: 1; }
+.q-row .m { width: 64px; height: 64px; flex: none; }
+.check-bar { position: fixed; }
+.fb-mascot { position: absolute; right: calc(16px + env(safe-area-inset-right)); top: -58px; width: 72px; height: 72px; }
+.m-pop { animation: pop .35s cubic-bezier(.2,1.6,.4,1) both, bounce .6s .35s ease-in-out 2; }
+.m-shake { animation: pop .3s ease-out both, shake .45s .3s ease-in-out; }
+.m-jump { animation: jump .8s ease-in-out infinite; }
+@keyframes pop { from { transform: scale(0) translateY(30px); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes bounce { 50% { transform: translateY(-12px); } }
+@keyframes shake { 20%,60% { transform: translateX(-7px) rotate(-4deg); } 40%,80% { transform: translateX(7px) rotate(4deg); } }
+@keyframes jump { 0%,100% { transform: translateY(0) scale(1,1); } 15% { transform: scale(1.08,.9); } 45% { transform: translateY(-26px) scale(.95,1.06); } 75% { transform: translateY(0) scale(1.05,.95); } }
+#hearts { display: inline-block; position: relative; }
+#hearts.lose { animation: hshake .5s ease-in-out; }
+#hearts.lose::after { content: "💔"; position: absolute; left: 0; top: 0; animation: fall .9s ease-in forwards; }
+@keyframes hshake { 25% { transform: scale(1.3) rotate(-10deg); } 50% { transform: scale(.9) rotate(8deg); } }
+@keyframes fall { to { transform: translateY(40px) scale(.6); opacity: 0; } }
+.node-wrap .m { position: absolute; width: 58px; height: 58px; top: 26px; }
+.sleep-card { display: flex; align-items: center; gap: 10px; background: #f0f7ff; border: 2px solid #ddf4ff; border-radius: 14px; padding: 8px 12px; margin-top: 4px; font-size: .9rem; color: #4b4b4b; font-weight: 600; }
+.sleep-card .m { width: 72px; height: 72px; flex: none; }
+.done-screen .m { width: 150px; height: 150px; margin: 0 auto; }
+.xp-count { font-size: 2.2rem; font-weight: 800; color: #ffc800; }
+.streak-gain { display: flex; align-items: center; justify-content: center; gap: 6px; margin: 10px 0; font-weight: 800; color: #ff9600; font-size: 1.1rem; }
+.streak-gain .m { width: 64px; height: 64px; margin: 0; }
+.flame { display: inline-block; font-size: 1.6rem; animation: flick .5s ease-in-out infinite alternate; }
+@keyframes flick { to { transform: scale(1.2) rotate(6deg); } }
+.confetti { position: fixed; top: -12px; width: 9px; height: 14px; z-index: 60; pointer-events: none; border-radius: 2px; animation: confetti var(--d) var(--delay) ease-in forwards; }
+@keyframes confetti { to { transform: translate(var(--x), 110vh) rotate(var(--r)); } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } #hearts.lose::after { display: none; } }
 .hearts-box { text-align: center; margin: 4px 0 8px; font-size: .85rem; color: #777; }
 /* exercises */
 .top-row { display: flex; align-items: center; gap: 12px; }
@@ -121,11 +153,37 @@ const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 function toast(msg) { const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 1800); }
 
+const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const mascot = (pose, cls = "") => `<img class="m ${cls}" src="mascot/${pose}.png" alt="" aria-hidden="true">`;
+function buzz(p) { if (/Android/i.test(navigator.userAgent) && navigator.vibrate) navigator.vibrate(p); }
+function confetti() {
+  if (RM) return;
+  const cols = ["#58cc02", "#ffc800", "#1cb0f6", "#ff9600", "#ce82ff", "#ff4b4b"];
+  for (let i = 0; i < 70; i++) {
+    const c = document.createElement("div"); c.className = "confetti";
+    c.style.cssText = `left:${Math.random() * 100}vw;background:${cols[i % cols.length]};--x:${(Math.random() - .5) * 160}px;--r:${Math.random() * 900 - 450}deg;--d:${1.6 + Math.random() * 1.4}s;--delay:${Math.random() * .4}s`;
+    document.body.appendChild(c); setTimeout(() => c.remove(), 3600);
+  }
+}
+function countUp(el, to) {
+  if (RM || to <= 0) { el.textContent = "+" + to + " XP"; return; }
+  const t0 = performance.now(), dur = 900;
+  const step = t => { const k = Math.min(1, (t - t0) / dur); el.textContent = "+" + Math.round(to * (1 - Math.pow(1 - k, 3))) + " XP"; if (k < 1) requestAnimationFrame(step); };
+  requestAnimationFrame(step);
+}
+function scrollToCurrent() {
+  const c = $("current"); if (!c) return;
+  const hh = document.querySelector("header").offsetHeight, r = c.getBoundingClientRect();
+  window.scrollTo(0, Math.max(0, window.scrollY + r.top - hh - (window.innerHeight - hh) / 2 + r.height / 2));
+}
 function showHome() {
+  document.querySelectorAll(".confetti").forEach(c => c.remove());
   updateHeader();
   const cur = currentIndex();
   let h = "";
   if (state.hearts <= 0) h += `<div class="hearts-box">Sin vidas. Se recupera 1 ❤️ cada 20 min.<button class="btn secondary" onclick="refill()">Recargar vidas</button></div>`;
+  const today = new Date().toDateString();
+  if (state.streak === 0 || state.lastDay !== today) h += `<div class="sleep-card">${mascot("sleep", "m-idle")}<span>${state.streak === 0 ? "Zzz… ¡Despiértame con tu primera lección!" : "Hoy aún no has practicado. ¡Mantén tu racha de " + state.streak + " 🔥!"}</span></div>`;
   let idx = 0;
   COURSE.forEach(lv => {
     const lessons = lv.units.flatMap(u => u.lessons), done = lessons.filter(l => state.completed.includes(l.id)).length;
@@ -136,15 +194,14 @@ function showHome() {
         const i = idx++, done = state.completed.includes(l.id), isCur = i === cur, x = Math.round(Math.sin(i * 0.9) * 70);
         const cls = done ? "done" : isCur ? "current" : "locked";
         const icon = done ? "👑" : isCur ? "★" : "🔒";
-        h += `<div class="node-wrap" style="transform:translateX(${x}px)" ${isCur ? 'id="current"' : ""}>${isCur ? '<div class="bubble">Empezar</div>' : ""}<button class="node ${cls}" style="${isCur ? "background:" + u.color : ""}" onclick="tapNode(${i})" aria-label="${esc(l.title)}">${icon}</button><div class="node-title">${esc(l.title)}</div></div>`;
+        h += `<div class="node-wrap" style="transform:translateX(${x}px)" ${isCur ? 'id="current"' : ""}>${isCur ? '<div class="bubble">Empezar</div>' + mascot("neutral", "m-idle").replace('class="m', `style="${x > 0 ? "right" : "left"}:-72px" class="m`) : ""}<button class="node ${cls}" style="${isCur ? "background:" + u.color : ""}" onclick="tapNode(${i})" aria-label="${esc(l.title)}">${icon}</button><div class="node-title">${esc(l.title)}</div></div>`;
       });
       h += `</div>`;
     });
   });
   if (cur === -1) h += `<div class="done-screen"><img src="mascot.png" alt=""><h2>¡Enhorabona!</h2><p>Has completado todo el curso.</p></div>`;
   $("main").innerHTML = h;
-  const c = $("current");
-  if (c) requestAnimationFrame(() => c.scrollIntoView({ block: "center" }));
+  requestAnimationFrame(scrollToCurrent);
 }
 function tapNode(i) {
   const cur = currentIndex();
@@ -163,7 +220,7 @@ function showExercise() {
   if (ex.type === "learn") {
     h += `<div class="question">${ex.label || "Palabra nueva"}</div><div class="learn-card"><div class="learn-word">${esc(ex.word)}</div><div class="learn-meaning">${esc(ex.meaning)}</div>${ex.note ? `<div class="hint">${esc(ex.note)}</div>` : ""}</div>`;
   } else {
-    h += `<div class="question">${esc(ex.question)}</div>`;
+    h += `<div class="q-row">${mascot(ex.type === "mc" ? "think" : "neutral", "m-idle")}<div class="question">${esc(ex.question)}</div></div>`;
     if (ex.type === "mc") h += `<div class="options">${ex.options.map((o, i) => `<button class="option" data-i="${i}" onclick="selectOption(${i})">${esc(o)}</button>`).join("")}</div>`;
     else if (ex.type === "type") h += `<input class="input-answer" id="answerInput" placeholder="Escribe en valenciano…" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="$('checkBtn').disabled=!this.value.trim()" onkeydown="if(event.key==='Enter'&&this.value.trim())onCheck()">`;
     else if (ex.type === "order") {
@@ -216,18 +273,20 @@ function onCheck() {
   }
   state.answered = true;
   const bar = $("checkBar"), fb = $("feedback");
-  if (ok) { fb.innerHTML = "✅ ¡Correcto! " + esc(ex.explanation || ""); state.correctInLesson++; bar.classList.add("ok"); }
+  bar.insertAdjacentHTML("afterbegin", mascot(ok ? "cheer" : "sad", "fb-mascot " + (ok ? "m-pop" : "m-shake")));
+  if (ok) { fb.innerHTML = "✅ ¡Correcto! " + esc(ex.explanation || ""); state.correctInLesson++; bar.classList.add("ok"); buzz(30); }
   else {
     fb.innerHTML = "❌ Solución: <strong>" + esc(ex.answer) + "</strong>" + (ex.explanation ? "<br>" + esc(ex.explanation) : "");
     if (state.hearts === MAX_HEARTS) state.heartTs = Date.now();
-    state.hearts = Math.max(0, state.hearts - 1); save(); bar.classList.add("bad");
+    state.hearts = Math.max(0, state.hearts - 1); save(); bar.classList.add("bad"); buzz([60, 40, 60]);
+    const hs = $("hearts"); hs.classList.remove("lose"); void hs.offsetWidth; hs.classList.add("lose");
   }
   updateHeader();
   const btn = $("checkBtn"); btn.textContent = "Continuar"; btn.disabled = false;
 }
 function next() {
   if (state.hearts <= 0) {
-    $("main").innerHTML = `<div class="done-screen"><h2>💔 Sin vidas</h2><p>Se recupera 1 ❤️ cada 20 minutos, o recárgalas ahora.</p><button class="btn secondary" onclick="refill();startLesson('${state.currentLesson.id}')">Recargar y reintentar</button><button class="btn" onclick="showHome()">Volver al camino</button></div>`;
+    $("main").innerHTML = `<div class="done-screen">${mascot("sad", "m-shake")}<h2>💔 Sin vidas</h2><p>Se recupera 1 ❤️ cada 20 minutos, o recárgalas ahora.</p><button class="btn secondary" onclick="refill();startLesson('${state.currentLesson.id}')">Recargar y reintentar</button><button class="btn" onclick="showHome()">Volver al camino</button></div>`;
     return;
   }
   state.currentExercise++;
@@ -239,10 +298,11 @@ function finishLesson() {
   state.xp += earned;
   if (!state.completed.includes(lesson.id)) state.completed.push(lesson.id);
   const today = new Date().toDateString(), yest = new Date(Date.now() - 864e5).toDateString();
+  const before = state.streak;
   if (state.lastDay !== today) { state.streak = state.lastDay === yest ? state.streak + 1 : 1; state.lastDay = today; }
   save();
-  $("main").innerHTML = `<div class="done-screen"><img src="mascot.png" alt="Rat penat"><h2>¡Lección completada!</h2><p>Has ganado <strong>${earned} XP</strong></p><p>Aciertos: ${state.correctInLesson} / ${graded}</p><button class="btn" id="finishBtn" onclick="showHome()">Continuar</button></div>`;
-  updateHeader();
+  $("main").innerHTML = `<div class="done-screen">${mascot("trophy", "m-jump")}<h2>¡Lección completada!</h2><div class="xp-count" id="xpCount">+0 XP</div>${state.streak > before ? `<div class="streak-gain">${mascot("jump", "m-jump")}<span class="flame">🔥</span> ¡Racha de ${state.streak} día${state.streak > 1 ? "s" : ""}!</div>` : ""}<p>Aciertos: ${state.correctInLesson} / ${graded}</p><button class="btn" id="finishBtn" onclick="showHome()">Continuar</button></div>`;
+  updateHeader(); countUp($("xpCount"), earned); confetti(); buzz([40, 60, 40]);
 }
 showHome();
 setInterval(updateHeader, 60000);
