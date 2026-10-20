@@ -1,409 +1,252 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Valencià — Aprende como Duolingo</title>
-  <style>
-* { box-sizing: border-box; margin: 0; padding: 0; }
-body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: #f0f4f8;
-  color: #1a1a1a;
-  line-height: 1.5;
-}
-#app { max-width: 480px; margin: 0 auto; min-height: 100vh; background: white; box-shadow: 0 0 20px rgba(0,0,0,.1); }
-header {
-  background: #58cc02;
-  color: white;
-  padding: 16px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-header h1 { font-size: 1.6rem; font-weight: 700; }
-.stats { display: flex; gap: 16px; font-weight: 600; }
-main { padding: 20px; }
-.home-title { text-align: center; margin-bottom: 24px; color: #58cc02; }
-.level-section { margin-bottom: 28px; }
-.level-section h2 { color: #333; margin-bottom: 12px; font-size: 1.2rem; }
-.lesson-card {
-  background: #fff;
-  border: 2px solid #e5e5e5;
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 10px;
-  cursor: pointer;
-  transition: all .2s;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.lesson-card:hover { border-color: #58cc02; transform: translateY(-2px); }
-.lesson-card.completed { border-color: #58cc02; background: #f0fff0; }
-.lesson-card .title { font-weight: 600; }
-.lesson-card .meta { font-size: .85rem; color: #666; }
-.progress-bar {
-  height: 8px;
-  background: #e5e5e5;
-  border-radius: 4px;
-  margin: 16px 0;
-  overflow: hidden;
-}
-.progress-fill { height: 100%; background: #58cc02; transition: width .3s; }
-.question { font-size: 1.25rem; font-weight: 600; margin: 20px 0; text-align: center; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Diu sí al valencià</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#58cc02">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Diu sí al valencià">
+<link rel="apple-touch-icon" href="icon-180.png">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html, body { overflow-x: hidden; }
+body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: #f0f4f8; color: #1a1a1a; line-height: 1.5; -webkit-text-size-adjust: 100%; }
+#app { max-width: 480px; margin: 0 auto; min-height: 100vh; min-height: 100dvh; background: #fff; box-shadow: 0 0 20px rgba(0,0,0,.1); }
+header { position: sticky; top: 0; z-index: 20; background: #58cc02; color: #fff; padding: calc(10px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) 10px calc(14px + env(safe-area-inset-left)); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+header .brand { display: flex; align-items: center; gap: 8px; min-width: 0; }
+header img { width: 34px; height: 34px; border-radius: 9px; flex: none; }
+header h1 { font-size: 1.05rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.stats { display: flex; gap: 10px; font-weight: 700; font-size: .95rem; flex: none; }
+main { padding: 16px calc(16px + env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left)); }
+/* path */
+.level-head { margin: 18px 0 6px; padding: 12px 14px; border-radius: 14px; background: #f7f7f7; border: 2px solid #e5e5e5; }
+.level-head h2 { font-size: 1.15rem; }
+.level-head .sub { font-size: .85rem; color: #777; }
+.pbar { height: 10px; background: #e5e5e5; border-radius: 6px; overflow: hidden; margin-top: 6px; }
+.pfill { height: 100%; background: #58cc02; border-radius: 6px; transition: width .3s; }
+.unit-banner { color: #fff; border-radius: 14px; padding: 12px 16px; margin: 18px 0 8px; box-shadow: 0 4px 0 rgba(0,0,0,.18); }
+.unit-banner .u { font-size: .8rem; font-weight: 700; opacity: .9; text-transform: uppercase; letter-spacing: .04em; }
+.unit-banner .t { font-size: 1.1rem; font-weight: 800; }
+.path { display: flex; flex-direction: column; align-items: center; gap: 14px; padding: 10px 0; }
+.node-wrap { position: relative; display: flex; flex-direction: column; align-items: center; }
+.node { width: 70px; height: 70px; border-radius: 50%; border: none; font-size: 1.7rem; color: #fff; cursor: pointer; background: #e5e5e5; box-shadow: 0 6px 0 #c4c4c4; touch-action: manipulation; }
+.node:active { transform: translateY(4px); box-shadow: 0 2px 0 #c4c4c4; }
+.node.done { background: #ffc800; box-shadow: 0 6px 0 #d9a800; }
+.node.current { box-shadow: 0 6px 0 rgba(0,0,0,.25), 0 0 0 6px rgba(88,204,2,.25); animation: pulse 1.6s infinite; }
+@keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.07); } }
+.node-title { font-size: .75rem; color: #777; margin-top: 8px; max-width: 120px; text-align: center; font-weight: 600; }
+.bubble { background: #fff; border: 2px solid #e5e5e5; color: #58cc02; font-weight: 800; padding: 4px 12px; border-radius: 12px; margin-bottom: 8px; text-transform: uppercase; font-size: .85rem; animation: bob 1.2s infinite ease-in-out; }
+@keyframes bob { 50% { transform: translateY(-4px); } }
+.toast { position: fixed; left: 50%; bottom: calc(24px + env(safe-area-inset-bottom)); transform: translateX(-50%); background: #333; color: #fff; padding: 10px 16px; border-radius: 12px; z-index: 50; font-size: .9rem; max-width: 90vw; }
+.hearts-box { text-align: center; margin: 4px 0 8px; font-size: .85rem; color: #777; }
+/* exercises */
+.top-row { display: flex; align-items: center; gap: 12px; }
+.back-btn { background: none; border: none; color: #afafaf; font-size: 1.6rem; cursor: pointer; min-width: 44px; min-height: 44px; }
+.top-row .pbar { flex: 1; margin: 0; height: 14px; }
+.question { font-size: 1.25rem; font-weight: 700; margin: 20px 0; }
 .options { display: flex; flex-direction: column; gap: 10px; }
-.option {
-  padding: 14px;
-  border: 2px solid #e5e5e5;
-  border-radius: 12px;
-  background: white;
-  cursor: pointer;
-  text-align: left;
-  font-size: 1rem;
-  transition: all .15s;
-}
-.option { -webkit-tap-highlight-color: transparent; color: #1cb0f6; font-weight: 600; }
-@media (hover: hover) { .option:not(:disabled):hover { background: #f7f7f7; } }
-.option.selected { border-color: #1cb0f6; background: #ddf4ff; box-shadow: 0 2px 0 #1cb0f6; }
+.option { padding: 14px; min-height: 52px; border: 2px solid #e5e5e5; border-radius: 12px; background: #fff; cursor: pointer; text-align: left; font-size: 1rem; color: #4b4b4b; font-weight: 600; box-shadow: 0 2px 0 #e5e5e5; touch-action: manipulation; }
+@media (hover: hover) { .option:not(:disabled):hover { background: #f7f7f7; } .btn:not(:disabled):hover { filter: brightness(1.05); } }
+.option.selected { border-color: #1cb0f6; background: #ddf4ff; color: #1899d6; box-shadow: 0 2px 0 #1cb0f6; }
+.option.correct { border-color: #58cc02; background: #d7ffb8; }
+.option.wrong { border-color: #ff4b4b; background: #ffdfe0; }
 .option:disabled { cursor: default; }
-.check-bar { position: fixed; left: 0; right: 0; bottom: 0; padding: 14px 20px calc(14px + env(safe-area-inset-bottom)); background: #fff; border-top: 2px solid #eee; }
-.check-bar.ok { background: #d7ffb8; border-top-color: #d7ffb8; }
-.check-bar.bad { background: #ffdfe0; border-top-color: #ffdfe0; }
-.check-bar .feedback { margin: 0 0 10px; text-align: left; }
-.check-bar .feedback:empty { display: none; }
-.check-bar .btn { margin-top: 0; }
-.check-bar.bad .btn { background: #ff4b4b; }
-.exercise-pad { height: 170px; }
-.option.correct { border-color: #58cc02; background: #d4edda; }
-.option.wrong { border-color: #ff4b4b; background: #f8d7da; }
-.feedback { text-align: center; margin: 16px 0; font-weight: 600; min-height: 24px; }
-.btn {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  background: #58cc02;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  cursor: pointer;
-  margin-top: 16px;
-}
-.btn:disabled { background: #ccc; cursor: not-allowed; }
-.btn.secondary { background: #1cb0f6; }
-.back-btn { background: none; border: none; color: #58cc02; font-weight: 600; cursor: pointer; margin-bottom: 12px; }
-.lesson-complete { text-align: center; padding: 40px 20px; }
-.lesson-complete h2 { color: #58cc02; font-size: 2rem; margin-bottom: 12px; }
-.input-answer {
-  width: 100%;
-  padding: 14px;
-  border: 2px solid #e5e5e5;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  margin: 10px 0;
-}
-.input-answer:focus { outline: none; border-color: #58cc02; }
-.learn-card { text-align: center; border: 2px solid #e5e5e5; border-radius: 16px; padding: 32px 16px; margin-top: 10px; }
-.learn-word { font-size: 2rem; font-weight: 800; color: #1cb0f6; }
-.learn-meaning { font-size: 1.2rem; margin-top: 8px; color: #4b4b4b; }
-.hint { font-size: .9rem; color: #666; text-align: center; margin-top: 8px; }
-  </style>
-  <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#58cc02">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Valencià">
-  <link rel="apple-touch-icon" href="icon-180.png">
+.btn { display: block; width: 100%; min-height: 50px; padding: 14px; border: none; border-radius: 14px; background: #58cc02; color: #fff; font-weight: 800; font-size: 1rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 0 #46a302; margin-top: 12px; touch-action: manipulation; }
+.btn:disabled { background: #e5e5e5; color: #afafaf; box-shadow: none; }
+.btn.secondary { background: #1cb0f6; box-shadow: 0 4px 0 #1899d6; }
+.check-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; padding: 14px calc(20px + env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left)); background: #fff; border-top: 2px solid #eee; }
+.check-bar > * { max-width: 440px; margin-left: auto; margin-right: auto; }
+.check-bar.ok { background: #d7ffb8; border-top-color: #d7ffb8; } .check-bar.ok .feedback { color: #58a700; }
+.check-bar.bad { background: #ffdfe0; border-top-color: #ffdfe0; } .check-bar.bad .feedback { color: #ea2b2b; }
+.check-bar .feedback { margin: 0 0 10px; font-weight: 700; } .check-bar .feedback:empty { display: none; }
+.check-bar .btn { margin-top: 0; } .check-bar.bad .btn { background: #ff4b4b; box-shadow: 0 4px 0 #ea2b2b; }
+.exercise-pad { height: 190px; }
+.input-answer { width: 100%; padding: 14px; border: 2px solid #e5e5e5; border-radius: 12px; font-size: 16px; background: #f7f7f7; }
+.input-answer:focus { outline: none; border-color: #1cb0f6; }
+.learn-card { text-align: center; border: 2px solid #e5e5e5; border-radius: 16px; padding: 28px 16px; }
+.learn-word { font-size: 1.8rem; font-weight: 800; color: #1cb0f6; overflow-wrap: anywhere; }
+.learn-meaning { font-size: 1.15rem; margin-top: 8px; color: #4b4b4b; }
+.hint { font-size: .9rem; color: #777; margin-top: 10px; }
+.answer-line { min-height: 64px; border-bottom: 2px solid #e5e5e5; display: flex; flex-wrap: wrap; gap: 8px; padding: 8px 0; margin-bottom: 18px; }
+.bank { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+.chip { padding: 10px 14px; min-height: 46px; border: 2px solid #e5e5e5; border-radius: 12px; background: #fff; font-size: 1rem; font-weight: 600; color: #4b4b4b; box-shadow: 0 2px 0 #e5e5e5; cursor: pointer; touch-action: manipulation; }
+.chip.used { visibility: hidden; }
+.done-screen { text-align: center; padding: 30px 10px; }
+.done-screen img { width: 120px; height: 120px; border-radius: 28px; }
+.done-screen h2 { color: #58cc02; font-size: 1.7rem; margin: 12px 0; }
+</style>
 </head>
 <body>
-  <div id="app">
-    <header>
-      <h1>Valencià</h1>
-      <div class="stats">
-        <span id="xp">0 XP</span>
-        <span id="streak">🔥 0</span>
-        <span id="hearts">❤️ 5</span>
-      </div>
-    </header>
-    <main id="main"></main>
-  </div>
-  <script>
-const lessons = [
-  {
-    id: "a1-1", level: "A1", title: "Saludos y presentaciones", xp: 10,
-    exercises: [
-      { type: "learn", word: "Hola", meaning: "Hola", note: "Igual que en castellano." },
-      { type: "learn", word: "Bon dia", meaning: "Buenos días", note: "El saludo más común por la mañana." },
-      { type: "learn", word: "Adéu", meaning: "Adiós" },
-      { type: "mc", question: "¿Cómo se dice «Buenos días»?", options: ["Bon dia", "Adéu", "Hola", "Bona nit"], answer: "Bon dia", explanation: "Bon dia = buenos días." },
-      { type: "mc", question: "¿Cómo se dice «Adiós»?", options: ["Hola", "Adéu", "Bon dia", "Gràcies"], answer: "Adéu", explanation: "Adéu = adiós." },
-      { type: "learn", word: "Com et dius?", meaning: "¿Cómo te llamas?" },
-      { type: "learn", word: "Em dic…", meaning: "Me llamo…", note: "Em dic Ana = Me llamo Ana." },
-      { type: "mc", question: "«¿Cómo te llamas?»", options: ["Com estàs?", "Com et dius?", "On vas?", "Què fas?"], answer: "Com et dius?", explanation: "Com et dius? = ¿Cómo te llamas?" },
-      { type: "type", question: "Traduce: «Me llamo Ana»", answer: "Em dic Ana", explanation: "Em dic + nombre." },
-      { type: "type", question: "Escribe «Adiós» en valenciano", answer: "Adéu", explanation: "Adéu = adiós." }
-    ]
-  },
-  {
-    id: "a1-2", level: "A1", title: "Números básicos", xp: 10,
-    exercises: [
-      { type: "learn", word: "U / una", meaning: "Uno / una", note: "1. «U» masculino, «una» femenino." },
-      { type: "learn", word: "Dos", meaning: "Dos", note: "2" },
-      { type: "learn", word: "Tres", meaning: "Tres", note: "3" },
-      { type: "mc", question: "¿Cómo se dice «uno»?", options: ["Dos", "U", "Tres", "Cinc"], answer: "U", explanation: "1 = u." },
-      { type: "learn", word: "Cinc", meaning: "Cinco", note: "5" },
-      { type: "learn", word: "Deu", meaning: "Diez", note: "10" },
-      { type: "mc", question: "¿Cómo se dice «cinco»?", options: ["Tres", "Deu", "Cinc", "Dos"], answer: "Cinc", explanation: "5 = cinc." },
-      { type: "mc", question: "¿Qué número es «deu»?", options: ["2", "5", "10", "3"], answer: "10", explanation: "Deu = 10." },
-      { type: "type", question: "Escribe el número 10 en valenciano", answer: "Deu", explanation: "10 = deu." },
-      { type: "type", question: "Escribe el número 3 en valenciano", answer: "Tres", explanation: "3 = tres." }
-    ]
-  },
-  {
-    id: "a1-3", level: "A1", title: "Días", xp: 10,
-    exercises: [
-      { type: "learn", word: "Hui", meaning: "Hoy", note: "En valenciano se prefiere «hui»." },
-      { type: "learn", word: "Demà", meaning: "Mañana (el día siguiente)" },
-      { type: "learn", word: "Ahir", meaning: "Ayer" },
-      { type: "mc", question: "«Hoy» en valenciano es…", options: ["Demà", "Hui", "Ahir", "Ara"], answer: "Hui", explanation: "Hui = hoy." },
-      { type: "mc", question: "¿Qué significa «demà»?", options: ["Ayer", "Hoy", "Mañana", "Ahora"], answer: "Mañana", explanation: "Demà = mañana." },
-      { type: "type", question: "Escribe «ayer» en valenciano", answer: "Ahir", explanation: "Ahir = ayer." }
-    ]
-  },
-  {
-    id: "a1-4", level: "A1", title: "Familia", xp: 12,
-    exercises: [
-      { type: "learn", word: "Mare", meaning: "Madre" },
-      { type: "learn", word: "Pare", meaning: "Padre" },
-      { type: "mc", question: "«Madre»", options: ["Pare", "Mare", "Germana", "Iaia"], answer: "Mare", explanation: "Mare = madre." },
-      { type: "learn", word: "Germana", meaning: "Hermana", note: "Germà = hermano." },
-      { type: "learn", word: "La meua", meaning: "Mi (femenino)", note: "La meua germana = mi hermana." },
-      { type: "learn", word: "Iaia", meaning: "Abuela", note: "Iaio = abuelo." },
-      { type: "mc", question: "«Abuela»", options: ["Mare", "Germana", "Iaia", "Pare"], answer: "Iaia", explanation: "Iaia = abuela." },
-      { type: "mc", question: "«Hermana»", options: ["Germana", "Mare", "Iaia", "Pare"], answer: "Germana", explanation: "Germana = hermana." },
-      { type: "type", question: "Traduce: «Mi hermana»", answer: "La meua germana", accept: ["la meua germana", "la meva germana", "meua germana"], explanation: "En valenciano se prefiere «meua»." },
-      { type: "type", question: "Escribe «padre» en valenciano", answer: "Pare", explanation: "Pare = padre." }
-    ]
-  },
-  {
-    id: "a1-5", level: "A1", title: "Comida básica", xp: 12,
-    exercises: [
-      { type: "learn", word: "Pa", meaning: "Pan" },
-      { type: "learn", word: "Aigua", meaning: "Agua" },
-      { type: "mc", question: "«Agua»", options: ["Pa", "Aigua", "Café", "Creïlla"], answer: "Aigua", explanation: "Aigua = agua." },
-      { type: "learn", word: "Creïlla", meaning: "Patata", note: "La forma valenciana más usada." },
-      { type: "learn", word: "Vull", meaning: "Quiero", note: "Vull café = quiero café." },
-      { type: "learn", word: "Gràcies", meaning: "Gracias" },
-      { type: "mc", question: "«Patata»", options: ["Pa", "Creïlla", "Aigua", "Vull"], answer: "Creïlla", explanation: "Creïlla = patata." },
-      { type: "mc", question: "¿Qué significa «vull»?", options: ["Tengo", "Quiero", "Voy", "Soy"], answer: "Quiero", explanation: "Vull = quiero." },
-      { type: "type", question: "Traduce: «Quiero café»", answer: "Vull café", accept: ["vull cafe", "vull café", "vull un cafe", "vull un café"], explanation: "Vull = quiero." },
-      { type: "type", question: "Escribe «gracias» en valenciano", answer: "Gràcies", explanation: "Gràcies = gracias." }
-    ]
-  },
-  {
-    id: "a1-6", level: "A1", title: "Verbos básicos", xp: 15,
-    exercises: [
-      { type: "learn", word: "Parle", meaning: "Hablo", note: "En valenciano la 1ª persona acaba en -e." },
-      { type: "learn", word: "Vaig", meaning: "Voy" },
-      { type: "mc", question: "«Yo hablo»", options: ["Parles", "Parle", "Parla", "Vaig"], answer: "Parle", explanation: "Parle = hablo." },
-      { type: "learn", word: "Soc", meaning: "Soy" },
-      { type: "learn", word: "Estic", meaning: "Estoy", note: "Estic bé = estoy bien." },
-      { type: "learn", word: "Tinc", meaning: "Tengo" },
-      { type: "mc", question: "«Soy»", options: ["Estic", "Soc", "Tinc", "Vaig"], answer: "Soc", explanation: "Soc = soy." },
-      { type: "mc", question: "«Tengo»", options: ["Soc", "Vaig", "Tinc", "Parle"], answer: "Tinc", explanation: "Tinc = tengo." },
-      { type: "type", question: "Traduce: «Estoy bien»", answer: "Estic bé", accept: ["estic be", "estic bé"], explanation: "Estic = estoy, bé = bien." },
-      { type: "type", question: "Escribe «voy» en valenciano", answer: "Vaig", explanation: "Vaig = voy." }
-    ]
-  }
-];
-
-const levels = ["A1", "A2", "B1"];
-
-let state = {
-  xp: parseInt(localStorage.getItem("valencia_xp") || "0"),
-  streak: parseInt(localStorage.getItem("valencia_streak") || "0"),
-  hearts: 5,
-  completed: JSON.parse(localStorage.getItem("valencia_completed") || "[]"),
-  currentLesson: null,
-  currentExercise: 0,
-  correctInLesson: 0
+<div id="app">
+  <header>
+    <div class="brand"><img src="mascot.png" alt=""><h1>Diu sí al valencià</h1></div>
+    <div class="stats"><span id="streak">🔥 0</span><span id="xp">0 XP</span><span id="hearts">❤️ 5</span></div>
+  </header>
+  <main id="main"></main>
+</div>
+<script src="lessons.js"></script>
+<script>
+const MAX_HEARTS = 5, REGEN_MS = 20 * 60 * 1000;
+const ALL = []; COURSE.forEach(lv => lv.units.forEach((u, ui) => u.lessons.forEach(l => ALL.push(Object.assign(l, { level: lv.id, unit: ui })))));
+const ls = localStorage;
+const state = {
+  xp: +(ls.getItem("valencia_xp") || 0), streak: +(ls.getItem("valencia_streak") || 0),
+  lastDay: ls.getItem("valencia_lastday") || "", completed: JSON.parse(ls.getItem("valencia_completed") || "[]"),
+  hearts: ls.getItem("valencia_hearts") === null ? MAX_HEARTS : +ls.getItem("valencia_hearts"),
+  heartTs: +(ls.getItem("valencia_heartts") || Date.now()),
 };
-
+state.completed = state.completed.filter(id => ALL.some(l => l.id === id));
 function save() {
-  localStorage.setItem("valencia_xp", state.xp);
-  localStorage.setItem("valencia_streak", state.streak);
-  localStorage.setItem("valencia_completed", JSON.stringify(state.completed));
+  ls.setItem("valencia_xp", state.xp); ls.setItem("valencia_streak", state.streak); ls.setItem("valencia_lastday", state.lastDay);
+  ls.setItem("valencia_completed", JSON.stringify(state.completed)); ls.setItem("valencia_hearts", state.hearts); ls.setItem("valencia_heartts", state.heartTs);
 }
-
+function regen() {
+  if (state.hearts >= MAX_HEARTS) { state.heartTs = Date.now(); return; }
+  const n = Math.floor((Date.now() - state.heartTs) / REGEN_MS);
+  if (n > 0) { state.hearts = Math.min(MAX_HEARTS, state.hearts + n); state.heartTs += n * REGEN_MS; save(); }
+}
+function refill() { state.hearts = MAX_HEARTS; state.heartTs = Date.now(); save(); updateHeader(); showHome(); }
 function updateHeader() {
+  regen();
   document.getElementById("xp").textContent = state.xp + " XP";
   document.getElementById("streak").textContent = "🔥 " + state.streak;
   document.getElementById("hearts").textContent = "❤️ " + state.hearts;
 }
+const currentIndex = () => { const i = ALL.findIndex(l => !state.completed.includes(l.id)); return i; };
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+function toast(msg) { const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 1800); }
 
 function showHome() {
-  const main = document.getElementById("main");
-  let html = `<h2 class="home-title">Aprende valencià</h2>`;
-  html += `<div class="progress-bar"><div class="progress-fill" style="width:${Math.min(100, (state.completed.length / lessons.length) * 100)}%"></div></div>`;
-  html += `<p style="text-align:center;color:#666;margin-bottom:20px">${state.completed.length} / ${lessons.length} lecciones completadas</p>`;
-
-  levels.forEach(level => {
-    const levelLessons = lessons.filter(l => l.level === level);
-    if (levelLessons.length === 0) return;
-    html += `<div class="level-section"><h2>${level}</h2>`;
-    levelLessons.forEach(les => {
-      const done = state.completed.includes(les.id);
-      html += `<div class="lesson-card ${done ? "completed" : ""}" onclick="startLesson('${les.id}')">
-        <div>
-          <div class="title">${les.title}</div>
-          <div class="meta">${les.exercises.filter(e=>e.type!=='learn').length} ejercicios • ${les.xp} XP</div>
-        </div>
-        <div>${done ? "✅" : "▶️"}</div>
-      </div>`;
-    });
-    html += `</div>`;
-  });
-
-  main.innerHTML = html;
   updateHeader();
-}
-
-function startLesson(id) {
-  const lesson = lessons.find(l => l.id === id);
-  if (!lesson) return;
-  state.currentLesson = lesson;
-  state.currentExercise = 0;
-  state.correctInLesson = 0;
-  state.hearts = 5;
-  showExercise();
-}
-
-function showExercise() {
-  const lesson = state.currentLesson;
-  const ex = lesson.exercises[state.currentExercise];
-  const main = document.getElementById("main");
-  const progress = ((state.currentExercise) / lesson.exercises.length) * 100;
-
-  let html = `<button class="back-btn" onclick="showHome()">← Salir</button>`;
-  html += `<div class="progress-bar"><div class="progress-fill" style="width:${progress}%"></div></div>`;
-  html += `<div class="question">${ex.question}</div>`;
-
-  if (ex.type === "mc") {
-    html += `<div class="options">`;
-    ex.options.forEach((opt, i) => {
-      html += `<button class="option" data-i="${i}" onclick="selectOption(${i})">${opt}</button>`;
+  const cur = currentIndex();
+  let h = "";
+  if (state.hearts <= 0) h += `<div class="hearts-box">Sin vidas. Se recupera 1 ❤️ cada 20 min.<button class="btn secondary" onclick="refill()">Recargar vidas</button></div>`;
+  let idx = 0;
+  COURSE.forEach(lv => {
+    const lessons = lv.units.flatMap(u => u.lessons), done = lessons.filter(l => state.completed.includes(l.id)).length;
+    h += `<div class="level-head"><h2>${lv.id} · ${esc(lv.title)}</h2><div class="sub">${done} / ${lessons.length} lecciones</div><div class="pbar"><div class="pfill" style="width:${done / lessons.length * 100}%"></div></div></div>`;
+    lv.units.forEach((u, ui) => {
+      h += `<div class="unit-banner" style="background:${u.color}"><div class="u">${lv.id} · Unidad ${ui + 1}</div><div class="t">${esc(u.title)}</div></div><div class="path">`;
+      u.lessons.forEach((l, li) => {
+        const i = idx++, done = state.completed.includes(l.id), isCur = i === cur, x = Math.round(Math.sin(i * 0.9) * 70);
+        const cls = done ? "done" : isCur ? "current" : "locked";
+        const icon = done ? "👑" : isCur ? "★" : "🔒";
+        h += `<div class="node-wrap" style="transform:translateX(${x}px)" ${isCur ? 'id="current"' : ""}>${isCur ? '<div class="bubble">Empezar</div>' : ""}<button class="node ${cls}" style="${isCur ? "background:" + u.color : ""}" onclick="tapNode(${i})" aria-label="${esc(l.title)}">${icon}</button><div class="node-title">${esc(l.title)}</div></div>`;
+      });
+      h += `</div>`;
     });
-    html += `</div>`;
-  } else if (ex.type === "learn") {
-    html = html.replace(`<div class="question">${ex.question}</div>`, `<div class="question">Palabra nueva</div>`);
-    html += `<div class="learn-card"><div class="learn-word">${ex.word}</div><div class="learn-meaning">${ex.meaning}</div>${ex.note ? `<div class="hint">${ex.note}</div>` : ""}</div>`;
-  } else if (ex.type === "type") {
-    html += `<input class="input-answer" id="answerInput" placeholder="Escribe en valenciano…" oninput="document.getElementById('checkBtn').disabled=!this.value.trim()" onkeypress="if(event.key==='Enter'&&this.value.trim())onCheck()">`;
+  });
+  if (cur === -1) h += `<div class="done-screen"><img src="mascot.png" alt=""><h2>¡Enhorabona!</h2><p>Has completado todo el curso.</p></div>`;
+  $("main").innerHTML = h;
+  const c = $("current");
+  if (c) requestAnimationFrame(() => c.scrollIntoView({ block: "center" }));
+}
+function tapNode(i) {
+  const cur = currentIndex();
+  if (cur !== -1 && i > cur) { toast("🔒 Completa las lecciones anteriores para desbloquearla"); return; }
+  if (state.hearts <= 0) { toast("Sin vidas: recárgalas para seguir"); showHome(); return; }
+  startLesson(ALL[i].id);
+}
+function startLesson(id) {
+  const lesson = ALL.find(l => l.id === id); if (!lesson) return;
+  Object.assign(state, { currentLesson: lesson, currentExercise: 0, correctInLesson: 0 });
+  window.scrollTo(0, 0); showExercise();
+}
+function showExercise() {
+  const lesson = state.currentLesson, ex = lesson.exercises[state.currentExercise];
+  let h = `<div class="top-row"><button class="back-btn" onclick="showHome()" aria-label="Salir">✕</button><div class="pbar"><div class="pfill" style="width:${state.currentExercise / lesson.exercises.length * 100}%"></div></div></div>`;
+  if (ex.type === "learn") {
+    h += `<div class="question">${ex.label || "Palabra nueva"}</div><div class="learn-card"><div class="learn-word">${esc(ex.word)}</div><div class="learn-meaning">${esc(ex.meaning)}</div>${ex.note ? `<div class="hint">${esc(ex.note)}</div>` : ""}</div>`;
+  } else {
+    h += `<div class="question">${esc(ex.question)}</div>`;
+    if (ex.type === "mc") h += `<div class="options">${ex.options.map((o, i) => `<button class="option" data-i="${i}" onclick="selectOption(${i})">${esc(o)}</button>`).join("")}</div>`;
+    else if (ex.type === "type") h += `<input class="input-answer" id="answerInput" placeholder="Escribe en valenciano…" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="$('checkBtn').disabled=!this.value.trim()" onkeydown="if(event.key==='Enter'&&this.value.trim())onCheck()">`;
+    else if (ex.type === "order") {
+      const bank = ex.words.concat(ex.distractors).map((w, i) => ({ w, i }));
+      for (let i = bank.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bank[i], bank[j]] = [bank[j], bank[i]]; }
+      state.bank = bank; state.picked = [];
+      h += `<div class="answer-line" id="line"></div><div class="bank">${bank.map((b, k) => `<button class="chip" id="chip${k}" onclick="pick(${k})">${esc(b.w)}</button>`).join("")}</div>`;
+    }
   }
-  html += `<div class="exercise-pad"></div>`;
-  html += `<div class="check-bar" id="checkBar"><div class="feedback" id="feedback"></div><button class="btn" id="checkBtn" disabled onclick="onCheck()">Comprobar</button></div>`;
+  h += `<div class="exercise-pad"></div><div class="check-bar" id="checkBar"><div class="feedback" id="feedback"></div><button class="btn" id="checkBtn" disabled onclick="onCheck()">Comprobar</button></div>`;
   state.selected = null; state.answered = false;
-  main.innerHTML = html;
-  if (ex.type === "learn") { const b = document.getElementById("checkBtn"); b.disabled = false; b.textContent = "Continuar"; state.answered = true; }
+  $("main").innerHTML = h;
+  if (ex.type === "learn") { const b = $("checkBtn"); b.disabled = false; b.textContent = "Continuar"; state.answered = true; }
   if (document.activeElement) document.activeElement.blur();
   updateHeader();
 }
-
 function selectOption(i) {
-  if (state.answered) return;
-  state.selected = i;
+  if (state.answered) return; state.selected = i;
   document.querySelectorAll(".option").forEach(b => b.classList.toggle("selected", +b.dataset.i === i));
-  document.getElementById("checkBtn").disabled = false;
+  $("checkBtn").disabled = false;
 }
-
+function pick(k) {
+  if (state.answered) return; state.picked.push(k); $("chip" + k).classList.add("used"); renderLine();
+}
+function unpick(pos) {
+  if (state.answered) return; const k = state.picked.splice(pos, 1)[0]; $("chip" + k).classList.remove("used"); renderLine();
+}
+function renderLine() {
+  $("line").innerHTML = state.picked.map((k, p) => `<button class="chip" onclick="unpick(${p})">${esc(state.bank[k].w)}</button>`).join("");
+  $("checkBtn").disabled = !state.picked.length;
+}
+const norm = t => t.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[’]/g, "'").replace(/[.!?¿¡,«»]/g, "").replace(/\s+/g, " ");
 function onCheck() {
   if (state.answered) { next(); return; }
   const ex = state.currentLesson.exercises[state.currentExercise];
-  const feedback = document.getElementById("feedback");
-  const bar = document.getElementById("checkBar");
   let ok;
   if (ex.type === "mc") {
     if (state.selected === null) return;
-    const sel = ex.options[state.selected];
-    ok = sel === ex.answer;
+    ok = ex.options[state.selected] === ex.answer;
     document.querySelectorAll(".option").forEach(b => {
       b.disabled = true; b.classList.remove("selected");
-      const t = ex.options[+b.dataset.i];
-      if (t === ex.answer) b.classList.add("correct");
-      else if (+b.dataset.i === state.selected) b.classList.add("wrong");
+      if (ex.options[+b.dataset.i] === ex.answer) b.classList.add("correct"); else if (+b.dataset.i === state.selected) b.classList.add("wrong");
     });
+  } else if (ex.type === "type") {
+    const input = $("answerInput"), user = norm(input.value); if (!user) return;
+    ok = (ex.accept || [ex.answer]).map(norm).includes(user); input.disabled = true;
   } else {
-    const input = document.getElementById("answerInput");
-    const norm = t => t.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[.!?¿¡,]/g, "").replace(/\s+/g, " ");
-    const user = norm(input.value);
-    if (!user) return;
-    ok = (ex.accept || [ex.answer]).map(norm).includes(user);
-    input.disabled = true;
+    if (!state.picked.length) return;
+    ok = norm(state.picked.map(k => state.bank[k].w).join(" ")) === norm(ex.answer);
   }
   state.answered = true;
-  if (ok) {
-    feedback.innerHTML = "✅ ¡Correcto! " + (ex.explanation || "");
-    feedback.style.color = "#58a700";
-    state.correctInLesson++;
-    bar.classList.add("ok");
-  } else {
-    feedback.innerHTML = "❌ La respuesta es: <strong>" + ex.answer + "</strong><br>" + (ex.explanation || "");
-    feedback.style.color = "#ea2b2b";
-    state.hearts--;
-    bar.classList.add("bad");
+  const bar = $("checkBar"), fb = $("feedback");
+  if (ok) { fb.innerHTML = "✅ ¡Correcto! " + esc(ex.explanation || ""); state.correctInLesson++; bar.classList.add("ok"); }
+  else {
+    fb.innerHTML = "❌ Solución: <strong>" + esc(ex.answer) + "</strong>" + (ex.explanation ? "<br>" + esc(ex.explanation) : "");
+    if (state.hearts === MAX_HEARTS) state.heartTs = Date.now();
+    state.hearts = Math.max(0, state.hearts - 1); save(); bar.classList.add("bad");
   }
   updateHeader();
-  const btn = document.getElementById("checkBtn");
-  btn.textContent = "Continuar"; btn.disabled = false;
+  const btn = $("checkBtn"); btn.textContent = "Continuar"; btn.disabled = false;
 }
-
 function next() {
   if (state.hearts <= 0) {
-    document.getElementById("main").innerHTML = `
-      <div class="lesson-complete">
-        <h2>💔</h2>
-        <p>Te has quedado sin vidas. ¡Inténtalo de nuevo!</p>
-        <button class="btn" onclick="startLesson('${state.currentLesson.id}')">Reintentar</button>
-        <button class="btn secondary" onclick="showHome()">Volver</button>
-      </div>`;
+    $("main").innerHTML = `<div class="done-screen"><h2>💔 Sin vidas</h2><p>Se recupera 1 ❤️ cada 20 minutos, o recárgalas ahora.</p><button class="btn secondary" onclick="refill();startLesson('${state.currentLesson.id}')">Recargar y reintentar</button><button class="btn" onclick="showHome()">Volver al camino</button></div>`;
     return;
   }
-
   state.currentExercise++;
-  if (state.currentExercise >= state.currentLesson.exercises.length) {
-    finishLesson();
-  } else {
-    showExercise();
-  }
+  if (state.currentExercise >= state.currentLesson.exercises.length) finishLesson(); else showExercise();
 }
-
 function finishLesson() {
-  const lesson = state.currentLesson;
-  const graded = lesson.exercises.filter(e=>e.type!=='learn').length;
-  const ratio = state.correctInLesson / graded;
-  const earned = Math.round(lesson.xp * ratio);
+  const lesson = state.currentLesson, graded = lesson.exercises.filter(e => e.type !== "learn").length;
+  const earned = Math.max(1, Math.round(lesson.xp * state.correctInLesson / graded));
   state.xp += earned;
-  if (!state.completed.includes(lesson.id)) {
-    state.completed.push(lesson.id);
-    state.streak++;
-  }
+  if (!state.completed.includes(lesson.id)) state.completed.push(lesson.id);
+  const today = new Date().toDateString(), yest = new Date(Date.now() - 864e5).toDateString();
+  if (state.lastDay !== today) { state.streak = state.lastDay === yest ? state.streak + 1 : 1; state.lastDay = today; }
   save();
-
-  document.getElementById("main").innerHTML = `
-    <div class="lesson-complete">
-      <h2>🎉 ¡Lección completada!</h2>
-      <p>Has ganado <strong>${earned} XP</strong></p>
-      <p>Aciertos: ${state.correctInLesson} / ${lesson.exercises.filter(e=>e.type!=='learn').length}</p>
-      <button class="btn" onclick="showHome()">Continuar</button>
-    </div>`;
+  $("main").innerHTML = `<div class="done-screen"><img src="mascot.png" alt="Rat penat"><h2>¡Lección completada!</h2><p>Has ganado <strong>${earned} XP</strong></p><p>Aciertos: ${state.correctInLesson} / ${graded}</p><button class="btn" id="finishBtn" onclick="showHome()">Continuar</button></div>`;
   updateHeader();
 }
-
 showHome();
-  </script>
-<script>if('serviceWorker' in navigator)navigator.serviceWorker.register('sw.js');</script>
+setInterval(updateHeader, 60000);
+</script>
+<script>if ('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');</script>
 </body>
 </html>
