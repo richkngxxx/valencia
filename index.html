@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
 <title>Diu sí al valencià</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#58cc02">
@@ -13,7 +13,9 @@
 <link rel="apple-touch-icon" href="icon-180.png">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-html, body { overflow-x: clip; }
+html, body { overflow-x: hidden; overflow-x: clip; max-width: 100%; }
+input, textarea, select { font-size: 16px !important; }
+img { max-width: 100%; }
 body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: #f0f4f8; color: #1a1a1a; line-height: 1.5; -webkit-text-size-adjust: 100%; }
 #app { max-width: 480px; margin: 0 auto; min-height: 100vh; min-height: 100dvh; background: #fff; box-shadow: 0 0 20px rgba(0,0,0,.1); }
 header { position: sticky; top: 0; z-index: 20; background: #58cc02; color: #fff; padding: calc(10px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) 10px calc(14px + env(safe-area-inset-left)); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
@@ -21,7 +23,7 @@ header .brand { display: flex; align-items: center; gap: 8px; min-width: 0; }
 header img { width: 34px; height: 34px; border-radius: 9px; flex: none; }
 header h1 { font-size: 1.05rem; font-weight: 800; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .stats { display: flex; gap: 10px; font-weight: 700; font-size: .95rem; flex: none; }
-main { padding: 16px calc(16px + env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left)); }
+main { overflow-x: hidden; padding: 16px calc(16px + env(safe-area-inset-right)) calc(24px + env(safe-area-inset-bottom)) calc(16px + env(safe-area-inset-left)); }
 /* path */
 .level-head { margin: 18px 0 6px; padding: 12px 14px; border-radius: 14px; background: #f7f7f7; border: 2px solid #e5e5e5; }
 .level-head h2 { font-size: 1.15rem; }
@@ -90,14 +92,14 @@ main { padding: 16px calc(16px + env(safe-area-inset-right)) calc(24px + env(saf
 .btn { display: block; width: 100%; min-height: 50px; padding: 14px; border: none; border-radius: 14px; background: #58cc02; color: #fff; font-weight: 800; font-size: 1rem; text-transform: uppercase; cursor: pointer; box-shadow: 0 4px 0 #46a302; margin-top: 12px; touch-action: manipulation; }
 .btn:disabled { background: #e5e5e5; color: #afafaf; box-shadow: none; }
 .btn.secondary { background: #1cb0f6; box-shadow: 0 4px 0 #1899d6; }
-.check-bar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 30; padding: 14px calc(20px + env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left)); background: #fff; border-top: 2px solid #eee; }
+.check-bar { position: fixed; left: 0; transition: bottom .1s; right: 0; bottom: 0; z-index: 30; padding: 14px calc(20px + env(safe-area-inset-right)) calc(14px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left)); background: #fff; border-top: 2px solid #eee; }
 .check-bar > * { max-width: 440px; margin-left: auto; margin-right: auto; }
 .check-bar.ok { background: #d7ffb8; border-top-color: #d7ffb8; } .check-bar.ok .feedback { color: #58a700; }
 .check-bar.bad { background: #ffdfe0; border-top-color: #ffdfe0; } .check-bar.bad .feedback { color: #ea2b2b; }
 .check-bar .feedback { margin: 0 0 10px; font-weight: 700; } .check-bar .feedback:empty { display: none; }
 .check-bar .btn { margin-top: 0; } .check-bar.bad .btn { background: #ff4b4b; box-shadow: 0 4px 0 #ea2b2b; }
 .exercise-pad { height: 190px; }
-.input-answer { width: 100%; padding: 14px; border: 2px solid #e5e5e5; border-radius: 12px; font-size: 16px; background: #f7f7f7; }
+.input-answer { width: 100%; max-width: 100%; display: block; padding: 14px; border: 2px solid #e5e5e5; border-radius: 12px; font-size: 16px; background: #f7f7f7; }
 .input-answer:focus { outline: none; border-color: #1cb0f6; }
 .learn-card { text-align: center; border: 2px solid #e5e5e5; border-radius: 16px; padding: 28px 16px; }
 .learn-word { font-size: 1.8rem; font-weight: 800; color: #1cb0f6; overflow-wrap: anywhere; }
@@ -194,7 +196,7 @@ function showHome() {
         const i = idx++, done = state.completed.includes(l.id), isCur = i === cur, x = Math.round(Math.sin(i * 0.9) * 70);
         const cls = done ? "done" : isCur ? "current" : "locked";
         const icon = done ? "👑" : isCur ? "★" : "🔒";
-        h += `<div class="node-wrap" style="transform:translateX(${x}px)" ${isCur ? 'id="current"' : ""}>${isCur ? '<div class="bubble">Empezar</div>' + mascot("neutral", "m-idle").replace('class="m', `style="${x > 0 ? "right" : "left"}:-72px" class="m`) : ""}<button class="node ${cls}" style="${isCur ? "background:" + u.color : ""}" onclick="tapNode(${i})" aria-label="${esc(l.title)}">${icon}</button><div class="node-title">${esc(l.title)}</div></div>`;
+        h += `<div class="node-wrap" style="transform:translateX(${x}px)" ${isCur ? 'id="current"' : ""}>${isCur ? '<div class="bubble">Empezar</div>' + mascot("neutral", "m-idle").replace('class="m', `style="${x > 0 ? "left" : "right"}:-62px" class="m`) : ""}<button class="node ${cls}" style="${isCur ? "background:" + u.color : ""}" onclick="tapNode(${i})" aria-label="${esc(l.title)}">${icon}</button><div class="node-title">${esc(l.title)}</div></div>`;
       });
       h += `</div>`;
     });
@@ -222,7 +224,7 @@ function showExercise() {
   } else {
     h += `<div class="q-row">${mascot(ex.type === "mc" ? "think" : "neutral", "m-idle")}<div class="question">${esc(ex.question)}</div></div>`;
     if (ex.type === "mc") h += `<div class="options">${ex.options.map((o, i) => `<button class="option" data-i="${i}" onclick="selectOption(${i})">${esc(o)}</button>`).join("")}</div>`;
-    else if (ex.type === "type") h += `<input class="input-answer" id="answerInput" placeholder="Escribe en valenciano…" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="$('checkBtn').disabled=!this.value.trim()" onkeydown="if(event.key==='Enter'&&this.value.trim())onCheck()">`;
+    else if (ex.type === "type") h += `<input class="input-answer" id="answerInput" placeholder="Escribe en valenciano…" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="$('checkBtn').disabled=!this.value.trim()" enterkeyhint="done" onkeydown="if(event.key==='Enter'){event.preventDefault();if(this.value.trim())onCheck()}">`;
     else if (ex.type === "order") {
       const bank = ex.words.concat(ex.distractors).map((w, i) => ({ w, i }));
       for (let i = bank.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bank[i], bank[j]] = [bank[j], bank[i]]; }
@@ -304,6 +306,16 @@ function finishLesson() {
   $("main").innerHTML = `<div class="done-screen">${mascot("trophy", "m-jump")}<h2>¡Lección completada!</h2><div class="xp-count" id="xpCount">+0 XP</div>${state.streak > before ? `<div class="streak-gain">${mascot("jump", "m-jump")}<span class="flame">🔥</span> ¡Racha de ${state.streak} día${state.streak > 1 ? "s" : ""}!</div>` : ""}<p>Aciertos: ${state.correctInLesson} / ${graded}</p><button class="btn" id="finishBtn" onclick="showHome()">Continuar</button></div>`;
   updateHeader(); countUp($("xpCount"), earned); confetti(); buzz([40, 60, 40]);
 }
+// keep the check bar above the iOS keyboard
+function placeBar() {
+  const bar = document.getElementById("checkBar"), vv = window.visualViewport; if (!bar || !vv) return;
+  const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
+  bar.style.bottom = kb + "px";
+  bar.style.paddingBottom = kb > 0 ? "14px" : "";
+}
+if (window.visualViewport) { visualViewport.addEventListener("resize", placeBar); visualViewport.addEventListener("scroll", placeBar); }
+document.addEventListener("focusin", e => { if (e.target.id === "answerInput") setTimeout(() => { placeBar(); e.target.scrollIntoView({ block: "center" }); }, 300); });
+document.addEventListener("focusout", () => setTimeout(placeBar, 100));
 showHome();
 setInterval(updateHeader, 60000);
 </script>
