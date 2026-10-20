@@ -12,11 +12,15 @@
 <meta name="apple-mobile-web-app-title" content="Diu sí al valencià">
 <link rel="apple-touch-icon" href="icon-180.png">
 <style>
+@font-face { font-family: Nunito; font-weight: 700; font-display: swap; src: url(fonts/nunito-700.woff2) format("woff2"); }
+@font-face { font-family: Nunito; font-weight: 800; font-display: swap; src: url(fonts/nunito-800.woff2) format("woff2"); }
+@font-face { font-family: Nunito; font-weight: 900; font-display: swap; src: url(fonts/nunito-900.woff2) format("woff2"); }
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 html, body { overflow-x: hidden; overflow-x: clip; max-width: 100%; }
+input, textarea, select, button { font-family: inherit; }
 input, textarea, select { font-size: 16px !important; }
 img { max-width: 100%; }
-body { font-family: system-ui, -apple-system, 'Segoe UI', sans-serif; background: #f0f4f8; color: #1a1a1a; line-height: 1.5; -webkit-text-size-adjust: 100%; }
+body { font-family: Nunito, system-ui, -apple-system, sans-serif; font-weight: 700; background: #f0f4f8; color: #1a1a1a; line-height: 1.5; -webkit-text-size-adjust: 100%; }
 #app { max-width: 480px; margin: 0 auto; min-height: 100vh; min-height: 100dvh; background: #fff; box-shadow: 0 0 20px rgba(0,0,0,.1); }
 header { position: sticky; top: 0; z-index: 20; background: #58cc02; color: #fff; padding: calc(10px + env(safe-area-inset-top)) calc(14px + env(safe-area-inset-right)) 10px calc(14px + env(safe-area-inset-left)); display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 header .brand { display: flex; align-items: center; gap: 8px; min-width: 0; }
@@ -112,6 +116,31 @@ main { overflow-x: hidden; padding: 16px calc(16px + env(safe-area-inset-right))
 .done-screen { text-align: center; padding: 30px 10px; }
 .done-screen img { width: 120px; height: 120px; border-radius: 28px; }
 .done-screen h2 { color: #58cc02; font-size: 1.7rem; margin: 12px 0; }
+/* Duolingo-style exercise layout */
+.ex { display: flex; flex-direction: column; min-height: calc(100vh - 150px); min-height: calc(100dvh - 150px); }
+.ex-body { flex: 1; display: flex; flex-direction: column; justify-content: center; padding: 8px 0 12px; }
+.question, .q-row .question { font-size: 24px; font-weight: 800; line-height: 1.25; color: #3c3c3c; }
+.q-row { margin: 14px 0 8px; }
+.options { gap: 12px; }
+.option { min-height: 68px; font-size: 19px; font-weight: 700; color: #4b4b4b; padding: 14px 18px; border: 2px solid #e5e5e5; border-bottom-width: 4px; border-radius: 16px; box-shadow: none; display: flex; align-items: center; }
+.option:not(:disabled):active { transform: translateY(2px); border-bottom-width: 2px; margin-bottom: 2px; }
+.option.selected { border-color: #1cb0f6; background: #ddf4ff; color: #1899d6; box-shadow: none; }
+.option.correct { border-color: #58cc02; background: #d7ffb8; color: #58a700; }
+.option.wrong { border-color: #ff4b4b; background: #ffdfe0; color: #ea2b2b; }
+.chip { min-height: 52px; font-size: 19px; font-weight: 700; padding: 10px 16px; border: 2px solid #e5e5e5; border-bottom-width: 4px; border-radius: 16px; box-shadow: none; color: #4b4b4b; }
+.chip:active { transform: translateY(2px); border-bottom-width: 2px; margin-bottom: 2px; }
+.answer-line { min-height: 128px; align-content: flex-start; border-bottom: none; background: repeating-linear-gradient(to bottom, transparent 0 62px, #e5e5e5 62px 64px); gap: 8px 8px; padding: 4px 0 8px; margin-bottom: 24px; }
+.bank { gap: 10px; }
+.input-answer { resize: none; min-height: 140px; font-weight: 700; border-radius: 16px; border-bottom-width: 4px; padding: 16px; font-size: 19px !important; }
+.learn-card { border-bottom-width: 4px; padding: 36px 16px; }
+.learn-word { font-weight: 900; font-size: 2rem; }
+.btn { min-height: 56px; font-size: 18px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; border-radius: 16px; box-shadow: 0 5px 0 #46a302; }
+.btn:not(:disabled):active { transform: translateY(5px); box-shadow: none; }
+.btn.secondary { box-shadow: 0 5px 0 #1899d6; }
+.check-bar.bad .btn { box-shadow: 0 5px 0 #ea2b2b; }
+.check-bar .feedback { font-size: 18px; font-weight: 800; }
+.btn:disabled { box-shadow: 0 5px 0 #d0d0d0; }
+.exercise-pad { height: 110px; flex: none; }
 </style>
 </head>
 <body>
@@ -218,13 +247,13 @@ function startLesson(id) {
 }
 function showExercise() {
   const lesson = state.currentLesson, ex = lesson.exercises[state.currentExercise];
-  let h = `<div class="top-row"><button class="back-btn" onclick="showHome()" aria-label="Salir">✕</button><div class="pbar"><div class="pfill" style="width:${state.currentExercise / lesson.exercises.length * 100}%"></div></div></div>`;
+  let h = `<div class="ex"><div class="top-row"><button class="back-btn" onclick="showHome()" aria-label="Salir">✕</button><div class="pbar"><div class="pfill" style="width:${state.currentExercise / lesson.exercises.length * 100}%"></div></div></div>`;
   if (ex.type === "learn") {
-    h += `<div class="question">${ex.label || "Palabra nueva"}</div><div class="learn-card"><div class="learn-word">${esc(ex.word)}</div><div class="learn-meaning">${esc(ex.meaning)}</div>${ex.note ? `<div class="hint">${esc(ex.note)}</div>` : ""}</div>`;
+    h += `<div class="question">${ex.label || "Palabra nueva"}</div><div class="ex-body"><div class="learn-card"><div class="learn-word">${esc(ex.word)}</div><div class="learn-meaning">${esc(ex.meaning)}</div>${ex.note ? `<div class="hint">${esc(ex.note)}</div>` : ""}</div></div>`;
   } else {
-    h += `<div class="q-row">${mascot(ex.type === "mc" ? "think" : "neutral", "m-idle")}<div class="question">${esc(ex.question)}</div></div>`;
+    h += `<div class="q-row">${mascot(ex.type === "mc" ? "think" : "neutral", "m-idle")}<div class="question">${esc(ex.question)}</div></div><div class="ex-body">`;
     if (ex.type === "mc") h += `<div class="options">${ex.options.map((o, i) => `<button class="option" data-i="${i}" onclick="selectOption(${i})">${esc(o)}</button>`).join("")}</div>`;
-    else if (ex.type === "type") h += `<input class="input-answer" id="answerInput" placeholder="Escribe en valenciano…" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="$('checkBtn').disabled=!this.value.trim()" enterkeyhint="done" onkeydown="if(event.key==='Enter'){event.preventDefault();if(this.value.trim())onCheck()}">`;
+    else if (ex.type === "type") h += `<textarea rows="3" class="input-answer" id="answerInput" placeholder="Escribe en valenciano…" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="$('checkBtn').disabled=!this.value.trim()" enterkeyhint="done" onkeydown="if(event.key==='Enter'){event.preventDefault();if(this.value.trim())onCheck()}"></textarea>`;
     else if (ex.type === "order") {
       const bank = ex.words.concat(ex.distractors).map((w, i) => ({ w, i }));
       for (let i = bank.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bank[i], bank[j]] = [bank[j], bank[i]]; }
@@ -232,7 +261,8 @@ function showExercise() {
       h += `<div class="answer-line" id="line"></div><div class="bank">${bank.map((b, k) => `<button class="chip" id="chip${k}" onclick="pick(${k})">${esc(b.w)}</button>`).join("")}</div>`;
     }
   }
-  h += `<div class="exercise-pad"></div><div class="check-bar" id="checkBar"><div class="feedback" id="feedback"></div><button class="btn" id="checkBtn" disabled onclick="onCheck()">Comprobar</button></div>`;
+  if (ex.type !== "learn") h += `</div>`;
+  h += `<div class="exercise-pad"></div></div><div class="check-bar" id="checkBar"><div class="feedback" id="feedback"></div><button class="btn" id="checkBtn" disabled onclick="onCheck()">Comprobar</button></div>`;
   state.selected = null; state.answered = false;
   $("main").innerHTML = h;
   if (ex.type === "learn") { const b = $("checkBtn"); b.disabled = false; b.textContent = "Continuar"; state.answered = true; }
