@@ -105,6 +105,9 @@ main { padding: 20px; }
   margin: 10px 0;
 }
 .input-answer:focus { outline: none; border-color: #58cc02; }
+.learn-card { text-align: center; border: 2px solid #e5e5e5; border-radius: 16px; padding: 32px 16px; margin-top: 10px; }
+.learn-word { font-size: 2rem; font-weight: 800; color: #1cb0f6; }
+.learn-meaning { font-size: 1.2rem; margin-top: 8px; color: #4b4b4b; }
 .hint { font-size: .9rem; color: #666; text-align: center; margin-top: 8px; }
   </style>
 </head>
@@ -123,68 +126,89 @@ main { padding: 20px; }
   <script>
 const lessons = [
   {
-    id: "a1-1",
-    level: "A1",
-    title: "Saludos y presentaciones",
-    xp: 10,
+    id: "a1-1", level: "A1", title: "Saludos y presentaciones", xp: 10,
     exercises: [
-      { type: "mc", question: "¿Cómo se dice «Hola» en valenciano?", options: ["Hola", "Bon dia", "Adéu", "Gràcies"], answer: "Bon dia", explanation: "«Bon dia» es el saludo más común por la mañana." },
-      { type: "mc", question: "«¿Cómo te llamas?»", options: ["Com et dius?", "Com estàs?", "On vas?", "Què fas?"], answer: "Com et dius?", explanation: "«Com et dius?» = ¿Cómo te llamas?" },
-      { type: "type", question: "Traduce: «Me llamo Ana»", answer: "Em dic Ana", accept: ["em dic ana", "em dic Ana"], explanation: "Em dic + nombre." },
-      { type: "mc", question: "«Encantado/a de conocerte»", options: ["Encantat de conéixer-te", "Bon dia", "Fins demà", "Moltes gràcies"], answer: "Encantat de conéixer-te", explanation: "Forma estándar AVL." },
-      { type: "mc", question: "¿Cómo se dice «Adiós»?", options: ["Adéu", "Hola", "Bon dia", "Per favor"], answer: "Adéu", explanation: "«Adéu» es el adiós habitual." }
+      { type: "learn", word: "Hola", meaning: "Hola", note: "Igual que en castellano." },
+      { type: "learn", word: "Bon dia", meaning: "Buenos días", note: "El saludo más común por la mañana." },
+      { type: "learn", word: "Adéu", meaning: "Adiós" },
+      { type: "mc", question: "¿Cómo se dice «Buenos días»?", options: ["Bon dia", "Adéu", "Hola", "Bona nit"], answer: "Bon dia", explanation: "Bon dia = buenos días." },
+      { type: "mc", question: "¿Cómo se dice «Adiós»?", options: ["Hola", "Adéu", "Bon dia", "Gràcies"], answer: "Adéu", explanation: "Adéu = adiós." },
+      { type: "learn", word: "Com et dius?", meaning: "¿Cómo te llamas?" },
+      { type: "learn", word: "Em dic…", meaning: "Me llamo…", note: "Em dic Ana = Me llamo Ana." },
+      { type: "mc", question: "«¿Cómo te llamas?»", options: ["Com estàs?", "Com et dius?", "On vas?", "Què fas?"], answer: "Com et dius?", explanation: "Com et dius? = ¿Cómo te llamas?" },
+      { type: "type", question: "Traduce: «Me llamo Ana»", answer: "Em dic Ana", explanation: "Em dic + nombre." },
+      { type: "type", question: "Escribe «Adiós» en valenciano", answer: "Adéu", explanation: "Adéu = adiós." }
     ]
   },
   {
-    id: "a1-2",
-    level: "A1",
-    title: "Números básicos",
-    xp: 10,
+    id: "a1-2", level: "A1", title: "Números básicos", xp: 10,
     exercises: [
-      { type: "mc", question: "¿Cómo se dice «uno»?", options: ["U", "Dos", "Tres", "Quatre"], answer: "U", explanation: "1 = u (masculino) / una (femenino)." },
-      { type: "mc", question: "¿Cómo se dice «cinco»?", options: ["Cinc", "Sis", "Set", "Vuit"], answer: "Cinc", explanation: "5 = cinc." },
-      { type: "type", question: "Escribe el número 10 en valenciano", answer: "deu", accept: ["deu"], explanation: "10 = deu." },
-      { type: "mc", question: "«Hoy» en valenciano es…", options: ["Hui", "Avui", "Demà", "Ahir"], answer: "Hui", explanation: "En valenciano se prefiere «hui» (AVL)." },
-      { type: "mc", question: "¿Cómo se dice «mañana»?", options: ["Demà", "Hui", "Ahir", "Ara"], answer: "Demà", explanation: "Demà = mañana." }
+      { type: "learn", word: "U / una", meaning: "Uno / una", note: "1. «U» masculino, «una» femenino." },
+      { type: "learn", word: "Dos", meaning: "Dos", note: "2" },
+      { type: "learn", word: "Tres", meaning: "Tres", note: "3" },
+      { type: "mc", question: "¿Cómo se dice «uno»?", options: ["Dos", "U", "Tres", "Cinc"], answer: "U", explanation: "1 = u." },
+      { type: "learn", word: "Cinc", meaning: "Cinco", note: "5" },
+      { type: "learn", word: "Deu", meaning: "Diez", note: "10" },
+      { type: "mc", question: "¿Cómo se dice «cinco»?", options: ["Tres", "Deu", "Cinc", "Dos"], answer: "Cinc", explanation: "5 = cinc." },
+      { type: "mc", question: "¿Qué número es «deu»?", options: ["2", "5", "10", "3"], answer: "10", explanation: "Deu = 10." },
+      { type: "type", question: "Escribe el número 10 en valenciano", answer: "Deu", explanation: "10 = deu." },
+      { type: "type", question: "Escribe el número 3 en valenciano", answer: "Tres", explanation: "3 = tres." }
     ]
   },
   {
-    id: "a1-3",
-    level: "A1",
-    title: "Familia",
-    xp: 12,
+    id: "a1-3", level: "A1", title: "Días", xp: 10,
     exercises: [
-      { type: "mc", question: "«Madre»", options: ["Mare", "Pare", "Germana", "Iaia"], answer: "Mare", explanation: "Mare = madre." },
-      { type: "mc", question: "«Padre»", options: ["Pare", "Mare", "Fill", "Avi"], answer: "Pare", explanation: "Pare = padre." },
-      { type: "mc", question: "«Niño / chico»", options: ["Xiquet", "Xiqueta", "Home", "Dona"], answer: "Xiquet", explanation: "Xiquet es la forma valenciana típica." },
-      { type: "type", question: "Traduce: «Mi hermana»", answer: "La meua germana", accept: ["la meua germana", "la meva germana"], explanation: "En valenciano se prefiere «meua»." },
-      { type: "mc", question: "«Abuela»", options: ["Iaia", "Iaio", "Tia", "Cosina"], answer: "Iaia", explanation: "Iaia = abuela (muy usado)." }
+      { type: "learn", word: "Hui", meaning: "Hoy", note: "En valenciano se prefiere «hui»." },
+      { type: "learn", word: "Demà", meaning: "Mañana (el día siguiente)" },
+      { type: "learn", word: "Ahir", meaning: "Ayer" },
+      { type: "mc", question: "«Hoy» en valenciano es…", options: ["Demà", "Hui", "Ahir", "Ara"], answer: "Hui", explanation: "Hui = hoy." },
+      { type: "mc", question: "¿Qué significa «demà»?", options: ["Ayer", "Hoy", "Mañana", "Ahora"], answer: "Mañana", explanation: "Demà = mañana." },
+      { type: "type", question: "Escribe «ayer» en valenciano", answer: "Ahir", explanation: "Ahir = ayer." }
     ]
   },
   {
-    id: "a1-4",
-    level: "A1",
-    title: "Comida básica",
-    xp: 12,
+    id: "a1-4", level: "A1", title: "Familia", xp: 12,
     exercises: [
-      { type: "mc", question: "«Pan»", options: ["Pa", "Aigua", "Llet", "Formatge"], answer: "Pa", explanation: "Pa = pan." },
-      { type: "mc", question: "«Agua»", options: ["Aigua", "Vi", "Café", "Suc"], answer: "Aigua", explanation: "Aigua = agua." },
-      { type: "mc", question: "«Patata»", options: ["Creïlla", "Tomaca", "Ceba", "Pebre"], answer: "Creïlla", explanation: "Creïlla es la forma valenciana preferida." },
-      { type: "type", question: "Traduce: «Quiero café»", answer: "Vull café", accept: ["vull cafe", "vull café", "vull un cafe"], explanation: "Vull = quiero." },
-      { type: "mc", question: "«Gracias»", options: ["Gràcies", "Per favor", "De res", "Bon profit"], answer: "Gràcies", explanation: "Gràcies = gracias." }
+      { type: "learn", word: "Mare", meaning: "Madre" },
+      { type: "learn", word: "Pare", meaning: "Padre" },
+      { type: "mc", question: "«Madre»", options: ["Pare", "Mare", "Germana", "Iaia"], answer: "Mare", explanation: "Mare = madre." },
+      { type: "learn", word: "Germana", meaning: "Hermana", note: "Germà = hermano." },
+      { type: "learn", word: "La meua", meaning: "Mi (femenino)", note: "La meua germana = mi hermana." },
+      { type: "learn", word: "Iaia", meaning: "Abuela", note: "Iaio = abuelo." },
+      { type: "mc", question: "«Abuela»", options: ["Mare", "Germana", "Iaia", "Pare"], answer: "Iaia", explanation: "Iaia = abuela." },
+      { type: "mc", question: "«Hermana»", options: ["Germana", "Mare", "Iaia", "Pare"], answer: "Germana", explanation: "Germana = hermana." },
+      { type: "type", question: "Traduce: «Mi hermana»", answer: "La meua germana", accept: ["la meua germana", "la meva germana", "meua germana"], explanation: "En valenciano se prefiere «meua»." },
+      { type: "type", question: "Escribe «padre» en valenciano", answer: "Pare", explanation: "Pare = padre." }
     ]
   },
   {
-    id: "a1-5",
-    level: "A1",
-    title: "Verbos básicos",
-    xp: 15,
+    id: "a1-5", level: "A1", title: "Comida básica", xp: 12,
     exercises: [
-      { type: "mc", question: "«Yo hablo»", options: ["Parle", "Parlo", "Parles", "Parla"], answer: "Parle", explanation: "En valenciano la 1ª persona es «parle» (AVL)." },
-      { type: "mc", question: "«Voy»", options: ["Vaig", "Vas", "Va", "Anem"], answer: "Vaig", explanation: "Vaig = voy (verbo anar)." },
-      { type: "mc", question: "«Soy» (permanente)", options: ["Soc", "Estic", "Vaig", "Tinc"], answer: "Soc", explanation: "Soc = soy (ser)." },
-      { type: "type", question: "Traduce: «Estoy bien»", answer: "Estic bé", accept: ["estic be", "estic bé"], explanation: "Estic = estoy." },
-      { type: "mc", question: "«Tengo»", options: ["Tinc", "Tens", "Té", "Tenim"], answer: "Tinc", explanation: "Tinc = tengo." }
+      { type: "learn", word: "Pa", meaning: "Pan" },
+      { type: "learn", word: "Aigua", meaning: "Agua" },
+      { type: "mc", question: "«Agua»", options: ["Pa", "Aigua", "Café", "Creïlla"], answer: "Aigua", explanation: "Aigua = agua." },
+      { type: "learn", word: "Creïlla", meaning: "Patata", note: "La forma valenciana más usada." },
+      { type: "learn", word: "Vull", meaning: "Quiero", note: "Vull café = quiero café." },
+      { type: "learn", word: "Gràcies", meaning: "Gracias" },
+      { type: "mc", question: "«Patata»", options: ["Pa", "Creïlla", "Aigua", "Vull"], answer: "Creïlla", explanation: "Creïlla = patata." },
+      { type: "mc", question: "¿Qué significa «vull»?", options: ["Tengo", "Quiero", "Voy", "Soy"], answer: "Quiero", explanation: "Vull = quiero." },
+      { type: "type", question: "Traduce: «Quiero café»", answer: "Vull café", accept: ["vull cafe", "vull café", "vull un cafe", "vull un café"], explanation: "Vull = quiero." },
+      { type: "type", question: "Escribe «gracias» en valenciano", answer: "Gràcies", explanation: "Gràcies = gracias." }
+    ]
+  },
+  {
+    id: "a1-6", level: "A1", title: "Verbos básicos", xp: 15,
+    exercises: [
+      { type: "learn", word: "Parle", meaning: "Hablo", note: "En valenciano la 1ª persona acaba en -e." },
+      { type: "learn", word: "Vaig", meaning: "Voy" },
+      { type: "mc", question: "«Yo hablo»", options: ["Parles", "Parle", "Parla", "Vaig"], answer: "Parle", explanation: "Parle = hablo." },
+      { type: "learn", word: "Soc", meaning: "Soy" },
+      { type: "learn", word: "Estic", meaning: "Estoy", note: "Estic bé = estoy bien." },
+      { type: "learn", word: "Tinc", meaning: "Tengo" },
+      { type: "mc", question: "«Soy»", options: ["Estic", "Soc", "Tinc", "Vaig"], answer: "Soc", explanation: "Soc = soy." },
+      { type: "mc", question: "«Tengo»", options: ["Soc", "Vaig", "Tinc", "Parle"], answer: "Tinc", explanation: "Tinc = tengo." },
+      { type: "type", question: "Traduce: «Estoy bien»", answer: "Estic bé", accept: ["estic be", "estic bé"], explanation: "Estic = estoy, bé = bien." },
+      { type: "type", question: "Escribe «voy» en valenciano", answer: "Vaig", explanation: "Vaig = voy." }
     ]
   }
 ];
@@ -228,7 +252,7 @@ function showHome() {
       html += `<div class="lesson-card ${done ? "completed" : ""}" onclick="startLesson('${les.id}')">
         <div>
           <div class="title">${les.title}</div>
-          <div class="meta">${les.exercises.length} ejercicios • ${les.xp} XP</div>
+          <div class="meta">${les.exercises.filter(e=>e.type!=='learn').length} ejercicios • ${les.xp} XP</div>
         </div>
         <div>${done ? "✅" : "▶️"}</div>
       </div>`;
@@ -266,6 +290,9 @@ function showExercise() {
       html += `<button class="option" data-i="${i}" onclick="selectOption(${i})">${opt}</button>`;
     });
     html += `</div>`;
+  } else if (ex.type === "learn") {
+    html = html.replace(`<div class="question">${ex.question}</div>`, `<div class="question">Palabra nueva</div>`);
+    html += `<div class="learn-card"><div class="learn-word">${ex.word}</div><div class="learn-meaning">${ex.meaning}</div>${ex.note ? `<div class="hint">${ex.note}</div>` : ""}</div>`;
   } else if (ex.type === "type") {
     html += `<input class="input-answer" id="answerInput" placeholder="Escribe en valenciano…" oninput="document.getElementById('checkBtn').disabled=!this.value.trim()" onkeypress="if(event.key==='Enter'&&this.value.trim())onCheck()">`;
   }
@@ -273,6 +300,7 @@ function showExercise() {
   html += `<div class="check-bar" id="checkBar"><div class="feedback" id="feedback"></div><button class="btn" id="checkBtn" disabled onclick="onCheck()">Comprobar</button></div>`;
   state.selected = null; state.answered = false;
   main.innerHTML = html;
+  if (ex.type === "learn") { const b = document.getElementById("checkBtn"); b.disabled = false; b.textContent = "Continuar"; state.answered = true; }
   if (document.activeElement) document.activeElement.blur();
   updateHeader();
 }
@@ -302,9 +330,10 @@ function onCheck() {
     });
   } else {
     const input = document.getElementById("answerInput");
-    const user = input.value.trim().toLowerCase();
+    const norm = t => t.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[.!?¿¡,]/g, "").replace(/\s+/g, " ");
+    const user = norm(input.value);
     if (!user) return;
-    ok = (ex.accept || [ex.answer]).map(a => a.toLowerCase()).includes(user);
+    ok = (ex.accept || [ex.answer]).map(norm).includes(user);
     input.disabled = true;
   }
   state.answered = true;
@@ -346,7 +375,8 @@ function next() {
 
 function finishLesson() {
   const lesson = state.currentLesson;
-  const ratio = state.correctInLesson / lesson.exercises.length;
+  const graded = lesson.exercises.filter(e=>e.type!=='learn').length;
+  const ratio = state.correctInLesson / graded;
   const earned = Math.round(lesson.xp * ratio);
   state.xp += earned;
   if (!state.completed.includes(lesson.id)) {
@@ -359,7 +389,7 @@ function finishLesson() {
     <div class="lesson-complete">
       <h2>🎉 ¡Lección completada!</h2>
       <p>Has ganado <strong>${earned} XP</strong></p>
-      <p>Aciertos: ${state.correctInLesson} / ${lesson.exercises.length}</p>
+      <p>Aciertos: ${state.correctInLesson} / ${lesson.exercises.filter(e=>e.type!=='learn').length}</p>
       <button class="btn" onclick="showHome()">Continuar</button>
     </div>`;
   updateHeader();
