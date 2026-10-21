@@ -225,6 +225,39 @@ main { overflow-x: hidden; padding: 16px calc(16px + env(safe-area-inset-right))
 .node.done::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.55) 45%, transparent 60%); background-size: 250% 100%; animation: shimmer 3.2s ease-in-out infinite; pointer-events: none; }
 @keyframes shimmer { 0% { background-position: 130% 0; } 60%,100% { background-position: -130% 0; } }
 @media (prefers-reduced-motion: reduce) { .leaf-new, .ring-new, .node.done::after { animation: none !important; } }
+/* phrasebook sheet */
+.ask-fab { position: fixed; z-index: 25; right: calc(16px + env(safe-area-inset-right)); bottom: calc(18px + env(safe-area-inset-bottom)); background: #1cb0f6; color: #fff; border: none; border-radius: 28px; padding: 14px 18px; min-height: 52px; font: inherit; font-weight: 900; font-size: 16px; box-shadow: 0 4px 0 #1899d6, 0 6px 16px rgba(0,0,0,.15); cursor: pointer; }
+.ask-fab:active { transform: translateY(4px); box-shadow: 0 0 0 #1899d6; }
+body.sheet-open { overflow: hidden; }
+.sheet-wrap { position: fixed; inset: 0; z-index: 70; }
+.sheet-bg { position: absolute; inset: 0; background: rgba(0,0,0,.35); }
+.sheet { position: absolute; left: 0; right: 0; bottom: 0; max-width: 480px; margin: 0 auto; height: min(88vh, 88dvh); background: #fff; border-radius: 20px 20px 0 0; display: flex; flex-direction: column; animation: sheetup .25s ease-out; padding-bottom: env(safe-area-inset-bottom); }
+@keyframes sheetup { from { transform: translateY(100%); } }
+.sheet-head { display: flex; justify-content: space-between; align-items: center; padding: 10px 12px 0 18px; font-size: 20px; }
+.tabs { display: flex; gap: 6px; padding: 8px 14px; border-bottom: 2px solid #eee; }
+.tab { flex: 1; min-height: 44px; border: 2px solid #e5e5e5; border-bottom-width: 4px; border-radius: 14px; background: #fff; font: inherit; font-weight: 800; color: #777; font-size: 15px; }
+.tab.on { border-color: #1cb0f6; background: #ddf4ff; color: #1899d6; }
+.sheet-body { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px 16px; }
+.credit { font-size: 12px; color: #999; text-align: center; padding: 6px 12px 8px; border-top: 1px solid #f0f0f0; }
+.ask-form { display: flex; gap: 8px; }
+.ask-input { flex: 1; min-width: 0; min-height: 50px; border: 2px solid #e5e5e5; border-bottom-width: 4px; border-radius: 14px; padding: 0 12px; font-family: inherit; font-weight: 700; background: #f7f7f7; }
+.ask-input:focus { outline: none; border-color: #1cb0f6; }
+.ask-btn { width: auto; margin: 0; padding: 0 16px; min-height: 50px; font-size: 15px; }
+.ph-card { border: 2px solid #e5e5e5; border-bottom-width: 4px; border-radius: 16px; padding: 14px; margin: 12px 0; }
+.ph-card.big .ph-va { font-size: 30px; }
+.ph-es { color: #777; font-weight: 700; }
+.ph-va { font-size: 24px; font-weight: 900; color: #1cb0f6; line-height: 1.2; margin: 4px 0; overflow-wrap: anywhere; }
+.ph-alt, .ph-note { color: #4b4b4b; font-size: 15px; margin-top: 4px; }
+.ph-note { color: #777; }
+.dnv-link { display: inline-block; margin-top: 8px; font-size: 14px; font-weight: 800; color: #1899d6; text-decoration: none; padding: 6px 0; }
+.ph-h { margin: 14px 0 6px; }
+.ph-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; width: 100%; min-height: 48px; text-align: left; background: #fff; border: none; border-bottom: 1px solid #f0f0f0; padding: 8px 4px; font: inherit; font-size: 15px; color: #4b4b4b; cursor: pointer; }
+.ph-row b { color: #1cb0f6; text-align: right; }
+.ph-miss { font-weight: 800; color: #4b4b4b; margin-top: 12px; }
+details.cat { border: 2px solid #e5e5e5; border-radius: 14px; margin: 8px 0; padding: 0 10px; }
+details.cat summary { min-height: 48px; display: flex; align-items: center; justify-content: space-between; font-weight: 900; cursor: pointer; }
+details.cat summary small { color: #999; }
+@media (prefers-reduced-motion: reduce) { .sheet { animation: none; } }
 </style>
 </head>
 <body>
@@ -381,6 +414,7 @@ function showHome() {
     });
   });
   state.lastEarned = null;
+  h += `<button class="ask-fab" onclick="openSheet()" aria-label="Abrir frases: ¿cómo se dice?">💬 ¿Cómo se dice…?</button>`;
   if (cur === -1) h += `<div class="done-screen">${card || state.hearts <= 0 ? "" : mascot("trophy")}<h2>¡Enhorabona!</h2><p>Has completado todo el curso.</p></div>`;
   $("main").innerHTML = h;
   requestAnimationFrame(scrollToCurrent);
@@ -401,7 +435,7 @@ function showExercise() {
   const lesson = state.currentLesson, ex = state.session[state.currentExercise];
   let h = `<div class="ex"><div class="top-row"><button class="back-btn" onclick="showHome()" aria-label="Salir">✕</button><div class="pbar"><div class="pfill" style="width:${state.currentExercise / state.session.length * 100}%"></div></div></div>`;
   if (ex.type === "learn") {
-    h += `<div class="question">${ex.label || "Palabra nueva"}</div><div class="ex-body"><div class="learn-card"><div class="learn-word">${esc(ex.word)}</div><div class="learn-meaning">${esc(ex.meaning)}</div>${ex.note ? `<div class="hint">${esc(ex.note)}</div>` : ""}</div></div>`;
+    h += `<div class="question">${ex.label || "Palabra nueva"}</div><div class="ex-body"><div class="learn-card"><div class="learn-word">${esc(ex.word)}</div><div class="learn-meaning">${esc(ex.meaning)}</div>${ex.note ? `<div class="hint">${esc(ex.note)}</div>` : ""}${dnvLink(ex.word)}</div></div>`;
   } else {
     h += `<div class="q-row">${mascot(ex.type === "mc" ? "think" : "neutral", "m-idle")}<div class="question">${esc(ex.question)}</div></div><div class="ex-body">`;
     if (ex.type === "mc") h += `<div class="options">${ex.options.map((o, i) => `<button class="option" data-i="${i}" onclick="selectOption(${i})">${esc(o)}</button>`).join("")}</div>`;
@@ -559,6 +593,107 @@ function showStreak() {
     <h3 class="ms-title">Logros</h3>
     <div class="miles">${MILESTONES.map(m => `<div class="mile${sk.miles.includes(m) ? " got" : ""}"><span>${sk.miles.includes(m) ? "🏅" : "🔒"}</span>${m}</div>`).join("")}</div>
   </div>`;
+}
+// ---- Phrasebook ("¿Cómo se dice…?") + DNV links ----
+const DNV = w => "https://www.avl.gva.es/lexicval/?paraula=" + encodeURIComponent(w);
+const STOP = new Set("el la els les l un una uns unes de del al a i o en per amb que es em et ens us li hi ho ne n no si sí molt més meu meua teu teua seu seua jo tu ell ella este esta eixe eixa s m t d".split(" "));
+function mainWord(va) {
+  const t = String(va).toLowerCase().replace(/[…!?¡¿.,;:«»"()]/g, " ").split(/[\s'’]+/).map(x => x.replace(/^-+|-+$/g, "")).filter(x => x && !STOP.has(x) && !/^\d+$/.test(x));
+  if (!t.length) return null;
+  const c = t.map(x => x.split("-")[0]).filter(x => x.length > 2);
+  return (c.length ? c : t)[(c.length ? c : t).length - 1]; // last content word: usually the noun/adjective head
+}
+function dnvLink(va) {
+  const w = mainWord(va); if (!w) return "";
+  return `<a class="dnv-link" href="${DNV(w)}" target="_blank" rel="noopener">Ver «${esc(w)}» en el DNV (AVL) ↗</a>`;
+}
+const pnorm = t => String(t).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
+let PH = null, PM = null;
+async function loadPhrases() {
+  if (PH) return;
+  const [a, b] = await Promise.all([fetch("phrases.json").then(r => r.json()), fetch("phrases_meta.json").then(r => r.json())]);
+  PH = a; PM = b;
+}
+function stripQuery(q) {
+  const quoted = q.match(/[«"“'‘]([^»"”'’]+)[»"”'’]/);
+  if (quoted) return pnorm(quoted[1]);
+  let n = pnorm(q);
+  n = n.replace(/^(y |oye |una pregunta )?(como|que) (se dice|puedo decir|digo|se puede decir|diria|seria|se escribe|se traduce)( en valenciano)?( la (frase|palabra))? ?/, "");
+  n = n.replace(/^(traduce|traduceme|traducir) /, "").replace(/ (en|al) valenciano$/, "").replace(/^(decir) /, "");
+  return n.trim();
+}
+function lev(a, b) {
+  if (Math.abs(a.length - b.length) > 12) return 99;
+  const d = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) { let prev = d[0]; d[0] = i; for (let j = 1; j <= b.length; j++) { const t = d[j]; d[j] = Math.min(d[j] + 1, d[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1)); prev = t; } }
+  return d[b.length];
+}
+function score(q, k) {
+  if (q === k) return 1;
+  const SW = /^(el|la|los|las|lo|de|del|y|a|al|en|un|una|es|que|por|me|mi|te|se|tu|su|con|para)$/;
+  const ct = x => { const t = x.split(" ").filter(w => !SW.test(w)); return t.length ? t : x.split(" "); };
+  const qt = ct(q), kt = ct(k), ks = new Set(kt);
+  const fuzzyTok = t => ks.has(t) ? 1 : kt.some(x => x.length > 3 && lev(t, x) <= (t.length > 6 ? 2 : 1)) ? .8 : 0;
+  const hit = qt.reduce((a, t) => a + fuzzyTok(t), 0);
+  const dice = 2 * hit / (qt.length + kt.length);
+  const ed = 1 - lev(q, k) / Math.max(q.length, k.length);
+  return Math.max(dice, ed) - (k.includes(q) || q.includes(k) ? 0 : .02);
+}
+function lookup(raw) {
+  const q = stripQuery(raw);
+  if (!q) return { q, exact: null, near: [] };
+  if (PH[q]) return { q, exact: q, near: related(q) };
+  const near = Object.keys(PH).map(k => [k, score(q, k)]).filter(x => x[1] > .55).sort((a, b) => b[1] - a[1]).slice(0, 6).map(x => x[0]);
+  return { q, exact: null, near };
+}
+function related(k) {
+  const m = PM[k] || {}, toks = new Set(k.split(" ").filter(t => t.length > 3));
+  const all = Object.keys(PH).filter(x => x !== k);
+  const share = all.filter(x => x.split(" ").some(t => toks.has(t)));
+  const same = all.filter(x => (PM[x] || {}).cat === m.cat && !share.includes(x));
+  return share.concat(same).slice(0, 4);
+}
+const myQs = () => JSON.parse(ls.getItem("valencia_myqs") || "[]");
+function saveMyQ(q) { const l = myQs().filter(x => x.q !== q); l.unshift({ q, t: todayKey() }); ls.setItem("valencia_myqs", JSON.stringify(l.slice(0, 100))); }
+function phraseCard(k, big) {
+  const m = PM[k] || {};
+  return `<div class="ph-card${big ? " big" : ""}"><div class="ph-es">${esc(m.es || k)}</div><div class="ph-va">${esc(PH[k])}</div>${m.alt ? `<div class="ph-alt">También: ${m.alt.map(esc).join(" · ")}</div>` : ""}${m.note ? `<div class="ph-note">${esc(m.note)}</div>` : ""}${dnvLink(PH[k])}</div>`;
+}
+const smallRow = k => `<button class="ph-row" onclick="showPhrase('${k.replace(/'/g, "")}')"><span>${esc((PM[k] || {}).es || k)}</span><b>${esc(PH[k])}</b></button>`;
+async function openSheet(tab) {
+  if (state.inLesson) return;
+  let sh = $("sheet");
+  if (!sh) { sh = document.createElement("div"); sh.id = "sheet"; sh.className = "sheet-wrap"; document.body.appendChild(sh); }
+  sh.innerHTML = `<div class="sheet-bg" onclick="closeSheet()"></div><div class="sheet" role="dialog" aria-modal="true" aria-label="¿Cómo se dice?">
+    <div class="sheet-head"><b>¿Cómo se dice…?</b><button class="back-btn" onclick="closeSheet()" aria-label="Cerrar">✕</button></div>
+    <div class="tabs" role="tablist">${[["ask", "Preguntar"], ["browse", "Frases"], ["mine", "Mis preguntas"]].map(([id, t]) => `<button role="tab" class="tab" id="tab-${id}" onclick="sheetTab('${id}')">${t}</button>`).join("")}</div>
+    <div class="sheet-body" id="sheetBody"><p class="hint">Cargando frases…</p></div>
+    <div class="credit">Referencia normativa: Diccionari Normatiu Valencià, AVL</div></div>`;
+  document.body.classList.add("sheet-open");
+  try { await loadPhrases(); } catch (e) { $("sheetBody").innerHTML = `<p class="hint">No se han podido cargar las frases. Comprueba la conexión.</p>`; return; }
+  sheetTab(tab || "ask");
+}
+function closeSheet() { const sh = $("sheet"); if (sh) sh.remove(); document.body.classList.remove("sheet-open"); }
+function sheetTab(id) {
+  document.querySelectorAll(".tab").forEach(t => t.classList.toggle("on", t.id === "tab-" + id));
+  const b = $("sheetBody");
+  if (id === "ask") {
+    b.innerHTML = `<form class="ask-form" onsubmit="event.preventDefault();ask($('askInput').value)"><input id="askInput" class="ask-input" type="search" enterkeyhint="search" autocomplete="off" placeholder="p. ej. ¿Cómo se dice «buenos días»?"><button class="btn ask-btn" type="submit">Buscar</button></form><div id="askOut"><p class="hint">Escribe en castellano: «cómo se dice gracias», «por favor», «¿cómo puedo decir "hola, buenos días"?»</p></div>`;
+  } else if (id === "browse") {
+    const cats = {}; Object.keys(PH).forEach(k => { const c = (PM[k] || {}).cat || "Otras"; (cats[c] = cats[c] || []).push(k); });
+    b.innerHTML = `<p class="hint">${Object.keys(PH).length} frases</p>` + Object.entries(cats).map(([c, ks]) => `<details class="cat"><summary>${esc(c)} <small>${ks.length}</small></summary>${ks.map(smallRow).join("")}</details>`).join("");
+  } else {
+    const l = myQs();
+    b.innerHTML = l.length ? `<p class="hint">Preguntas sin respuesta exacta. Toca una para buscarla otra vez.</p>` + l.map(x => `<button class="ph-row" onclick="sheetTab('ask');$('askInput').value=this.dataset.q;ask(this.dataset.q)" data-q="${esc(x.q)}"><span>${esc(x.q)}</span><small>${x.t}</small></button>`).join("") + `<button class="btn secondary" onclick="ls.removeItem('valencia_myqs');sheetTab('mine')">Borrar lista</button>` : `<p class="hint">Aquí aparecerán las frases que preguntes y aún no estén en el diccionario de frases.</p>`;
+  }
+}
+function showPhrase(k) { sheetTab("ask"); $("askInput").value = (PM[k] || {}).es || k; renderAnswer({ q: k, exact: k, near: related(k) }); }
+function ask(raw) { if (!raw.trim()) return; const r = lookup(raw); if (!r.exact && r.q) saveMyQ(raw.trim()); renderAnswer(r); if (document.activeElement) document.activeElement.blur(); }
+function renderAnswer(r) {
+  const o = $("askOut");
+  if (r.exact) o.innerHTML = phraseCard(r.exact, true) + (r.near.length ? `<h4 class="ph-h">Frases relacionadas</h4>` + r.near.map(smallRow).join("") : "");
+  else if (r.near.length) o.innerHTML = `<p class="ph-miss">No tengo «${esc(r.q)}» exactamente. ¿Quizá buscas…?</p>` + phraseCard(r.near[0], false) + r.near.slice(1).map(smallRow).join("") + `<p class="hint">La he guardado en «Mis preguntas».</p>`;
+  else o.innerHTML = `<p class="ph-miss">Todavía no tengo «${esc(r.q)}». La he guardado en «Mis preguntas».</p><p class="hint">Prueba con una frase más corta o mira la pestaña «Frases».</p>`;
 }
 // keep the check bar above the iOS keyboard
 function placeBar() {

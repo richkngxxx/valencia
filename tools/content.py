@@ -32,7 +32,7 @@ C["A1"] = ("Principiante", [
    [("El meu fill es diu Pau","Mi hijo se llama Pau"),("Els meus iaios viuen al poble","Mis abuelos viven en el pueblo"),("Tinc una filla i un fill","Tengo una hija y un hijo"),("La iaia té tres néts","La abuela tiene tres nietos")]),
   ("Más familia", [("oncle","tío"),("tia","tía"),("cosí","primo"),("cosina","prima"),("nebot","sobrino"),("neboda","sobrina"),("xiquet","niño"),("xiqueta","niña")],
    [("La meua tia viu a Castelló","Mi tía vive en Castellón"),("El xiquet té cinc anys","El niño tiene cinco años"),("Tinc tres cosins","Tengo tres primos"),("La meua neboda és molt simpàtica","Mi sobrina es muy simpática")]),
-  ("Describir personas", [("alt","alto"),("baix","bajo"),("jove","joven"),("major","mayor"),("simpàtic","simpático"),("guapo","guapo","También «bonic» / «formós»."),("ros","rubio","Femenino: rossa."),("morè","moreno","Femenino: morena.")],
+  ("Describir personas", [("alt","alto"),("baix","bajo"),("jove","joven"),("major","mayor"),("simpàtic","simpático"),("guapo","guapo","También «bonic» / «formós»."),("ros","rubio","Femenino: rossa."),("moré","moreno","Femenino: morena (DNV: moré).")],
    [("El meu germà és molt alt","Mi hermano es muy alto"),("La meua mare és jove","Mi madre es joven"),("La meua cosina és rossa","Mi prima es rubia"),("És un xiquet molt simpàtic","Es un niño muy simpático")]),
  ]),
  ("Comida", "#ff9600", [
@@ -158,7 +158,7 @@ C["B2"] = ("Intermedio alto", [
 ])
 C["C1"] = ("Avanzado", [
  ("Frases hechas", "#58cc02", [
-  ("Expresiones I", [("fer-se el longui","hacerse el sueco"),("ploure a bots i barrals","llover a cántaros"),("anar de bòlit","ir muy liado"),("parlar pels colzes","hablar por los codos"),("estar fet pols","estar hecho polvo"),("no tindre pèls a la llengua","no tener pelos en la lengua")],
+  ("Expresiones I", [("fer-se el desentés","hacerse el sueco","Coloquial también «fer-se el longui»."),("ploure a bots i barrals","llover a cántaros"),("anar de bòlit","ir muy liado"),("parlar pels colzes","hablar por los codos"),("estar fet pols","estar hecho polvo"),("no tindre pèls a la llengua","no tener pelos en la lengua")],
    [("Esta setmana vaig de bòlit","Esta semana voy muy liado"),("Ma mare no té pèls a la llengua","Mi madre no tiene pelos en la lengua"),("Plou a bots i barrals","Llueve a cántaros")]),
   ("Expresiones II", [("fer campana","hacer novillos"),("costar un ull de la cara","costar un ojo de la cara"),("tindre la mosca darrere l'orella","tener la mosca detrás de la oreja"),("estar com una cabra","estar como una cabra"),("tirar la casa per la finestra","tirar la casa por la ventana")],
    [("Este cotxe costa un ull de la cara","Este coche cuesta un ojo de la cara"),("Per Falles tiren la casa per la finestra","En Fallas tiran la casa por la ventana"),("Està com una cabra","Está como una cabra")]),
