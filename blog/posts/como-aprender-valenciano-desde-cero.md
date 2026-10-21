@@ -86,7 +86,7 @@ Muchos estudiantes entienden bastante, pero no se atreven a hablar. Es normal. A
 
 ## 9. Si lo necesitas, obtén un certificado
 
-En la Comunitat Valenciana, el organismo que expide los certificados oficiales de valenciano es la **Junta Qualificadora de Coneixements de Valencià (JQCV)**, que organiza pruebas por niveles del Marco Común Europeo, de A1 a C2. Las Escuelas Oficiales de Idiomas también ofrecen enseñanza de valenciano. Consulta siempre las convocatorias y requisitos actualizados en sus webs oficiales, porque las fechas y condiciones cambian cada año.
+En la Comunitat Valenciana, el organismo que expide los certificados oficiales de valenciano es la **Junta Qualificadora de Coneixements de Valencià (JQCV)**, que organiza pruebas por niveles del Marco Común Europeo, de A2 a C2 (te los explicamos en nuestra guía de [niveles de valenciano de la JQCV](/blog/niveles-de-valenciano-jqcv.html)). Las Escuelas Oficiales de Idiomas también ofrecen enseñanza de valenciano. Consulta siempre las convocatorias y requisitos actualizados en sus webs oficiales, porque las fechas y condiciones cambian cada año.
 
 ## 10. Conoce las variedades
 
