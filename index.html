@@ -194,13 +194,44 @@ main { overflow-x: hidden; padding: 16px calc(16px + env(safe-area-inset-right))
 .bump { display: inline-block; animation: bumpn .5s cubic-bezier(.2,1.6,.4,1); }
 @keyframes bumpn { from { transform: scale(.4); opacity: .3; } to { transform: scale(1); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .milestone-badge, .bump { animation: none !important; } }
+/* leaves + rings */
+.lv-badge { display: none; }
+.node-ring { position: relative; width: 90px; height: 90px; display: flex; align-items: center; justify-content: center; }
+.ring { position: absolute; inset: 0; transform: rotate(-90deg); pointer-events: none; }
+.ring circle { fill: none; stroke-width: 6; stroke-linecap: round; }
+.ring-bg { stroke: #e5e5e5; }
+.ring-new { animation: ringfill .9s .2s ease-out both; }
+@keyframes ringfill { from { stroke-dasharray: var(--from) 999; } to { stroke-dasharray: var(--to) 999; } }
+.node-wrap .m { top: 36px; }
+.leaf { width: 18px; height: 18px; display: inline-block; vertical-align: -3px; }
+.leaf .lf { fill: #ff9600; stroke: #e07b00; stroke-width: .8; stroke-linejoin: round; }
+.leaf .vein { fill: none; stroke: #c45f00; stroke-width: 1.1; stroke-linecap: round; }
+.leaf.off .lf { fill: #fff; stroke: #d0d0d0; stroke-width: 1.4; }
+.leaf.off .vein { stroke: #e0e0e0; }
+.leaves { display: flex; gap: 2px; justify-content: center; margin-top: 2px; }
+.node-leaves .leaf { width: 20px; height: 20px; }
+.big-leaves { gap: 10px; margin: 8px 0 4px; }
+.big-leaves .leaf { width: 46px; height: 46px; }
+.leaf-new { animation: leafpop .8s .35s cubic-bezier(.2,1.6,.4,1) both; }
+@keyframes leafpop { 0% { transform: scale(0) rotate(-200deg); opacity: 0; } 70% { transform: scale(1.25) rotate(15deg); opacity: 1; } 100% { transform: scale(1) rotate(0); } }
+.inline-leaf .leaf { width: 16px; height: 16px; }
+.leaf-count { display: inline-flex; align-items: center; gap: 2px; }
+.leaf-count .leaf { width: 18px; height: 18px; filter: drop-shadow(0 1px 0 rgba(0,0,0,.15)); }
+.leaf-count .leaf .lf { stroke: #fff; stroke-width: 1; }
+.node.done { background: #ffc800; box-shadow: 0 6px 0 #d9a800; overflow: hidden; }
+.node .gold-leaf { width: 38px; height: 38px; }
+.node .gold-leaf .lf { fill: #fff3c4; stroke: #e0a800; }
+.node .gold-leaf .vein { stroke: #d9a800; }
+.node.done::after { content: ""; position: absolute; inset: 0; border-radius: 50%; background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,.55) 45%, transparent 60%); background-size: 250% 100%; animation: shimmer 3.2s ease-in-out infinite; pointer-events: none; }
+@keyframes shimmer { 0% { background-position: 130% 0; } 60%,100% { background-position: -130% 0; } }
+@media (prefers-reduced-motion: reduce) { .leaf-new, .ring-new, .node.done::after { animation: none !important; } }
 </style>
 </head>
 <body>
 <div id="app">
   <header>
     <div class="brand"><h1>Diu sí al valencià</h1></div>
-    <div class="stats"><button id="streak" class="flame-btn" onclick="showStreak()" aria-label="Racha">🔥 0</button><span id="xp">0 XP</span><span id="hearts">❤️ 5</span></div>
+    <div class="stats"><button id="streak" class="flame-btn" onclick="showStreak()" aria-label="Racha">🔥 0</button><span id="leafCount" class="leaf-count" role="img"></span><span id="xp">0 XP</span><span id="hearts">❤️ 5</span></div>
   </header>
   <main id="main"></main>
 </div>
@@ -274,6 +305,7 @@ function regen() {
 function refill() { state.hearts = MAX_HEARTS; state.heartTs = Date.now(); save(); updateHeader(); showHome(); }
 function updateHeader() {
   regen();
+  const lc = document.getElementById("leafCount"); if (lc) { lc.innerHTML = leafSVG(true) + totalLeaves(); lc.setAttribute("aria-label", totalLeaves() + " hojas de nivel"); }
   const fl = document.getElementById("streak"); fl.classList.toggle("off", !practisedToday());
   document.getElementById("xp").textContent = state.xp + " XP";
   document.getElementById("streak").textContent = "🔥 " + state.streak;
@@ -307,6 +339,14 @@ function scrollToCurrent() {
   const hh = document.querySelector("header").offsetHeight, r = c.getBoundingClientRect();
   window.scrollTo(0, Math.max(0, window.scrollY + r.top - hh - (window.innerHeight - hh) / 2 + r.height / 2));
 }
+// leaf motif (same as the orange leaf on the mascot's head)
+function leafSVG(filled, cls = "") {
+  return `<svg class="leaf ${filled ? "on" : "off"} ${cls}" viewBox="0 0 24 24" aria-hidden="true"><path class="lf" d="M12 1.5c1 2 2.6 3 4.4 3.2-.5 1.2-.3 2.2.6 3 1.4-.6 2.8-.4 4 .6-1 1.6-1.3 3.2-.6 4.8-1.6.2-2.8 1-3.4 2.4-1.4-.6-2.8-.4-4 .6V22h-2v-5.9c-1.2-1-2.6-1.2-4-.6-.6-1.4-1.8-2.2-3.4-2.4.7-1.6.4-3.2-.6-4.8 1.2-1 2.6-1.2 4-.6.9-.8 1.1-1.8.6-3C9.4 4.5 11 3.5 12 1.5z"/><path class="vein" d="M12 5v15M12 10l-3.5-2.5M12 10l3.5-2.5M12 14l-4.5-1.5M12 14l4.5-1.5"/></svg>`;
+}
+function leaves(n, fresh, cls) {
+  return `<div class="leaves ${cls}" role="img" aria-label="Nivel ${n} de 3">${[1, 2, 3].map(k => leafSVG(k <= n, k === fresh ? "leaf-new" : "")).join("")}</div>`;
+}
+function totalLeaves() { return Object.values(state.levels).reduce((a, b) => a + b, 0); }
 function showHome() {
   state.inLesson = false;
   document.querySelectorAll(".confetti").forEach(c => c.remove());
@@ -325,20 +365,22 @@ function showHome() {
   let idx = 0;
   COURSE.forEach(lv => {
     const lessons = lv.units.flatMap(u => u.lessons), done = lessons.filter(l => lvlOf(l.id) > 0).length, crowns = lessons.reduce((a, l) => a + lvlOf(l.id), 0);
-    h += `<div class="level-head"><h2>${lv.id} · ${esc(lv.title)}</h2><div class="sub">${done} / ${lessons.length} lecciones · 👑 ${crowns} / ${lessons.length * 3}</div><div class="pbar"><div class="pfill" style="width:${crowns / (lessons.length * 3) * 100}%"></div></div></div>`;
+    h += `<div class="level-head"><h2>${lv.id} · ${esc(lv.title)}</h2><div class="sub">${done} / ${lessons.length} lecciones · <span class="inline-leaf">${leafSVG(true)}</span> ${crowns} / ${lessons.length * 3}</div><div class="pbar"><div class="pfill" style="width:${crowns / (lessons.length * 3) * 100}%"></div></div></div>`;
     lv.units.forEach((u, ui) => {
       h += `<div class="unit-banner" style="background:${u.color}"><div class="u">${lv.id} · Unidad ${ui + 1}</div><div class="t">${esc(u.title)}</div></div><div class="path">`;
       u.lessons.forEach((l, li) => {
         const i = idx++, n = lvlOf(l.id), isCur = i === cur, x = Math.round(Math.sin(i * 0.9) * 70);
         const open = n > 0 || isCur, done = n >= 3;
         const cls = done ? "done" : isCur ? "current" : n > 0 ? "progress" : "locked";
-        const icon = done ? "👑" : isCur || n > 0 ? "★" : "🔒";
-        const badge = open ? `<span class="lv-badge${done ? " gold" : ""}">${n}/3</span>` : "";
-        h += `<div class="node-wrap" style="transform:translateX(${x}px)" ${isCur ? 'id="current"' : ""}>${isCur ? '<div class="bubble">Empezar</div>' + (!pathMascot ? "" : mascot("neutral", "m-idle").replace('class="m', `style="${x > 0 ? "left" : "right"}:-62px" class="m`)) : ""}<button class="node ${cls}" style="${!done && open ? "background:" + u.color : ""}" onclick="tapNode(${i})" aria-label="${esc(l.title)}, nivel ${n} de 3">${icon}${badge}</button><div class="node-title">${esc(l.title)}</div></div>`;
+        const icon = done ? leafSVG(true, "gold-leaf") : isCur || n > 0 ? "★" : "🔒";
+        const fresh = state.lastEarned && state.lastEarned.id === l.id ? state.lastEarned.level : 0;
+        const C = 2 * Math.PI * 41, ring = `<svg class="ring" viewBox="0 0 90 90" aria-hidden="true"><circle cx="45" cy="45" r="41" class="ring-bg"/>${n ? "" : "<!--"}<circle cx="45" cy="45" r="41" class="ring-fg${fresh ? " ring-new" : ""}" style="stroke:${done ? "#ffc800" : u.color};stroke-dasharray:${C * n / 3} ${C};--from:${C * Math.max(0, n - 1) / 3}px;--to:${C * n / 3}px"/>${n ? "" : "-->"}</svg>`;
+        h += `<div class="node-wrap" style="transform:translateX(${x}px)" ${isCur ? 'id="current"' : ""}>${isCur ? '<div class="bubble">Empezar</div>' + (!pathMascot ? "" : mascot("neutral", "m-idle").replace('class="m', `style="${x > 0 ? "left" : "right"}:-62px" class="m`)) : ""}<div class="node-ring">${open ? ring : ""}<button class="node ${cls}" style="${!done && open ? "background:" + u.color : ""}" onclick="tapNode(${i})" aria-label="${esc(l.title)}: ${open ? `nivel ${n} de 3` : "bloqueada"}">${icon}</button></div>${leaves(n, fresh, "node-leaves")}<div class="node-title">${esc(l.title)}</div></div>`;
       });
       h += `</div>`;
     });
   });
+  state.lastEarned = null;
   if (cur === -1) h += `<div class="done-screen">${card || state.hearts <= 0 ? "" : mascot("trophy")}<h2>¡Enhorabona!</h2><p>Has completado todo el curso.</p></div>`;
   $("main").innerHTML = h;
   requestAnimationFrame(scrollToCurrent);
@@ -467,10 +509,11 @@ function finishLesson() {
   state.xp += earned;
   const prevLvl = lvlOf(lesson.id);
   state.levels[lesson.id] = Math.max(prevLvl, state.playLevel);
+  state.lastEarned = state.levels[lesson.id] > prevLvl ? { id: lesson.id, level: state.levels[lesson.id] } : null;
   if (!state.completed.includes(lesson.id)) state.completed.push(lesson.id);
   state.celebrate = registerPractice(); state.inLesson = false;
   save();
-  $("main").innerHTML = `<div class="done-screen">${mascot("trophy", "m-jump")}<h2>¡Nivel ${state.playLevel} completado!</h2><div class="lvl-line">${esc(lesson.title)} · Nivel ${state.playLevel} de 3 ${"👑".repeat(state.levels[lesson.id])}</div><div class="xp-count" id="xpCount">+0 XP</div><p>Aciertos: ${state.correctInLesson} / ${graded}</p><button class="btn" id="finishBtn" onclick="afterLesson()">Continuar</button></div>`;
+  $("main").innerHTML = `<div class="done-screen">${mascot("trophy", "m-jump")}<h2>¡Nivel ${state.playLevel} completado!</h2><div class="lvl-line">${esc(lesson.title)}</div>${leaves(state.levels[lesson.id], state.lastEarned ? state.lastEarned.level : 0, "big-leaves")}<div class="xp-count" id="xpCount">+0 XP</div><p>Aciertos: ${state.correctInLesson} / ${graded}</p><button class="btn" id="finishBtn" onclick="afterLesson()">Continuar</button></div>`;
   updateHeader(); countUp($("xpCount"), earned); confetti(); buzz([40, 60, 40]);
 }
 function afterLesson() { if (state.celebrate) { const c = state.celebrate; state.celebrate = null; showCelebration(c); } else showHome(); }
