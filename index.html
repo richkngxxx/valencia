@@ -259,6 +259,22 @@ body.sheet-open { overflow: hidden; }
 .credit { font-size: 12px; color: #999; text-align: center; padding: 6px 12px 8px; border-top: 1px solid #f0f0f0; }
 .ask-form { display: flex; gap: 8px; }
 .ask-input { flex: 1; min-width: 0; min-height: 50px; border: 2px solid #e5e5e5; border-bottom-width: 4px; border-radius: 14px; padding: 0 12px; font-family: inherit; font-weight: 700; background: #f7f7f7; }
+/* keyboard mode (iOS): exercise/sheet pinned to the visual viewport, nothing scrolls */
+html.kb, html.kb body { overflow: hidden; height: 100%; overscroll-behavior: none; }
+html.kb-ex .ex { position: fixed; left: 0; right: 0; top: var(--vvt, 0px); height: calc(var(--vvh, 100vh) - var(--barh, 90px)); min-height: 0; z-index: 35; background: #fff; padding: 6px calc(16px + env(safe-area-inset-right)) 6px calc(16px + env(safe-area-inset-left)); overflow: hidden; max-width: 600px; margin: 0 auto; }
+html.kb-ex .ex .top-row { margin: 0; min-height: 0; }
+html.kb-ex .ex .top-row button { width: 34px; height: 34px; font-size: 16px; }
+html.kb-ex .q-row { margin: 6px 0 4px; } html.kb-ex .q-row .m, html.kb-ex .q-spk { display: none; }
+html.kb-ex .question, html.kb-ex .q-row .question { font-size: 18px; line-height: 1.25; }
+html.kb-ex .ex-body { justify-content: flex-start; padding: 4px 0; flex: 1; min-height: 0; }
+html.kb-ex .input-answer { min-height: 0; height: 100%; max-height: 120px; padding: 10px 12px; font-size: 18px !important; }
+html.kb-ex .exercise-pad { display: none; }
+html.kb-ex .check-bar { top: calc(var(--vvt, 0px) + var(--vvh, 100vh)); bottom: auto !important; transform: translateY(-100%); padding-top: 8px; padding-bottom: 8px !important; z-index: 36; }
+html.kb-ex header { visibility: hidden; }
+html.kb-sheet .sheet-wrap { top: var(--vvt, 0px); bottom: auto; height: var(--vvh, 100vh); }
+html.kb-sheet .sheet { height: calc(var(--vvh, 100vh) - 8px); animation: none; padding-bottom: 0; }
+html.kb-sheet .credit, html.kb-sheet .sheet-head { display: none; }
+.ask-input { font-size: 16px; }
 .ask-input:focus { outline: none; border-color: #1cb0f6; }
 .ask-btn { width: auto; margin: 0; padding: 0 16px; min-height: 50px; font-size: 15px; }
 .ph-card { border: 2px solid #e5e5e5; border-bottom-width: 4px; border-radius: 16px; padding: 14px; margin: 12px 0; }
@@ -851,16 +867,29 @@ function renderAnswer(r) {
   else if (r.near.length) o.innerHTML = `<p class="ph-miss">No tengo «${esc(r.q)}» exactamente. ¿Quizá buscas…?</p>` + phraseCard(r.near[0], false) + r.near.slice(1).map(smallRow).join("") + `<p class="hint">La he guardado en «Mis preguntas».</p>`;
   else o.innerHTML = `<p class="ph-miss">Todavía no tengo «${esc(r.q)}». La he guardado en «Mis preguntas».</p><p class="hint">Prueba con una frase más corta o mira la pestaña «Frases».</p>`;
 }
-// keep the check bar above the iOS keyboard
-function placeBar() {
-  const bar = document.getElementById("checkBar"), vv = window.visualViewport; if (!bar || !vv) return;
-  const kb = Math.max(0, window.innerHeight - vv.height - vv.offsetTop);
-  bar.style.bottom = kb + "px";
-  bar.style.paddingBottom = kb > 0 ? "14px" : "";
+// iOS keyboard mode: pin the exercise / sheet to the visual viewport so nothing scrolls or "zooms"
+const KBI = el => el && (el.id === "answerInput" || el.id === "askInput");
+function vvSync() {
+  const vv = window.visualViewport, d = document.documentElement; if (!d.classList.contains("kb")) return;
+  const h = vv ? vv.height : innerHeight, t = vv ? vv.offsetTop : 0;
+  d.style.setProperty("--vvh", h + "px"); d.style.setProperty("--vvt", t + "px");
+  const bar = $("checkBar"); if (bar) d.style.setProperty("--barh", bar.offsetHeight + "px");
+  if (window.scrollY) window.scrollTo(0, 0);
 }
-if (window.visualViewport) { visualViewport.addEventListener("resize", placeBar); visualViewport.addEventListener("scroll", placeBar); }
-document.addEventListener("focusin", e => { if (e.target.id === "answerInput") setTimeout(() => { placeBar(); e.target.scrollIntoView({ block: "center" }); }, 300); });
-document.addEventListener("focusout", () => setTimeout(placeBar, 100));
+function kbOn(el) {
+  const d = document.documentElement; d.classList.add("kb", el.id === "askInput" ? "kb-sheet" : "kb-ex");
+  window.scrollTo(0, 0); vvSync(); setTimeout(vvSync, 50); setTimeout(vvSync, 300); setTimeout(vvSync, 600);
+}
+function kbOff() { const d = document.documentElement; d.classList.remove("kb", "kb-ex", "kb-sheet"); ["--vvh", "--vvt", "--barh"].forEach(v => d.style.removeProperty(v)); }
+if (window.visualViewport) { visualViewport.addEventListener("resize", vvSync); visualViewport.addEventListener("scroll", vvSync); }
+window.addEventListener("scroll", () => { if (document.documentElement.classList.contains("kb") && window.scrollY) window.scrollTo(0, 0); }, { passive: true });
+// focus without iOS auto-scroll: take over the tap and focus with preventScroll
+document.addEventListener("touchend", e => {
+  const el = e.target; if (!KBI(el) || document.activeElement === el || el.disabled) return;
+  e.preventDefault(); kbOn(el); el.focus({ preventScroll: true });
+}, { passive: false });
+document.addEventListener("focusin", e => { if (KBI(e.target)) kbOn(e.target); });
+document.addEventListener("focusout", e => { if (KBI(e.target)) setTimeout(() => { if (!KBI(document.activeElement)) kbOff(); }, 120); });
 migrateStreak(); reconcileStreak(); save();
 showHome();
 setInterval(updateHeader, 60000);
