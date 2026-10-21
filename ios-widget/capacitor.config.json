@@ -1,0 +1,7 @@
+{
+  "appId": "com.diusialvalencia.app",
+  "appName": "Diu sí al valencià",
+  "webDir": "www",
+  "ios": { "contentInset": "never", "scheme": "Diu sí al valencià" },
+  "server": { "iosScheme": "capacitor" }
+}

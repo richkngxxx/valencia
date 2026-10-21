@@ -1,0 +1,11 @@
+{
+  "name": "diusialvalencia-ios",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "sync-web": "rm -rf www && mkdir www && cd .. && cp -R index.html lessons.js phrases.json phrases_meta.json help.json qa.json manifest.json sw.js mascot.png mascot fonts audio icon-*.png ios-widget/www/",
+    "ios": "npm run sync-web && npx cap sync ios && npx cap open ios"
+  },
+  "dependencies": { "@capacitor/core": "^7.0.0", "@capacitor/ios": "^7.0.0", "@capacitor/app": "^7.0.0" },
+  "devDependencies": { "@capacitor/cli": "^7.0.0" }
+}

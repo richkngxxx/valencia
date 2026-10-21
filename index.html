@@ -386,7 +386,27 @@ function registerPractice() {
 function save() {
   ls.setItem("valencia_xp", state.xp); ls.setItem("valencia_streak", state.streak); ls.setItem("valencia_lastday", state.lastDay); ls.setItem("valencia_streakdata", JSON.stringify(state.sk));
   ls.setItem("valencia_levels", JSON.stringify(state.levels)); ls.setItem("valencia_completed", JSON.stringify(Object.keys(state.levels))); ls.setItem("valencia_hearts", state.hearts); ls.setItem("valencia_heartts", state.heartTs);
+  widgetSync();
 }
+// ---- iOS widget bridge (Capacitor app only; no-op in the browser/PWA) ----
+let widgetT = 0;
+function widgetSync() {
+  const W = window.Capacitor && Capacitor.Plugins && Capacitor.Plugins.WidgetBridge; if (!W) return;
+  clearTimeout(widgetT);
+  widgetT = setTimeout(() => {
+    try {
+      const next = ALL.find(l => lvlOf(l.id) < 3) || ALL[ALL.length - 1];
+      const words = []; ALL.forEach(l => l.levels[0].forEach(e => { if (e.type === "learn" && e.word.length < 28) words.push(e); }));
+      const t = todayKey(), w = words[[...t].reduce((h, c) => (h * 31 + c.charCodeAt(0)) >>> 0, 7) % words.length] || { word: "Bon dia", meaning: "buenos días" };
+      W.update({ streak: state.sk.cur || 0, xp: state.xp, leaves: totalLeaves(), lastLessonDate: practisedToday() ? t : (state.sk.last || ""),
+        nextLessonTitle: next.title, nextLessonId: next.id, wordVa: w.word, wordEs: w.meaning }).catch(() => {});
+    } catch (e) {}
+  }, 300);
+}
+// deep link from the widget: diusialvalencia://lesson/next
+if (window.Capacitor && Capacitor.Plugins && Capacitor.Plugins.App) Capacitor.Plugins.App.addListener("appUrlOpen", ev => {
+  if (/lesson\/next/.test(ev.url || "") && !state.inLesson) { const next = ALL.find(l => lvlOf(l.id) < 3); if (next) startLesson(next.id, Math.min(3, lvlOf(next.id) + 1)); }
+});
 function regen() {
   if (state.hearts >= MAX_HEARTS) { state.heartTs = Date.now(); return; }
   const n = Math.floor((Date.now() - state.heartTs) / REGEN_MS);
