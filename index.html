@@ -226,6 +226,12 @@ main { overflow-x: hidden; padding: 16px calc(16px + env(safe-area-inset-right))
 @keyframes shimmer { 0% { background-position: 130% 0; } 60%,100% { background-position: -130% 0; } }
 @media (prefers-reduced-motion: reduce) { .leaf-new, .ring-new, .node.done::after { animation: none !important; } }
 /* phrasebook sheet */
+.help-btn { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #e5e5e5; border-bottom-width: 4px; background: #fff; color: #1cb0f6; font: inherit; font-weight: 900; font-size: 20px; line-height: 1; cursor: pointer; }
+.help-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
+.tp-title { font-weight: 900; font-size: 18px; color: #3c3c3c; margin: 2px 0 4px; }
+.mistake { background: #fff4e5; border-radius: 10px; padding: 6px 8px; margin-top: 8px; color: #8a5300; font-size: 15px; }
+.exs { margin-top: 8px; display: grid; gap: 6px; } .exs div { background: #f7f7f7; border-radius: 10px; padding: 6px 8px; font-size: 15px; } .exs span { color: #777; }
+.ph-card.topic, .ph-card.qa { border-color: #ddf4ff; background: #fbfeff; }
 .ask-fab { position: fixed; z-index: 25; right: calc(16px + env(safe-area-inset-right)); bottom: calc(18px + env(safe-area-inset-bottom)); background: #1cb0f6; color: #fff; border: none; border-radius: 28px; padding: 14px 18px; min-height: 52px; font: inherit; font-weight: 900; font-size: 16px; box-shadow: 0 4px 0 #1899d6, 0 6px 16px rgba(0,0,0,.15); cursor: pointer; }
 .ask-fab:active { transform: translateY(4px); box-shadow: 0 0 0 #1899d6; }
 body.sheet-open { overflow: hidden; }
@@ -456,7 +462,7 @@ function startLesson(id, level) {
 }
 function showExercise() {
   const lesson = state.currentLesson, ex = state.session[state.currentExercise];
-  let h = `<div class="ex"><div class="top-row"><button class="back-btn" onclick="showHome()" aria-label="Salir">✕</button><div class="pbar"><div class="pfill" style="width:${state.currentExercise / state.session.length * 100}%"></div></div></div>`;
+  let h = `<div class="ex"><div class="top-row"><button class="back-btn" onclick="showHome()" aria-label="Salir">✕</button><button class="help-btn" onclick="openSheet('explain')" aria-label="Ayuda y explicación">?</button><div class="pbar"><div class="pfill" style="width:${state.currentExercise / state.session.length * 100}%"></div></div></div>`;
   if (ex.type === "learn") {
     h += `<div class="question">${ex.label || "Palabra nueva"}</div><div class="ex-body"><div class="learn-card"><div class="learn-word">${esc(ex.word)}</div><div class="learn-meaning">${esc(ex.meaning)}</div>${ex.note ? `<div class="hint">${esc(ex.note)}</div>` : ""}${dnvLink(ex.word)}</div></div>`;
   } else {
@@ -632,10 +638,41 @@ function dnvLink(va) {
 }
 const pnorm = t => String(t).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
 let PH = null, PM = null;
+let HELP = null, QA = null;
 async function loadPhrases() {
-  if (PH) return;
-  const [a, b] = await Promise.all([fetch("phrases.json").then(r => r.json()), fetch("phrases_meta.json").then(r => r.json())]);
-  PH = a; PM = b;
+  if (PH && HELP && QA) return;
+  const j = u => fetch(u).then(r => { if (!r.ok) throw new Error(u); return r.json(); });
+  [PH, PM, HELP, QA] = await Promise.all([j("phrases.json"), j("phrases_meta.json"), j("help.json"), j("qa.json")]);
+}
+const ikey = t => pnorm(String(t).replace(/['’]/g, " "));
+const helpItem = va => HELP && HELP.items[ikey(va)];
+function topicCard(id) {
+  const t = HELP && HELP.topics[id]; if (!t) return "";
+  return `<div class="ph-card topic"><div class="ph-es">Gramática</div><div class="tp-title">${esc(t.title)}</div><div class="ph-alt">${esc(t.text)}</div>${t.mistake ? `<div class="mistake">⚠️ Error típico: ${esc(t.mistake)}</div>` : ""}</div>`;
+}
+function itemCard(it, big) {
+  return `<div class="ph-card${big ? " big" : ""}"><div class="ph-es">${esc(it.es)}</div><div class="ph-va">${esc(it.va)}</div>
+    ${it.note ? `<div class="ph-note">📝 ${esc(it.note)}</div>` : ""}
+    ${it.pron ? `<div class="ph-alt">🗣️ ${it.pron.map(esc).join(" · ")}</div>` : ""}
+    ${it.mistake ? `<div class="mistake">⚠️ ${esc(it.mistake)}</div>` : ""}
+    ${it.examples ? `<div class="exs">${it.examples.map(e => `<div><b>${esc(e.va)}</b><br><span>${esc(e.es)}</span></div>`).join("")}</div>` : ""}
+    <div class="ph-note">${esc(it.level)} · ${esc(it.lesson)}</div>${dnvLink(it.va)}</div>`;
+}
+function explainHTML() {
+  const ex = state.session && state.session[state.currentExercise];
+  if (!ex) return `<p class="hint">Abre esta ayuda desde un ejercicio.</p>`;
+  const lessonTopic = (() => { const it = state.session.map(e => helpItem(e.key || e.word || "")).find(Boolean); return it ? it.topic : ""; })();
+  const done = ex.type === "learn" || state.answered;
+  if (ex.type === "match") {
+    const its = ex.pairs.map(p => helpItem(p[0])).filter(Boolean);
+    return (done ? its.map(it => itemCard(it, false)).join("") : `<p class="hint">Une cada palabra en valenciano con su traducción. Si fallas un par no pierdes vidas.</p>`) + topicCard(lessonTopic);
+  }
+  const key = ex.type === "learn" ? ex.word : ex.key, it = helpItem(key);
+  if (!done) {
+    const ans = String(ex.answer || "");
+    return `<div class="ph-card"><div class="ph-es">Pista</div><div class="ph-alt">${ex.type === "order" ? "Empieza por «" + esc(ex.words[0]) + "»." : "La respuesta empieza por «" + esc((ans.match(/\p{L}/u) || [""])[0]) + "…» y tiene " + ans.split(" ").length + " palabra(s)."}</div>${it && it.pron && ex.type !== "mc" ? `<div class="ph-note">🗣️ ${it.pron.map(esc).join(" · ")}</div>` : ""}<div class="ph-note">La explicación completa aparece al comprobar. Consultar la ayuda no quita vidas.</div></div>` + topicCard(it ? it.topic : lessonTopic);
+  }
+  return (it ? itemCard(it, true) : `<div class="ph-card big"><div class="ph-va">${esc(key || "")}</div>${dnvLink(key || "")}</div>`) + topicCard(it ? it.topic : lessonTopic);
 }
 function stripQuery(q) {
   const quoted = q.match(/[«"“'‘]([^»"”'’]+)[»"”'’]/);
@@ -684,12 +721,12 @@ function phraseCard(k, big) {
 }
 const smallRow = k => `<button class="ph-row" onclick="showPhrase('${k.replace(/'/g, "")}')"><span>${esc((PM[k] || {}).es || k)}</span><b>${esc(PH[k])}</b></button>`;
 async function openSheet(tab) {
-  if (state.inLesson) return;
+  if (state.inLesson && tab !== "explain") return;
   let sh = $("sheet");
   if (!sh) { sh = document.createElement("div"); sh.id = "sheet"; sh.className = "sheet-wrap"; document.body.appendChild(sh); }
   sh.innerHTML = `<div class="sheet-bg" onclick="closeSheet()"></div><div class="sheet" role="dialog" aria-modal="true" aria-label="¿Cómo se dice?">
-    <div class="sheet-head"><b>¿Cómo se dice…?</b><button class="back-btn" onclick="closeSheet()" aria-label="Cerrar">✕</button></div>
-    <div class="tabs" role="tablist">${[["ask", "Preguntar"], ["browse", "Frases"], ["mine", "Mis preguntas"]].map(([id, t]) => `<button role="tab" class="tab" id="tab-${id}" onclick="sheetTab('${id}')">${t}</button>`).join("")}</div>
+    <div class="sheet-head"><b>${tab === "explain" ? "Ayuda" : "¿Cómo se dice…?"}</b><button class="back-btn" onclick="closeSheet()" aria-label="Cerrar">✕</button></div>
+    <div class="tabs" role="tablist">${(tab === "explain" ? [["explain", "Explicación"]] : []).concat([["ask", "Preguntar"], ["browse", "Frases"], ["mine", "Mis preguntas"]]).map(([id, t]) => `<button role="tab" class="tab" id="tab-${id}" onclick="sheetTab('${id}')">${t}</button>`).join("")}</div>
     <div class="sheet-body" id="sheetBody"><p class="hint">Cargando frases…</p></div>
     <div class="credit">Referencia normativa: Diccionari Normatiu Valencià, AVL</div></div>`;
   document.body.classList.add("sheet-open");
@@ -700,8 +737,9 @@ function closeSheet() { const sh = $("sheet"); if (sh) sh.remove(); document.bod
 function sheetTab(id) {
   document.querySelectorAll(".tab").forEach(t => t.classList.toggle("on", t.id === "tab-" + id));
   const b = $("sheetBody");
+  if (id === "explain") { b.innerHTML = explainHTML(); return; }
   if (id === "ask") {
-    b.innerHTML = `<form class="ask-form" onsubmit="event.preventDefault();ask($('askInput').value)"><input id="askInput" class="ask-input" type="search" enterkeyhint="search" autocomplete="off" placeholder="p. ej. ¿Cómo se dice «buenos días»?"><button class="btn ask-btn" type="submit">Buscar</button></form><div id="askOut"><p class="hint">Escribe en castellano: «cómo se dice gracias», «por favor», «¿cómo puedo decir "hola, buenos días"?»</p></div>`;
+    b.innerHTML = `<form class="ask-form" onsubmit="event.preventDefault();ask($('askInput').value)"><input id="askInput" class="ask-input" type="search" enterkeyhint="search" autocomplete="off" placeholder="p. ej. ¿Cómo se dice «gracias»? / ¿perquè o per què?"><button class="btn ask-btn" type="submit">Buscar</button></form><div id="askOut"><p class="hint">Escribe en castellano: «cómo se dice gracias», «por favor», «¿cómo puedo decir "hola, buenos días"?»</p></div>`;
   } else if (id === "browse") {
     const cats = {}; Object.keys(PH).forEach(k => { const c = (PM[k] || {}).cat || "Otras"; (cats[c] = cats[c] || []).push(k); });
     b.innerHTML = `<p class="hint">${Object.keys(PH).length} frases</p>` + Object.entries(cats).map(([c, ks]) => `<details class="cat"><summary>${esc(c)} <small>${ks.length}</small></summary>${ks.map(smallRow).join("")}</details>`).join("");
@@ -711,7 +749,49 @@ function sheetTab(id) {
   }
 }
 function showPhrase(k) { sheetTab("ask"); $("askInput").value = (PM[k] || {}).es || k; renderAnswer({ q: k, exact: k, near: related(k) }); }
-function ask(raw) { if (!raw.trim()) return; const r = lookup(raw); if (!r.exact && r.q) saveMyQ(raw.trim()); renderAnswer(r); if (document.activeElement) document.activeElement.blur(); }
+// unified search: phrasebook + grammar Q&A + course items -> best 3
+const ESW = /^(el|la|los|las|lo|de|del|y|o|a|al|en|un|una|es|que|por|me|mi|te|se|tu|su|con|para|como|cuando|donde|cual|valenciano|valencia|dice|decir|digo|se|o|i|uso|usar)$/;
+const ctoks = t => pnorm(t).split(" ").filter(w => w && !ESW.test(w)).map(w => w.length > 4 ? w.replace(/(es|s)$/, "") : w);
+function qaScore(raw, e) {
+  const qn = pnorm(raw), qt = ctoks(raw); if (!qt.length) return 0;
+  const kt = new Set(ctoks(e.k)), hit = qt.filter(t => kt.has(t)).length;
+  let sc = hit / qt.length * Math.min(1, hit / 2 + .4);
+  const qb = " " + qn + " "; let sb = 0;
+  e.syn.forEach(s => { const n = pnorm(s); if (n.length > 3 && qb.includes(" " + n + " ")) sb = Math.max(sb, n.includes(" ") ? .7 : .25); }); sc += sb;
+  if (pnorm(e.q).includes(qn) && qn.length > 4) sc += .5;
+  return sc;
+}
+function itemScore(q, it) {
+  const es = pnorm(it.es.replace(/\(.*?\)/g, "")), va = ikey(it.va);
+  return Math.max(...[es, ...es.split(" / ")].map(x => score(q, pnorm(x))), q === va ? 1 : 0);
+}
+function search(raw) {
+  const ck = pnorm(raw), cache = JSON.parse(ls.getItem("valencia_askcache_v11") || "{}");
+  if (cache[ck]) return cache[ck];
+  const q = stripQuery(raw), r = [];
+  if (q && PH[q]) r.push({ t: "ph", id: q, s: 1.2 });
+  else if (q) Object.keys(PH).forEach(k => { const v = score(q, k); if (v > .55) r.push({ t: "ph", id: k, s: v }); });
+  QA.forEach(e => { const v = qaScore(raw, e); if (v > .5) r.push({ t: "qa", id: e.id, s: v }); });
+  if (q) Object.entries(HELP.items).forEach(([k, it]) => { const v = itemScore(q, it); if (v > .8) r.push({ t: "it", id: k, s: v - .05 }); });
+  r.sort((a, b) => b.s - a.s);
+  const seen = new Set(), best = [];
+  for (const x of r) { const va = x.t === "ph" ? pnorm(PH[x.id]) : x.t === "it" ? pnorm(HELP.items[x.id].va) : "qa" + x.id; if (seen.has(va)) continue; seen.add(va); best.push(x); if (best.length === 3) break; }
+  const res = { q, best, exact: best.length && best[0].s >= 1 };
+  cache[ck] = res; const keys = Object.keys(cache); if (keys.length > 200) delete cache[keys[0]];
+  ls.setItem("valencia_askcache_v11", JSON.stringify(cache));
+  return res;
+}
+function ask(raw) {
+  if (!raw.trim()) return;
+  const r = search(raw);
+  if (!r.exact) saveMyQ(raw.trim());
+  const o = $("askOut");
+  const card = (x, i) => x.t === "ph" ? phraseCard(x.id, i === 0 && x.s >= 1) : x.t === "qa" ? qaCard(QA[x.id]) : itemCard(HELP.items[x.id], false);
+  o.innerHTML = r.best.length ? (r.exact ? "" : `<p class="ph-miss">No tengo «${esc(r.q || raw)}» exactamente. Lo más parecido:</p>`) + r.best.map(card).join("") + (r.exact ? "" : `<p class="hint">La he guardado en «Mis preguntas».</p>`)
+    : `<p class="ph-miss">Todavía no tengo «${esc(r.q || raw)}». La he guardado en «Mis preguntas».</p><p class="hint">Prueba con una frase más corta o mira la pestaña «Frases».</p>`;
+  if (document.activeElement) document.activeElement.blur();
+}
+function qaCard(e) { return `<div class="ph-card qa"><div class="ph-es">Gramática · ${e.tags.map(esc).join(", ")}</div><div class="tp-title">${esc(e.q)}</div><div class="ph-alt">${esc(e.a)}</div></div>`; }
 function renderAnswer(r) {
   const o = $("askOut");
   if (r.exact) o.innerHTML = phraseCard(r.exact, true) + (r.near.length ? `<h4 class="ph-h">Frases relacionadas</h4>` + r.near.map(smallRow).join("") : "");
