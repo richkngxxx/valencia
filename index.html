@@ -258,13 +258,33 @@ details.cat { border: 2px solid #e5e5e5; border-radius: 14px; margin: 8px 0; pad
 details.cat summary { min-height: 48px; display: flex; align-items: center; justify-content: space-between; font-weight: 900; cursor: pointer; }
 details.cat summary small { color: #999; }
 @media (prefers-reduced-motion: reduce) { .sheet { animation: none; } }
+/* header stat chips: one row, fixed-size SVG icons (no emoji baseline drift on iOS) */
+.stats { display: flex; align-items: center; gap: 10px; flex: none; font-size: 15px; line-height: 20px; font-weight: 800; }
+.stat { display: inline-flex; align-items: center; gap: 3px; height: 28px; line-height: 20px; font-size: 15px; font-weight: 800; color: #fff; padding: 0; margin: 0; background: none; border: none; font-family: inherit; white-space: nowrap; }
+.stat .n { display: block; line-height: 20px; }
+.stat .ic, .stat .ic-wrap .leaf { width: 20px; height: 20px; flex: none; display: block; vertical-align: top; }
+.stat .ic-wrap { display: block; width: 20px; height: 20px; }
+.ic-flame path { fill: #ff9600; } .ic-flame .ic-flame-in { fill: #ffc800; }
+.flame-btn.off { filter: none; opacity: 1; } .flame-btn.off .ic-flame path { fill: #c8d7c0; } .flame-btn.off .ic-flame .ic-flame-in { fill: #e5ece0; }
+.ic-xp path { fill: #ffc800; stroke: #e0a800; stroke-width: 1; stroke-linejoin: round; }
+.ic-heart path { fill: #ff4b4b; stroke: #fff; stroke-width: 1.2; }
+.leaf-count .leaf .lf { stroke: #fff; stroke-width: 1; }
+.flame-btn { min-height: 28px; }
+#hearts.stat { display: inline-flex; position: relative; }
+#hearts.lose::after { top: 4px; }
+@media (max-width: 380px) { .stats { gap: 7px; } .stat { font-size: 14px; } header h1 { font-size: 1rem; } }
 </style>
 </head>
 <body>
 <div id="app">
   <header>
     <div class="brand"><h1>Diu sí al valencià</h1></div>
-    <div class="stats"><button id="streak" class="flame-btn" onclick="showStreak()" aria-label="Racha">🔥 0</button><span id="leafCount" class="leaf-count" role="img"></span><span id="xp">0 XP</span><span id="hearts">❤️ 5</span></div>
+    <div class="stats">
+      <button id="streak" class="stat flame-btn" onclick="showStreak()" aria-label="Racha"><svg class="ic ic-flame" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2c.6 3.2 2.6 4.8 4.3 6.6C18 10.4 19 12.4 19 14.6 19 18.7 15.9 22 12 22s-7-3.3-7-7.4c0-2.6 1.3-4.6 3-6 .1 1.9.9 3.2 2.2 3.9C9.9 9.2 10.6 5.4 12 2z"/><path class="ic-flame-in" d="M12 13c1.6 1.5 2.6 2.7 2.6 4.3 0 1.6-1.2 2.7-2.6 2.7s-2.6-1.1-2.6-2.7c0-1.6 1-2.8 2.6-4.3z"/></svg><span class="n" id="streakN">0</span></button>
+      <span id="leafCount" class="stat leaf-count" role="img"><span class="ic-wrap"></span><span class="n" id="leafN">0</span></span>
+      <span class="stat" id="xp" role="img"><svg class="ic ic-xp" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 2 4 13.5h6.5L9.5 22 20 9.8h-6.6L13.5 2z"/></svg><span class="n" id="xpN">0</span></span>
+      <span class="stat" id="hearts" role="img"><svg class="ic ic-heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21.2 3.6 13C1.4 10.8 1.5 7.3 3.8 5.3c2.1-1.8 5.2-1.5 7.1.5L12 7l1.1-1.2c1.9-2 5-2.3 7.1-.5 2.3 2 2.4 5.5.2 7.7L12 21.2z"/></svg><span class="n" id="heartsN">5</span></span>
+    </div>
   </header>
   <main id="main"></main>
 </div>
@@ -281,7 +301,10 @@ const state = {
 };
 // progress per lesson: 0..3 levels done. Migrate old "completed" list (= level 1 done).
 state.levels = JSON.parse(ls.getItem("valencia_levels") || "null");
-if (!state.levels) { state.levels = {}; state.completed.forEach(id => { state.levels[id] = 1; }); }
+if (!state.levels || typeof state.levels !== "object") state.levels = {};
+// union with the legacy "completed" list so pre-v6 progress always counts as level 1 (never reset)
+state.completed.forEach(id => { state.levels[id] = Math.max(1, +state.levels[id] || 0); });
+Object.keys(state.levels).forEach(id => { state.levels[id] = Math.min(3, Math.max(0, +state.levels[id] || 0)); });
 Object.keys(state.levels).forEach(id => { if (!ALL.some(l => l.id === id)) delete state.levels[id]; });
 const lvlOf = id => state.levels[id] || 0;
 // ---- Streaks (local calendar days in Europe/Madrid) ----
@@ -338,11 +361,11 @@ function regen() {
 function refill() { state.hearts = MAX_HEARTS; state.heartTs = Date.now(); save(); updateHeader(); showHome(); }
 function updateHeader() {
   regen();
-  const lc = document.getElementById("leafCount"); if (lc) { lc.innerHTML = leafSVG(true) + totalLeaves(); lc.setAttribute("aria-label", totalLeaves() + " hojas de nivel"); }
+  const lc = $("leafCount"), tl = totalLeaves(); if (!lc.querySelector(".leaf")) lc.querySelector(".ic-wrap").innerHTML = leafSVG(true, "ic"); $("leafN").textContent = tl; lc.setAttribute("aria-label", tl + " hojas de nivel");
   const fl = document.getElementById("streak"); fl.classList.toggle("off", !practisedToday());
-  document.getElementById("xp").textContent = state.xp + " XP";
-  document.getElementById("streak").textContent = "🔥 " + state.streak;
-  document.getElementById("hearts").textContent = "❤️ " + state.hearts;
+  $("xpN").textContent = state.xp + " XP"; $("xp").setAttribute("aria-label", state.xp + " puntos de experiencia");
+  $("streakN").textContent = state.streak; fl.setAttribute("aria-label", "Racha de " + state.streak + " días");
+  $("heartsN").textContent = state.hearts; $("hearts").setAttribute("aria-label", state.hearts + " vidas");
 }
 const currentIndex = () => ALL.findIndex(l => lvlOf(l.id) === 0);
 const $ = id => document.getElementById(id);
@@ -379,7 +402,7 @@ function leafSVG(filled, cls = "") {
 function leaves(n, fresh, cls) {
   return `<div class="leaves ${cls}" role="img" aria-label="Nivel ${n} de 3">${[1, 2, 3].map(k => leafSVG(k <= n, k === fresh ? "leaf-new" : "")).join("")}</div>`;
 }
-function totalLeaves() { return Object.values(state.levels).reduce((a, b) => a + b, 0); }
+function totalLeaves() { return ALL.reduce((a, l) => a + lvlOf(l.id), 0); }
 function showHome() {
   state.inLesson = false;
   document.querySelectorAll(".confetti").forEach(c => c.remove());
