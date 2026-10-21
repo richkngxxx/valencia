@@ -260,6 +260,10 @@ body.sheet-open { overflow: hidden; }
 .ask-form { display: flex; gap: 8px; }
 .ask-input { flex: 1; min-width: 0; min-height: 50px; border: 2px solid #e5e5e5; border-bottom-width: 4px; border-radius: 14px; padding: 0 12px; font-family: inherit; font-weight: 700; background: #f7f7f7; }
 /* keyboard mode (iOS): exercise/sheet pinned to the visual viewport, nothing scrolls */
+/* exercises: Duolingo-style, the app header is hidden; the top row (✕ ? 🔊 progress ❤️) is sticky at the top */
+body.in-ex header { display: none; }
+body.in-ex .ex .top-row { position: sticky; top: 0; z-index: 25; background: #fff; padding-top: calc(8px + env(safe-area-inset-top)); margin-top: 0; }
+.ex-hearts { flex: none; font-weight: 900; color: #ff4b4b; font-size: 17px; white-space: nowrap; }
 html.kb, html.kb body { overflow: hidden; height: 100%; overscroll-behavior: none; }
 html.kb-ex .ex { position: fixed; left: 0; right: 0; top: var(--vvt, 0px); height: calc(var(--vvh, 100vh) - var(--barh, 90px)); min-height: 0; z-index: 35; background: #fff; padding: 6px calc(16px + env(safe-area-inset-right)) 6px calc(16px + env(safe-area-inset-left)); overflow: hidden; max-width: 600px; margin: 0 auto; }
 html.kb-ex .ex .top-row { margin: 0; min-height: 0; }
@@ -414,7 +418,7 @@ function regen() {
 }
 function refill() { state.hearts = MAX_HEARTS; state.heartTs = Date.now(); save(); updateHeader(); showHome(); }
 function updateHeader() {
-  regen();
+  regen(); const eh = document.getElementById("exHeartsN"); if (eh) eh.textContent = state.hearts;
   const lc = $("leafCount"), tl = totalLeaves(); if (!lc.querySelector(".leaf")) lc.querySelector(".ic-wrap").innerHTML = leafSVG(true, "ic"); $("leafN").textContent = tl; lc.setAttribute("aria-label", tl + " hojas de nivel");
   const fl = document.getElementById("streak"); fl.classList.toggle("off", !practisedToday());
   $("xpN").textContent = state.xp + " XP"; $("xp").setAttribute("aria-label", state.xp + " puntos de experiencia");
@@ -510,7 +514,7 @@ function startLesson(id, level) {
 }
 function showExercise() {
   const lesson = state.currentLesson, ex = state.session[state.currentExercise];
-  let h = `<div class="ex"><div class="top-row"><button class="back-btn" onclick="showHome()" aria-label="Salir">✕</button><button class="help-btn" onclick="openSheet('explain')" aria-label="Ayuda y explicación">?</button><button class="snd-btn" id="sndBtn" onclick="toggleSound()" aria-label="Sonido">${soundOn() ? "🔊" : "🔇"}</button><div class="pbar"><div class="pfill" style="width:${state.currentExercise / state.session.length * 100}%"></div></div></div>`;
+  let h = `<div class="ex"><div class="top-row"><button class="back-btn" onclick="showHome()" aria-label="Salir">✕</button><button class="help-btn" onclick="openSheet('explain')" aria-label="Ayuda y explicación">?</button><button class="snd-btn" id="sndBtn" onclick="toggleSound()" aria-label="Sonido">${soundOn() ? "🔊" : "🔇"}</button><div class="pbar"><div class="pfill" style="width:${state.currentExercise / state.session.length * 100}%"></div></div><span class="ex-hearts" aria-label="Vidas">❤️ <b id="exHeartsN">${state.hearts}</b></span></div>`;
   if (ex.type === "learn") {
     h += `<div class="question">${ex.label || "Palabra nueva"}</div><div class="ex-body"><div class="learn-card"><div class="learn-head"><div class="learn-word">${esc(ex.word)}</div>${spk(ex.word)}</div><div class="learn-meaning">${esc(ex.meaning)}</div>${ex.note ? `<div class="hint">${esc(ex.note)}</div>` : ""}${dnvLink(ex.word)}</div></div>`;
   } else {
@@ -901,6 +905,16 @@ function kbOn(el) {
   window.scrollTo(0, 0); vvSync(); setTimeout(vvSync, 50); setTimeout(vvSync, 300); setTimeout(vvSync, 600);
 }
 function kbOff() { const d = document.documentElement; d.classList.remove("kb", "kb-ex", "kb-sheet"); ["--vvh", "--vvt", "--barh"].forEach(v => d.style.removeProperty(v)); }
+// every view change: start at the top (the path's scroll position must not carry over) + header only outside exercises
+function toTop() {
+  if (document.documentElement.classList.contains("kb")) return;
+  window.scrollTo(0, 0); const se = document.scrollingElement || document.documentElement; se.scrollTop = 0; document.body.scrollTop = 0;
+  const m = $("main"); if (m) m.scrollTop = 0;
+}
+new MutationObserver(() => {
+  document.body.classList.toggle("in-ex", !!document.querySelector("#main > .ex"));
+  toTop(); requestAnimationFrame(() => { toTop(); requestAnimationFrame(toTop); });
+}).observe($("main"), { childList: true });
 if (window.visualViewport) { visualViewport.addEventListener("resize", vvSync); visualViewport.addEventListener("scroll", vvSync); }
 window.addEventListener("scroll", () => { if (document.documentElement.classList.contains("kb") && window.scrollY) window.scrollTo(0, 0); }, { passive: true });
 // focus without iOS auto-scroll: take over the tap and focus with preventScroll
