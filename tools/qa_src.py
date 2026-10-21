@@ -38,7 +38,7 @@ Q = [
 ("¿Los meses y días se escriben con mayúscula?","No, en minúscula: dilluns, gener, març.",["ortografia","dias"],["mayuscula meses"]),
 # --- ser / estar
 ("¿Cuándo uso «ser» y cuándo «estar»?","«Ser» para identidad, características y también para situar algo (la llet és a la nevera). «Estar» para estados y situaciones temporales (estic cansat) y en estar + gerundio (estic menjant).",["ser estar","verbos"],["ser o estar","diferencia ser estar"]),
-("¿Se dice «on és» o «on està»?","Para preguntar dónde está algo, lo normativo es «on és…?»: on és l'estació?. «On està» es frecuente en el habla, pero se recomienda «és».",["ser estar"],["donde esta","on esta"]),
+("¿Se dice «on és» o «on està»?","Para preguntar dónde está algo, lo normativo es «on és…?»: on és l'estació? «On està» es frecuente en el habla, pero se recomienda «és».",["ser estar"],["donde esta","on esta"]),
 ("¿Se dice «estic cansat» o «soc cansat»?","«Estic cansat»: es un estado. «Soc» sería una característica permanente.",["ser estar"],["cansado"]),
 ("¿Cómo se conjuga «ser»?","soc, eres, és, som, sou, són.",["verbos","ser estar"],["ser presente"]),
 ("¿Cómo se conjuga «estar»?","estic, estàs, està, estem, esteu, estan.",["verbos","ser estar"],["estar presente"]),
@@ -52,7 +52,7 @@ Q = [
 ("¿Cómo se conjuga «dir»?","dic, dius, diu, diem, dieu, diuen.",["verbos"],["decir"]),
 ("¿Cómo se conjuga «vore/veure»?","veig, veus, veu, veiem, veieu, veuen. «Vore» y «veure» son normativos.",["verbos","formas valencianas"],["ver","vore veure"]),
 # --- perquè / per què, etc.
-("¿«Perquè» o «per què»?","«Per què» (separado y con acento) pregunta: per què no véns?. «Perquè» (junto) responde o explica: perquè plou.",["perque","ortografia"],["porque por que","perque per que"]),
+("¿«Perquè» o «per què»?","«Per què» (separado y con acento) pregunta: per què no véns? «Perquè» (junto) responde o explica: perquè plou.",["perque","ortografia"],["porque por que","perque per que"]),
 ("¿«Sinó» o «si no»?","«Sinó» = sino (no és roig sinó blau). «Si no» = si no (si no plou, eixirem).",["ortografia","conectores"],["sino si no"]),
 ("¿«Què» o «que»?","«Què» con acento es interrogativo o exclamativo (què fas?). «Que» sin acento es conjunción o relativo (crec que…).",["ortografia"],["que què"]),
 ("¿«Com» o «com que»?","«Com» = cómo / como. «Com que» = como (causal, al principio de la frase): com que plovia, no vaig eixir.",["conectores"],["como"]),
