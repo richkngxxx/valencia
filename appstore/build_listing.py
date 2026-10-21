@@ -72,9 +72,9 @@ Alternativas:
 ```
 
 ## URLs
-- Soporte: https://richkngxxx.github.io/valencia/
-- Marketing: https://richkngxxx.github.io/valencia/
-- Política de privacidad: https://richkngxxx.github.io/valencia/privacy.html
+- Soporte: https://diusialvalencia.com/
+- Marketing: https://diusialvalencia.com/
+- Política de privacidad: https://diusialvalencia.com/privacy.html
 - Email de soporte/contacto: soporte@diusialvalencia.com (⚠️ el dominio aún no está comprado: el buzón no funcionará hasta configurar dominio y reenvío)
 
 ## Categoría

@@ -2,7 +2,7 @@
 // Rule: a word may only be tested (type/order/match/mc answer in Valencian) after it was taught.
 // Taught set for lesson N, level k = level-1 learn cards of all earlier lessons (the next node unlocks
 // after level 1) + learn cards of lesson N's levels 1..k seen before the exercise.
-const COURSE = require('../lessons.js');
+const COURSE = require('../app/lessons.js');
 const norm = t => t.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[.,!?¿¡«»;:]/g, '').trim();
 const toks = s => norm(s).split(/[\s'’-]+/).filter(Boolean);
 const errors = [], ids = new Set(), stats = {};

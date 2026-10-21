@@ -4,7 +4,7 @@ github.com/langtech-bsc/minimal-tts-api (text/). Usage: python3 gen_audio.py TTS
 import sys, os, json, subprocess, tempfile
 from concurrent.futures import ProcessPoolExecutor
 TTS = sys.argv[1]; sys.path.insert(0, TTS)
-ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."); OUT = os.path.join(ROOT, "audio")
+ROOT = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".."); OUT = os.path.join(ROOT, "app", "audio")
 SPK = int(sys.argv[3]) if len(sys.argv) > 3 else 7  # 6 = lluc, 7 = gina (valencià)
 S = None
 def init():

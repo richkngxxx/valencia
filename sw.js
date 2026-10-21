@@ -1,6 +1,7 @@
-const A='valencia-audio-v1';const C='valencia-v16';const F=['./','./index.html','./manifest.json','./lessons.js','./phrases.json','./phrases_meta.json','./help.json','./qa.json','./audio/manifest.json','./mascot.png','./fonts/nunito-700.woff2','./fonts/nunito-800.woff2','./fonts/nunito-900.woff2','./icon-180.png','./mascot/neutral.png','./mascot/cheer.png','./mascot/jump.png','./mascot/sad.png','./mascot/think.png','./mascot/surprised.png','./mascot/sleep.png','./mascot/trophy.png','./icon-192.png','./icon-512.png'];
-self.addEventListener('install',e=>{self.skipWaiting();e.waitUntil(caches.open(C).then(c=>c.addAll(F)))});
-self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C&&x!==A).map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
-self.addEventListener('fetch',e=>{if(e.request.method!=='GET')return;
-if(/\/audio\/[0-9a-f]{8}\.mp3$/.test(new URL(e.request.url).pathname)){e.respondWith(caches.open(A).then(c=>c.match(e.request.url).then(m=>m||fetch(e.request.url).then(r=>{if(r.ok)c.put(e.request.url,r.clone());return r}))));return}
-e.respondWith(fetch(e.request).then(r=>{const cp=r.clone();caches.open(C).then(c=>c.put(e.request,cp));return r}).catch(()=>caches.match(e.request)))});
+// Limpieza: la app se movió a /app/. Este SW reemplaza al antiguo de la raíz (v16), borra sus cachés y se desregistra.
+self.addEventListener('install',()=>self.skipWaiting());
+self.addEventListener('activate',e=>e.waitUntil((async()=>{
+  for(const k of await caches.keys()){const m=/^valencia-v(\d+)$/.exec(k);if(m&&+m[1]<17)await caches.delete(k)}
+  await self.registration.unregister();
+  for(const c of await self.clients.matchAll({type:'window'}))c.navigate(c.url);
+})()));

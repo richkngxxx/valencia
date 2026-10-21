@@ -1,5 +1,5 @@
 // Collects every Valencian string that the app can speak -> stdout JSON [{text,key,h}]
-const fs = require("fs"), path = require("path"), R = p => fs.readFileSync(path.join(__dirname, "..", p), "utf8");
+const fs = require("fs"), path = require("path"), R = p => fs.readFileSync(path.join(__dirname, "..", "app", p), "utf8");
 eval(R("lessons.js").replace("const COURSE", "global.COURSE"));
 const akey = t => String(t).toLowerCase().normalize("NFC").replace(/[’]/g, "'").replace(/[¿¡!?.,;:«»"()…]/g, " ").replace(/\s+/g, " ").trim();
 const fnv = s => { let h = 0x811c9dc5; for (const b of Buffer.from(s, "utf8")) { h ^= b; h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, "0"); };
