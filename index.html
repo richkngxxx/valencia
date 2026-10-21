@@ -227,6 +227,18 @@ main { overflow-x: hidden; padding: 16px calc(16px + env(safe-area-inset-right))
 @media (prefers-reduced-motion: reduce) { .leaf-new, .ring-new, .node.done::after { animation: none !important; } }
 /* phrasebook sheet */
 .help-btn { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #e5e5e5; border-bottom-width: 4px; background: #fff; color: #1cb0f6; font: inherit; font-weight: 900; font-size: 20px; line-height: 1; cursor: pointer; }
+.spk-wrap { display: inline-flex; gap: 6px; vertical-align: middle; flex: none; }
+.spk { width: 44px; height: 44px; border-radius: 50%; border: none; border-bottom: 4px solid #1899d6; background: #1cb0f6; color: #fff; font-size: 20px; line-height: 1; cursor: pointer; padding: 0; display: inline-flex; align-items: center; justify-content: center; -webkit-tap-highlight-color: transparent; }
+.spk.slow { width: 36px; height: 36px; font-size: 17px; background: #fff; border: 2px solid #e5e5e5; border-bottom-width: 4px; }
+.spk:active, .spk.playing { transform: translateY(2px); border-bottom-width: 2px; }
+.spk.sm { width: 34px; height: 34px; font-size: 16px; border-bottom-width: 3px; }
+.spk.slow.sm { width: 30px; height: 30px; font-size: 14px; }
+.snd-btn { flex: none; width: 40px; height: 40px; border-radius: 50%; border: 2px solid #e5e5e5; border-bottom-width: 4px; background: #fff; font-size: 18px; line-height: 1; cursor: pointer; padding: 0; }
+.learn-head { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
+.q-spk { margin: 4px 0 0; }
+.fb-spk { display: flex; align-items: center; gap: 8px; margin-top: 6px; font-weight: 800; }
+.ph-line { display: flex; align-items: center; gap: 6px; } .ph-line .ph-row { flex: 1; min-width: 0; }
+.ph-va-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
 .help-btn:active { transform: translateY(2px); border-bottom-width: 2px; }
 .tp-title { font-weight: 900; font-size: 18px; color: #3c3c3c; margin: 2px 0 4px; }
 .mistake { background: #fff4e5; border-radius: 10px; padding: 6px 8px; margin-top: 8px; color: #8a5300; font-size: 15px; }
@@ -462,11 +474,11 @@ function startLesson(id, level) {
 }
 function showExercise() {
   const lesson = state.currentLesson, ex = state.session[state.currentExercise];
-  let h = `<div class="ex"><div class="top-row"><button class="back-btn" onclick="showHome()" aria-label="Salir">✕</button><button class="help-btn" onclick="openSheet('explain')" aria-label="Ayuda y explicación">?</button><div class="pbar"><div class="pfill" style="width:${state.currentExercise / state.session.length * 100}%"></div></div></div>`;
+  let h = `<div class="ex"><div class="top-row"><button class="back-btn" onclick="showHome()" aria-label="Salir">✕</button><button class="help-btn" onclick="openSheet('explain')" aria-label="Ayuda y explicación">?</button><button class="snd-btn" id="sndBtn" onclick="toggleSound()" aria-label="Sonido">${soundOn() ? "🔊" : "🔇"}</button><div class="pbar"><div class="pfill" style="width:${state.currentExercise / state.session.length * 100}%"></div></div></div>`;
   if (ex.type === "learn") {
-    h += `<div class="question">${ex.label || "Palabra nueva"}</div><div class="ex-body"><div class="learn-card"><div class="learn-word">${esc(ex.word)}</div><div class="learn-meaning">${esc(ex.meaning)}</div>${ex.note ? `<div class="hint">${esc(ex.note)}</div>` : ""}${dnvLink(ex.word)}</div></div>`;
+    h += `<div class="question">${ex.label || "Palabra nueva"}</div><div class="ex-body"><div class="learn-card"><div class="learn-head"><div class="learn-word">${esc(ex.word)}</div>${spk(ex.word)}</div><div class="learn-meaning">${esc(ex.meaning)}</div>${ex.note ? `<div class="hint">${esc(ex.note)}</div>` : ""}${dnvLink(ex.word)}</div></div>`;
   } else {
-    h += `<div class="q-row">${mascot(ex.type === "mc" ? "think" : "neutral", "m-idle")}<div class="question">${esc(ex.question)}</div></div><div class="ex-body">`;
+    h += `<div class="q-row">${mascot(ex.type === "mc" ? "think" : "neutral", "m-idle")}<div class="question">${esc(ex.question)}${promptVa(ex) ? `<div class="q-spk">${spk(ex.key)}</div>` : ""}</div></div><div class="ex-body">`;
     if (ex.type === "mc") h += `<div class="options">${ex.options.map((o, i) => `<button class="option" data-i="${i}" onclick="selectOption(${i})">${esc(o)}</button>`).join("")}</div>`;
     else if (ex.type === "match") {
       const L = ex.pairs.map((p, i) => i), Rr = ex.pairs.map((p, i) => i);
@@ -486,7 +498,7 @@ function showExercise() {
   h += `<div class="exercise-pad"></div></div><div class="check-bar" id="checkBar"><div class="feedback" id="feedback"></div><button class="btn" id="checkBtn" disabled onclick="onCheck()">Comprobar</button></div>`;
   state.selected = null; state.answered = false;
   $("main").innerHTML = h;
-  if (ex.type === "learn") { const b = $("checkBtn"); b.disabled = false; b.textContent = "Continuar"; state.answered = true; }
+  if (ex.type === "learn") { const b = $("checkBtn"); b.disabled = false; b.textContent = "Continuar"; state.answered = true; if (soundOn()) say(ex.word, false, true); }
   if (document.activeElement) document.activeElement.blur();
   updateHeader();
 }
@@ -547,6 +559,8 @@ function onCheck() {
   const bar = $("checkBar"), fb = $("feedback");
   document.querySelectorAll(".q-row .m").forEach(m => m.remove());
   bar.insertAdjacentHTML("afterbegin", mascot(ok ? "cheer" : "sad", "fb-mascot " + (ok ? "m-pop" : "m-shake")));
+  const fbs = () => (ex.type !== "match" && !promptVa(ex) && spk(ex.key)) ? `<div class="fb-spk">${spk(ex.key, true)}<span>${esc(ex.key)}</span></div>` : "";
+  setTimeout(() => { const f = $("feedback"); if (f && state.answered && !f.querySelector(".fb-spk")) f.insertAdjacentHTML("beforeend", fbs()); }, 0);
   if (ok) { fb.innerHTML = "✅ ¡Correcto! " + esc(ex.explanation || ""); state.correctInLesson++; bar.classList.add("ok"); buzz(30); }
   else if (ex.type === "match") { fb.innerHTML = "👍 ¡Hecho! Repasa los pares que fallaste."; bar.classList.add("ok"); }
   else {
@@ -637,6 +651,45 @@ function dnvLink(va) {
   return `<a class="dnv-link" href="${DNV(w)}" target="_blank" rel="noopener">Ver «${esc(w)}» en el DNV (AVL) ↗</a>`;
 }
 const pnorm = t => String(t).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^\w\s]/g, " ").replace(/\s+/g, " ").trim();
+// ---- audio: pre-generated Valencian mp3 (audio/<fnv1a(akey)>.mp3), Web Speech fallback ----
+const akey = t => String(t).toLowerCase().normalize("NFC").replace(/[’]/g, "'").replace(/[¿¡!?.,;:«»"()…]/g, " ").replace(/\s+/g, " ").trim();
+const fnv = t => { let h = 0x811c9dc5; for (const b of new TextEncoder().encode(t)) { h ^= b; h = Math.imul(h, 0x01000193) >>> 0; } return h.toString(16).padStart(8, "0"); };
+let AUD = null; const player = new Audio(); player.preload = "auto";
+fetch("audio/manifest.json").then(r => r.ok ? r.json() : null).then(j => { AUD = j && j.items; if (AUD) refreshSpk(); }).catch(() => {});
+const soundOn = () => ls.getItem("valencia_sound") !== "0";
+function toggleSound() { ls.setItem("valencia_sound", soundOn() ? "0" : "1"); const b = $("sndBtn"); if (b) b.textContent = soundOn() ? "🔊" : "🔇"; if (!soundOn()) stopAudio(); }
+let VOICE; // undefined = not looked up yet, null = none
+function caVoice() {
+  if (!("speechSynthesis" in window)) return null;
+  const vs = speechSynthesis.getVoices(); if (!vs.length) return VOICE || null;
+  const ca = vs.filter(v => /^ca([-_]|$)/i.test(v.lang) || /catal|valen/i.test(v.name));
+  VOICE = ca.find(v => /valen/i.test(v.lang + " " + v.name)) || ca[0] || null; return VOICE;
+}
+if ("speechSynthesis" in window) speechSynthesis.addEventListener && speechSynthesis.addEventListener("voiceschanged", () => { VOICE = undefined; caVoice(); refreshSpk(); });
+const hasFile = t => !!(AUD && AUD[akey(t)]);
+const canSay = t => hasFile(t) || !!caVoice();
+function stopAudio() { try { player.pause(); } catch (e) {} if ("speechSynthesis" in window) speechSynthesis.cancel(); document.querySelectorAll(".spk.playing").forEach(b => b.classList.remove("playing")); }
+function say(t, slow, auto, btn) {
+  stopAudio(); const rate = slow ? 0.7 : 1;
+  if (btn) { btn.classList.add("playing"); const off = () => btn.classList.remove("playing"); player.onended = player.onerror = off; setTimeout(off, 4000); }
+  const k = AUD && AUD[akey(t)];
+  if (k) {
+    player.src = "audio/" + k + ".mp3"; player.playbackRate = rate; player.defaultPlaybackRate = rate;
+    if ("preservesPitch" in player) player.preservesPitch = true;
+    const p = player.play(); if (p && p.catch) p.catch(() => { if (!auto) speak(t, rate); });
+  } else speak(t, rate);
+}
+function speak(t, rate) {
+  const v = caVoice(); if (!v) return;
+  const u = new SpeechSynthesisUtterance(t); u.voice = v; u.lang = v.lang; u.rate = 0.9 * rate; speechSynthesis.speak(u);
+}
+function spk(t, sm, noSlow) {
+  if (!t) return "";
+  const d = esc(String(t)), c = sm ? " sm" : "", hide = canSay(t) ? "" : ` style="display:none"`;
+  return `<span class="spk-wrap" data-t="${d}"${hide}><button class="spk${c}" type="button" onclick="event.stopPropagation();say(this.parentNode.dataset.t,0,0,this)" aria-label="Escuchar">🔊</button>${noSlow ? "" : `<button class="spk slow${c}" type="button" onclick="event.stopPropagation();say(this.parentNode.dataset.t,1,0,this)" aria-label="Escuchar despacio">🐢</button>`}</span>`;
+}
+function refreshSpk() { document.querySelectorAll(".spk-wrap").forEach(w => { w.style.display = canSay(w.dataset.t) ? "" : "none"; }); }
+const promptVa = ex => (ex.type === "mc" && /^¿Qué significa/.test(ex.question)) || (ex.type === "type" && ex.lang === "es");
 let PH = null, PM = null;
 let HELP = null, QA = null;
 async function loadPhrases() {
@@ -651,7 +704,7 @@ function topicCard(id) {
   return `<div class="ph-card topic"><div class="ph-es">Gramática</div><div class="tp-title">${esc(t.title)}</div><div class="ph-alt">${esc(t.text)}</div>${t.mistake ? `<div class="mistake">⚠️ Error típico: ${esc(t.mistake)}</div>` : ""}</div>`;
 }
 function itemCard(it, big) {
-  return `<div class="ph-card${big ? " big" : ""}"><div class="ph-es">${esc(it.es)}</div><div class="ph-va">${esc(it.va)}</div>
+  return `<div class="ph-card${big ? " big" : ""}"><div class="ph-es">${esc(it.es)}</div><div class="ph-va-row"><div class="ph-va">${esc(it.va)}</div>${spk(it.va)}</div>
     ${it.note ? `<div class="ph-note">📝 ${esc(it.note)}</div>` : ""}
     ${it.pron ? `<div class="ph-alt">🗣️ ${it.pron.map(esc).join(" · ")}</div>` : ""}
     ${it.mistake ? `<div class="mistake">⚠️ ${esc(it.mistake)}</div>` : ""}
@@ -717,9 +770,9 @@ const myQs = () => JSON.parse(ls.getItem("valencia_myqs") || "[]");
 function saveMyQ(q) { const l = myQs().filter(x => x.q !== q); l.unshift({ q, t: todayKey() }); ls.setItem("valencia_myqs", JSON.stringify(l.slice(0, 100))); }
 function phraseCard(k, big) {
   const m = PM[k] || {};
-  return `<div class="ph-card${big ? " big" : ""}"><div class="ph-es">${esc(m.es || k)}</div><div class="ph-va">${esc(PH[k])}</div>${m.alt ? `<div class="ph-alt">También: ${m.alt.map(esc).join(" · ")}</div>` : ""}${m.note ? `<div class="ph-note">${esc(m.note)}</div>` : ""}${dnvLink(PH[k])}</div>`;
+  return `<div class="ph-card${big ? " big" : ""}"><div class="ph-es">${esc(m.es || k)}</div><div class="ph-va-row"><div class="ph-va">${esc(PH[k])}</div>${spk(PH[k])}</div>${m.alt ? `<div class="ph-alt">También: ${m.alt.map(esc).join(" · ")}</div>` : ""}${m.note ? `<div class="ph-note">${esc(m.note)}</div>` : ""}${dnvLink(PH[k])}</div>`;
 }
-const smallRow = k => `<button class="ph-row" onclick="showPhrase('${k.replace(/'/g, "")}')"><span>${esc((PM[k] || {}).es || k)}</span><b>${esc(PH[k])}</b></button>`;
+const smallRow = k => `<div class="ph-line"><button class="ph-row" onclick="showPhrase('${k.replace(/'/g, "")}')"><span>${esc((PM[k] || {}).es || k)}</span><b>${esc(PH[k])}</b></button>${spk(PH[k], true, true)}</div>`;
 async function openSheet(tab) {
   if (state.inLesson && tab !== "explain") return;
   let sh = $("sheet");
@@ -728,7 +781,7 @@ async function openSheet(tab) {
     <div class="sheet-head"><b>${tab === "explain" ? "Ayuda" : "¿Cómo se dice…?"}</b><button class="back-btn" onclick="closeSheet()" aria-label="Cerrar">✕</button></div>
     <div class="tabs" role="tablist">${(tab === "explain" ? [["explain", "Explicación"]] : []).concat([["ask", "Preguntar"], ["browse", "Frases"], ["mine", "Mis preguntas"]]).map(([id, t]) => `<button role="tab" class="tab" id="tab-${id}" onclick="sheetTab('${id}')">${t}</button>`).join("")}</div>
     <div class="sheet-body" id="sheetBody"><p class="hint">Cargando frases…</p></div>
-    <div class="credit">Referencia normativa: Diccionari Normatiu Valencià, AVL</div></div>`;
+    <div class="credit">Referencia normativa: Diccionari Normatiu Valencià, AVL · Voz: Matxa-TTS (Projecte Aina, BSC), uso no comercial</div></div>`;
   document.body.classList.add("sheet-open");
   try { await loadPhrases(); } catch (e) { $("sheetBody").innerHTML = `<p class="hint">No se han podido cargar las frases. Comprueba la conexión.</p>`; return; }
   sheetTab(tab || "ask");
