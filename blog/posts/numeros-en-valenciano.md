@@ -3,6 +3,7 @@ title: Los números en valenciano del 1 al 1.000 (con ordinales)
 description: Aprende los números en valenciano: del 0 al 20, decenas, centenas y mil, con las formas valencianas huit, dèsset, díhuit y dènou, y los ordinales.
 slug: numeros-en-valenciano
 date: 2026-10-21
+updated: 2026-10-22
 ---
 Los números aparecen en todas partes: precios, horas, direcciones, números de teléfono o la edad. En valenciano siguen una lógica muy regular, y con aprender unas veinte palabras puedes construir casi cualquier cifra. Esta guía recoge los números en valenciano con las formas preferidas por la normativa valenciana de l'Acadèmia Valenciana de la Llengua (AVL).
 
@@ -155,4 +156,4 @@ Fíjate en que con la una se usa *és la* y a partir de las dos, *són les*, igu
 3. **Empieza por el 0-20 y las decenas.** Con esas 28 palabras ya puedes formar todos los números hasta el 99.
 4. **Combínalos con el calendario.** Las fechas son perfectas para practicar: repasa [los días de la semana y los meses en valenciano](/blog/dias-de-la-semana-y-meses-en-valenciano.html).
 
-Si buscas más vocabulario básico, consulta las [frases básicas en valenciano](/blog/frases-basicas-en-valenciano.html). Y para escuchar y practicar los números con ejercicios, prueba la [app gratuita Diu sí al valencià](/app/).
+Si buscas más vocabulario básico, consulta las [frases básicas en valenciano](/blog/frases-basicas-en-valenciano.html) o aprende los [colores en valenciano](/blog/colores-en-valenciano.html). Y para escuchar y practicar los números con ejercicios, prueba la [app gratuita Diu sí al valencià](/app/).
