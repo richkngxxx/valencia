@@ -11,7 +11,7 @@ for cat, items in P.items():
         seen.add(k); alts = [a.strip() for a in va.split("|")]
         out.append({"es": es, "va": alts[0], "alt": alts[1:], "cat": cat, "note": note})
 for lv, (lt, units) in C.items():
-    for ut, col, lessons in units:
+    for ut, col, lessons, *_ in units:
         for title, words, phrases in lessons:
             for ph in phrases:
                 k = norm(ph[1])

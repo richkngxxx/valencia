@@ -53,6 +53,29 @@ T = {
  "registre-cult": ("Registro culto", "àdhuc (incluso), llevat de (excepto), així mateix (asimismo), tot i que (aunque), nogensmenys (no obstante).", ""),
  "administracio": ("Lenguaje administrativo", "instància, expedient, termini (plazo), tràmit, registre, al·legació.", "«Plazo» → «termini», no «plaç»."),
  "llengua": ("La lengua", "La AVL (creada en 1998) es la institución normativa. Las Normes de Castelló (1932) fijaron la ortografía.", ""),
+ "alfabet": ("El alfabeto", "Las letras tienen nombre femenino: la a, la be, la ce… Formas valencianas normativas (AVL): efe, ele, eme, ene, erre, esse (también fe, el, em, en, er, es). La b y la v se pueden llamar «be alta» y «ve baixa».", "Pronunciar la v como b en todas partes: en buena parte del valenciano la v suena labiodental [v]."),
+ "lletrejar": ("Deletrear", "Para deletrear se dice cada letra: «hola: hac, o, ele, a». Signos útiles: ela geminada (l·l), ce trencada (ç), apòstrof ('), guionet (-), dièresi (ï, ü).", "Olvidar el punto volado de la ela geminada: «col·legi», no «colegi»."),
+ "accents": ("Los acentos", "El valenciano tiene dos acentos: obert (à, è, ò) y tancat (é, í, ó, ú). Llevan acento las agudas acabadas en vocal, -as, -es, -is, -os, -us, -en, -in: també, cançó, café. En valenciano «e» tónica cerrada se escribe é: café, francés, anglés. Desde 2018 la AVL solo mantiene 15 acentos diacríticos (bé, déu, és, mà, més, món, pèl, què, sé, sí, sòl, té, ús, vós…): «soc» ya no lleva acento.", "Escribir «sóc» o «dóna»: la AVL los suprimió en 2018; hoy es «soc» y «dona»."),
+ "dades": ("Datos personales", "Edad con «tindre»: tinc trenta anys. Dirección: carrer, número, pis, porta, codi postal. Estado civil con «estar» o «ser»: estic casada / soc solter.", "Calcar «tengo 30 años» está bien; lo que no se dice es «soc 30 anys»."),
+ "nacionalitats": ("Países y nacionalidades", "Los gentilicios concuerdan: francés/francesa, anglés/anglesa, alemany/alemanya, italià/italiana. En valenciano la e tónica de -és es cerrada (francés, anglés); también se acepta francès, anglès.", "Escribirlos con mayúscula: en valenciano los gentilicios van en minúscula (és francesa)."),
+ "articles": ("Artículos y apóstrofo", "Artículos: el, la, els, les; un, una, uns, unes. Delante de vocal o h se apostrofa: l'home, l'aigua, l'amiga. «La» no se apostrofa ante i/u átonas (la illa, la universitat) ni ante la negación «a-» (la anormalitat).", "Escribir «l'illa» o «l'universitat»: la forma correcta es «la illa», «la universitat»."),
+ "contraccions": ("Contracciones", "a + el = al, a + els = als, de + el = del, de + els = dels, per + el = pel, per + els = pels. Con «la» o ante vocal no se contrae: a la, de l'home.", "Contraer con femenino («dela») o ante vocal («del home»): es «de la» y «de l'home»."),
+ "possessius": ("Posesivos", "Con artículo: el meu, la meua, els meus, les meues; el teu/la teua; el seu/la seua; el nostre/la nostra; el vostre/la vostra; el seu (de ells). Formas valencianas: meua, teua, seua.", "Omitir el artículo («meu pare»): lo normal es «el meu pare» (o «mon pare», más literario)."),
+ "femeni-plural": ("Femenino y plural", "Femenino: suele añadir -a (xic/xica, nou/nova). Plural: -s (llibre/llibres); -a → -es (casa/cases); tras -s, -x, -ç → -os (peix/peixos). Cambios: -ca → -ques, -ga → -gues, -ja → -ges.", "Hacer «cases» como «casas»: el plural de -a es -es."),
+ "concordanca": ("Concordancia", "Nombre y adjetivo concuerdan en género y número: un cotxe blanc, una casa blanca, uns cotxes blancs, unes cases blanques.", "Olvidar el cambio ortográfico: «blancas» → «blanques», «bonicas» → «boniques»."),
+ "mercat": ("Mercado y horno", "Cantidades con «de»: un quilo de, mig quilo de, una dotzena d'ous. En Valencia la panadería es «el forn». Tiendas en -eria: carnisseria, peixateria, pastisseria.", "Decir «medio quilo»: es «mig quilo»."),
+ "aficions": ("Aficiones y deportes", "«M'agrada» + singular o infinitivo, «m'agraden» + plural. «M'encanta» para gustos fuertes; «no m'agrada gens» = no me gusta nada. Deportes con «fer» (fer esport) o «jugar a» (jugar a futbol).", "Decir «m'agrada les pel·lícules»: con plural es «m'agraden»."),
+ "frequencia": ("Frecuencia", "sempre, sovint, de vegades, mai, cada dia, una vegada / dues vegades per setmana. «Mai» va solo o con «no»: mai faig esport / no faig mai esport.", "Usar «vez» → en valenciano es «vegada»."),
+ "imperatiu-receptes": ("Imperativo en recetas", "Tú afirmativo = 3.ª persona del presente: talla, pela, posa, remena. Formas valencianas: afig (afegir), bull (bullir), fregix (fregir), servix (servir). Negativo con subjuntivo: no cremes, no talles.", "Usar el infinitivo para mandar («tallar la ceba»): en una receta oral se usa el imperativo «talla la ceba»."),
+ "haver-de": ("Obligación: haver de", "haver de + infinitivo = tener que: he de, has de, ha de, hem de, heu de, han de. Impersonal: s'ha de / cal + infinitivo. «No cal» = no hace falta.", "Calcar «tindre que»: es incorrecto; se dice «haver de»."),
+ "participi": ("El participio", "Regular: -ar → -at (parlat), -er/-re → -ut (begut, perdut), -ir → -it (dormit). Irregulares frecuentes: fet, vist, dit, escrit, obert, pres, mort.", "Decir «hecho» → «fet», no «fit»; «abierto» → «obert»."),
+ "perfet": ("Pretérito perfecto", "haver (he, has, ha, hem, heu, han) + participio: he menjat, has fet, ha dit. Se usa para un tiempo que no ha terminado (hui, este matí, esta setmana) o sin fecha (alguna vegada, ja, encara no).", "Poner algo entre «he» y el participio como en inglés: se dice «ja he menjat» / «encara no he menjat»."),
+ "perfet-vs-perifrastic": ("He menjat o vaig menjar", "Tiempo terminado (ahir, l'any passat) → vaig + infinitivo: ahir vaig menjar paella. Tiempo que incluye el ahora (hui, este matí) → he + participio: hui he menjat paella.", "Usar «vaig menjar» con «hui»: lo normal es «hui he menjat»."),
+ "mitjans": ("Noticias y medios", "diari, notícia, ràdio, televisió, xarxes socials. Para contar una noticia: «segons…», «hi ha hagut…», perfecto para hechos recientes.", "Decir «periòdic» es correcto, pero en valenciano es muy habitual «diari»."),
+ "eines": ("Herramientas y aparatos", "«Per a què servix?» (forma valenciana de servir). Verbos: encendre (encén), apagar, funcionar, arreglar, penjar.", "Decir «encender» → «encendre»; el imperativo es «encén»."),
+ "cotxe": ("Coche y bici", "conduir, aparcar, el carnet de conduir, el taller, una avaria. «Portar el cotxe al taller».", "Usar «llevar» por «portar»: «llevar» en valenciano es quitar."),
+ "reclamacio": ("Reclamaciones", "«Vull fer una reclamació», «demanar el full de reclamacions», «tornar els diners», «canviar-lo», «té garantia».", "Decir «devolver el dinero» → «tornar els diners»."),
+ "medi": ("Medio ambiente", "reciclar, reutilitzar, reduir; contenidor de vidre, paper, plàstic i envasos. «Cal» / «hem de» para proponer.", "Escribir «plastic» sin acento: es «plàstic»."),
 }
 # lesson title -> topic
 L = {
@@ -68,6 +91,12 @@ L = {
  "Las Fallas":"cultura","Tradiciones":"cultura","Literatura I":"cultura","Cuerpo y casa":"falsos-amics","Verbos traicioneros":"falsos-amics","Cuantificadores":"quantificadors",
  "Combinaciones":"pf-comb","Imperativo":"imperatiu","En e hi avanzados":"pf-en-hi","Subjuntivo avanzado":"subj-present","Registro culto":"registre-cult","Administración":"administracio",
  "Refranes II":"refranys","Literatura II":"cultura","La lengua":"llengua",
+ "El alfabeto I":"alfabet","El alfabeto II":"alfabet","Deletrear":"lletrejar","Los acentos":"accents","Edad y dirección":"dades","Países y nacionalidades":"nacionalitats","Estado civil":"dades",
+ "Artículos y apóstrofo":"articles","Contracciones":"contraccions","Posesivos":"possessius","Femenino y plural":"femeni-plural","Concordancia":"concordanca",
+ "En el mercado":"mercat","Carne y pescado":"mercat","En el horno":"mercat","Me gusta":"aficions","Deportes":"aficions","Con qué frecuencia":"frequencia",
+ "Imperativo en la cocina":"imperatiu-receptes","Una receta":"imperatiu-receptes","Haver de":"haver-de","El participio":"participi","He menjat":"perfet","Hoy o ayer":"perfet-vs-perifrastic",
+ "Los medios":"mitjans","Sucesos":"mitjans","Opinar sobre noticias":"opinio","Herramientas":"eines","Aparatos de casa":"eines","El coche y la bici":"cotxe","Hacer una reclamación":"reclamacio",
+ "Reciclar":"medi","Cuidar el planeta":"medi",
 }
 # hand-written per-item extras (A1/A2): (pronunciation hint, common mistake)
 X = {

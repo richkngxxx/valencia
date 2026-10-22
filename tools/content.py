@@ -224,3 +224,106 @@ C["C2"] = ("Maestría", [
    [("Les Normes de Castelló són de 1932","Las Normas de Castelló son de 1932"),("L'AVL va ser creada l'any 1998","La AVL fue creada en 1998"),("La llengua és patrimoni de tots","La lengua es patrimonio de todos")]),
  ]),
 ])
+
+# ---------------------------------------------------------------------------
+# v18: units aligned with the official A1–A2 path (Ajuntament de Finestrat course used only as a
+# topic/sequence reference; all text below is original). New units carry a 4th element = stable slug:
+# their lesson ids are "<level>-<slug>-<n>", so the positional ids of the existing units never change.
+# Insert them anywhere; old units keep their positional numbering (counted over old units only).
+NEW = {
+ "lletres": ("Letras y sonidos", "#ff4b4b", [
+  ("El alfabeto I", [("a","la letra a"),("be","la letra b","También «be alta»."),("ce","la letra c"),("de","la letra d"),("e","la letra e"),("efe","la letra f"),("ge","la letra g"),("hac","la letra h","La h no suena: hola, home."),("i","la letra i"),("jota","la letra j")],
+   [("A de arròs","A de arroz"),("Com s'escriu?","¿Cómo se escribe?"),("S'escriu amb hac","Se escribe con hache"),("Pots lletrejar-ho?","¿Puedes deletrearlo?","«Lletrejar» = deletrear.")]),
+  ("El alfabeto II", [("ca","la letra k"),("ele","la letra l"),("eme","la letra m"),("ene","la letra n"),("pe","la letra p"),("cu","la letra q"),("erre","la letra r"),("esse","la letra s"),("te","la letra t"),("ve","la letra v","También «ve baixa»."),("ics","la letra x"),("zeta","la letra z")],
+   [("S'escriu amb ve","Se escribe con uve"),("Erre, a, ics","Erre, a, equis"),("El meu nom s'escriu amb zeta","Mi nombre se escribe con zeta"),("Ics de xocolate","Equis de chocolate")]),
+  ("Deletrear", [("lletrejar","deletrear"),("lletra","letra"),("majúscula","mayúscula"),("minúscula","minúscula"),("ela geminada","ele geminada (l·l)","Se escribe con punto volado: col·legi."),("ce trencada","ce con cedilla (ç)","Como en «plaça»."),("apòstrof","apóstrofo","Como en «l'home»."),("guionet","guion"),("dièresi","diéresis (ï, ü)","Como en «veïna».")],
+   [("Amb majúscula, per favor","Con mayúscula, por favor"),("Plaça porta ce trencada","Plaza lleva ce con cedilla"),("Col·legi porta ela geminada","Colegio lleva ele geminada"),("Pots repetir la lletra?","¿Puedes repetir la letra?")]),
+  ("Los acentos", [("accent","acento"),("accent obert","acento abierto (à, è, ò)","Vocal abierta: cafè no; café sí, porque la e es cerrada."),("accent tancat","acento cerrado (é, í, ó, ú)"),("vocal","vocal"),("síl·laba","sílaba"),("aguda","aguda"),("també","también","Aguda acabada en vocal: lleva acento."),("cançó","canción","Aguda acabada en -on: lleva acento."),("però","pero"),("més","más","Acento diacrítico: «més» (más) / «mes» (mes).")],
+   [("Café porta accent tancat","Café lleva acento cerrado"),("Això porta accent obert","Esto lleva acento abierto"),("Soc no porta accent","Soc no lleva acento","Desde 2018 la AVL escribe «soc» sin acento."),("Vull més pa","Quiero más pan")]),
+ ]),
+ "dades": ("Datos personales", "#00cd9c", [
+  ("Edad y dirección", [("quants anys tens?","¿cuántos años tienes?"),("tinc trenta anys","tengo treinta años"),("adreça","dirección"),("número","número"),("pis","piso (planta)"),("porta","puerta"),("codi postal","código postal"),("correu electrònic","correo electrónico"),("data de naixement","fecha de nacimiento"),("nàixer","nacer","Forma valenciana (DNV: nàixer/néixer).",["néixer"])],
+   [("Quina és la teua adreça?","¿Cuál es tu dirección?"),("Visc al carrer Major, número cinc","Vivo en la calle Mayor, número cinco"),("Vaig nàixer al maig","Nací en mayo"),("Em dones el teu correu electrònic?","¿Me das tu correo electrónico?")]),
+  ("Países y nacionalidades", [("Espanya","España"),("França","Francia"),("Anglaterra","Inglaterra"),("Alemanya","Alemania"),("Itàlia","Italia"),("espanyol","español","Femenino: espanyola."),("francés","francés","Femenino: francesa. DNV: francés (también francès).",["francès"]),("anglés","inglés","Femenino: anglesa.",["anglès"]),("alemany","alemán","Femenino: alemanya."),("italià","italiano","Femenino: italiana.")],
+   [("Soc francesa, de París","Soy francesa, de París"),("Ell és alemany","Él es alemán"),("Parle anglés i espanyol","Hablo inglés y español"),("La meua parella és italiana","Mi pareja es italiana")]),
+  ("Estado civil", [("parella","pareja"),("casat","casado","Femenino: casada."),("solter","soltero","Femenino: soltera."),("divorciat","divorciado","Femenino: divorciada."),("nóvio","novio","Femenino: nóvia."),("marit","marido"),("dona","mujer / esposa"),("amic","amigo","Femenino: amiga."),("company","compañero","Femenino: companya.")],
+   [("Estic casada i tinc dos fills","Estoy casada y tengo dos hijos"),("Ell és solter","Él es soltero"),("Visc amb la meua parella","Vivo con mi pareja"),("És un amic de la feina","Es un amigo del trabajo","DNV: «faena» (forma principal) o «feina».")]),
+ ]),
+ "gram1": ("Gramática básica", "#2b70c9", [
+  ("Artículos y apóstrofo", [("el","el"),("la","la"),("els","los"),("les","las"),("l'home","el hombre","Delante de vocal o h: l'."),("l'amiga","la amiga","«La» también se apostrofa: l'amiga."),("la illa","la isla","No se apostrofa «la» ante i/u átonas: la illa, la universitat."),("la universitat","la universidad"),("un","un"),("unes","unas")],
+   [("L'home i la dona","El hombre y la mujer"),("L'amiga de la meua germana","La amiga de mi hermana"),("La illa és xicoteta","La isla es pequeña"),("Els xiquets i les xiquetes","Los niños y las niñas")]),
+  ("Contracciones", [("al","al (a + el)"),("als","a los (a + els)"),("del","del (de + el)"),("dels","de los (de + els)"),("pel","por el (per + el)"),("pels","por los (per + els)"),("a la","a la (no se contrae)"),("de l'","de la / del (ante vocal)","Ante vocal no hay contracción: de l'home.")],
+   [("Vaig al mercat","Voy al mercado"),("Venim del poble","Venimos del pueblo"),("Passegem pel parc","Paseamos por el parque"),("La casa de l'iaio","La casa del abuelo")]),
+  ("Posesivos", [("el teu","tu (masculino)"),("la teua","tu (femenino)"),("el seu","su (masculino)"),("la seua","su (femenino)"),("el nostre","nuestro"),("la nostra","nuestra"),("el vostre","vuestro"),("els meus","mis (masculino)"),("les meues","mis (femenino)")],
+   [("La teua casa és molt gran","Tu casa es muy grande"),("El nostre pare treballa a València","Nuestro padre trabaja en Valencia"),("Les meues amigues viuen ací","Mis amigas viven aquí"),("És el vostre cotxe?","¿Es vuestro coche?")]),
+  ("Femenino y plural", [("xic","chico","Femenino: xica."),("xica","chica"),("gat","gato"),("gata","gata"),("llibre","libro"),("llibres","libros"),("cases","casas","-a → -es: casa, cases."),("peixos","peces","Tras -s, -x, -ç: -os."),("nou","nuevo","Femenino: nova."),("nova","nueva")],
+   [("Dos llibres nous","Dos libros nuevos"),("Tres cases noves","Tres casas nuevas"),("La xica és nova","La chica es nueva"),("Tinc dues gates","Tengo dos gatas")]),
+  ("Concordancia", [("blanca","blanca"),("blancs","blancos"),("blanques","blancas","-ca → -ques."),("alta","alta"),("alts","altos"),("altes","altas"),("bonic","bonito","Femenino: bonica."),("bonics","bonitos"),("bonica","bonita"),("boniques","bonitas")],
+   [("Una casa blanca","Una casa blanca"),("Unes sabates blanques","Unos zapatos blancos"),("Els meus germans són alts","Mis hermanos son altos"),("Les flors són boniques","Las flores son bonitas")]),
+ ]),
+ "mercat": ("Mercado y horno", "#ff9600", [
+  ("En el mercado", [("mercat","mercado"),("parada","puesto (del mercado)"),("quilo","kilo"),("mig quilo","medio kilo"),("dotzena","docena"),("paquet","paquete"),("pot","bote / tarro"),("bossa","bolsa"),("botella","botella"),("res més?","¿algo más?")],
+   [("Un quilo de tomaques, per favor","Un kilo de tomates, por favor"),("Mig quilo de cireres","Medio kilo de cerezas"),("Una dotzena d'ous","Una docena de huevos"),("Res més, gràcies","Nada más, gracias")]),
+  ("Carne y pescado", [("carnisseria","carnicería"),("peixateria","pescadería"),("pollastre","pollo"),("porc","cerdo"),("vedella","ternera"),("corder","cordero"),("sardina","sardina"),("lluç","merluza"),("gamba","gamba"),("calamar","calamar")],
+   [("Vull un pollastre sencer","Quiero un pollo entero"),("Mig quilo de lluç","Medio kilo de merluza"),("No menge porc","No como cerdo"),("Les sardines són fresques?","¿Las sardinas son frescas?")]),
+  ("En el horno", [("forn","horno / panadería","En Valencia la panadería es «el forn»."),("barra de pa","barra de pan"),("pa integral","pan integral"),("coca","coca (masa horneada)"),("pastís","pastel / tarta"),("magdalena","magdalena"),("galeta","galleta"),("ensaïmada","ensaimada"),("pastisseria","pastelería"),("dolç","dulce","Femenino: dolça.")],
+   [("Una barra de pa, per favor","Una barra de pan, por favor"),("Vaig al forn","Voy al horno"),("M'agraden les coses dolces","Me gustan las cosas dulces"),("Un pastís de xocolate","Un pastel de chocolate")]),
+ ]),
+ "aficions": ("Aficiones y deportes", "#ce82ff", [
+  ("Me gusta", [("afició","afición"),("m'encanta","me encanta"),("no m'agrada gens","no me gusta nada"),("llegir","leer"),("cantar","cantar"),("ballar","bailar"),("pintar","pintar"),("música","música"),("pel·lícula","película"),("temps lliure","tiempo libre")],
+   [("M'encanta llegir","Me encanta leer"),("No m'agrada gens ballar","No me gusta nada bailar"),("En el temps lliure pinte","En el tiempo libre pinto"),("Quina és la teua afició?","¿Cuál es tu afición?")]),
+  ("Deportes", [("esport","deporte"),("futbol","fútbol"),("bàsquet","baloncesto"),("tenis","tenis"),("nadar","nadar"),("córrer","correr"),("piscina","piscina"),("equip","equipo"),("partit","partido"),("guanyar","ganar")],
+   [("Faig esport cada dia","Hago deporte cada día"),("Vaig a nadar a la piscina","Voy a nadar a la piscina"),("El meu equip ha guanyat","Mi equipo ha ganado"),("Diumenge hi ha partit de futbol","El domingo hay partido de fútbol")]),
+  ("Con qué frecuencia", [("sempre","siempre"),("sovint","a menudo"),("de vegades","a veces"),("mai","nunca"),("cada setmana","cada semana"),("una vegada","una vez"),("dues vegades","dos veces"),("pilota","pelota"),("bicicleta","bicicleta"),("caminar","caminar")],
+   [("Sempre camine pel matí","Siempre camino por la mañana"),("De vegades jugue a tenis","A veces juego al tenis"),("Mai faig esport","Nunca hago deporte"),("Vaig en bicicleta dues vegades per setmana","Voy en bicicleta dos veces por semana")]),
+ ]),
+ "receptes": ("Recetas e instrucciones", "#ff4b4b", [
+  ("Imperativo en la cocina", [("talla","corta (tú)","Imperativo de «tallar»."),("pela","pela"),("posa","pon"),("afig","añade","Imperativo de «afegir»."),("remena","remueve"),("bull","hierve","Imperativo de «bullir»."),("fregix","fríe","Imperativo de «fregir»."),("tasta","prueba"),("servix","sirve","Imperativo de «servir»."),("no cremes","no quemes","Imperativo negativo: no + subjuntivo.")],
+   [("Pela les creïlles","Pela las patatas"),("Afig un poc de sal","Añade un poco de sal"),("Talla la ceba ben fina","Corta la cebolla bien fina"),("No cremes l'arròs","No quemes el arroz")]),
+  ("Una receta", [("recepta","receta"),("ingredient","ingrediente"),("cassola","cazuela"),("olla","olla"),("paella","paella (sartén / plato)"),("cullera","cuchara"),("ganivet","cuchillo"),("minut","minuto"),("primer","primero"),("després","después")],
+   [("Primer, escalfa l'oli","Primero, calienta el aceite"),("Després, posa la verdura","Después, pon la verdura"),("Deixa-ho deu minuts","Déjalo diez minutos"),("Servix-ho calent","Sírvelo caliente")]),
+  ("Haver de", [("he de","tengo que"),("has de","tienes que"),("ha de","tiene que"),("hem de","tenemos que"),("heu de","tenéis que"),("han de","tienen que"),("s'ha de","hay que (se debe)"),("cal","hace falta / hay que"),("no cal","no hace falta")],
+   [("He de comprar pa","Tengo que comprar pan"),("Hem de netejar la cuina","Tenemos que limpiar la cocina"),("S'ha de bullir vint minuts","Hay que hervirlo veinte minutos"),("No cal afegir sal","No hace falta añadir sal")]),
+ ]),
+ "perfet": ("¿Qué ha pasado?", "#58cc02", [
+  ("El participio", [("parlat","hablado"),("menjat","comido"),("begut","bebido"),("fet","hecho"),("vist","visto"),("dit","dicho"),("escrit","escrito"),("llegit","leído"),("obert","abierto"),("estat","estado")],
+   [("He parlat amb ma mare","He hablado con mi madre"),("Has vist la pel·lícula?","¿Has visto la película?"),("Ja hem menjat","Ya hemos comido"),("Qui ha obert la finestra?","¿Quién ha abierto la ventana?")]),
+  ("He menjat", [("he","he"),("has","has"),("ha","ha"),("hem","hemos"),("heu","habéis"),("han","han"),("he fet","he hecho"),("has dormit","has dormido"),("hem arribat","hemos llegado"),("han eixit","han salido")],
+   [("Hui he fet moltes coses","Hoy he hecho muchas cosas"),("Has dormit bé?","¿Has dormido bien?"),("Hem arribat tard","Hemos llegado tarde"),("Els xiquets han eixit al pati","Los niños han salido al patio")]),
+  ("Hoy o ayer", [("este matí","esta mañana"),("esta setmana","esta semana"),("ja","ya"),("encara no","todavía no"),("alguna vegada","alguna vez"),("mai","nunca"),("ahir vaig menjar","ayer comí","Tiempo terminado → vaig + infinitivo."),("hui he menjat","hoy he comido","Tiempo no terminado (hui, este matí) → he + participio."),("què ha passat?","¿qué ha pasado?")],
+   [("Este matí he esmorzat a casa","Esta mañana he desayunado en casa"),("Ahir vaig sopar amb amics","Ayer cené con amigos"),("Encara no he acabat","Todavía no he terminado"),("Has estat alguna vegada a Alacant?","¿Has estado alguna vez en Alicante?")]),
+ ]),
+ "mitjans": ("Noticias y medios", "#1cb0f6", [
+  ("Los medios", [("diari","periódico"),("notícia","noticia"),("ràdio","radio"),("televisió","televisión"),("periodista","periodista"),("titular","titular"),("revista","revista"),("xarxes socials","redes sociales"),("informatiu","informativo"),("entrevista","entrevista")],
+   [("Llig el diari cada matí","Leo el periódico cada mañana"),("Has vist la notícia?","¿Has visto la noticia?"),("Escolte la ràdio al cotxe","Escucho la radio en el coche"),("Ho he llegit a les xarxes socials","Lo he leído en las redes sociales")]),
+  ("Sucesos", [("accident","accidente"),("incendi","incendio"),("trànsit","tráfico"),("policia","policía"),("ferit","herido","Femenino: ferida."),("tempesta","tormenta"),("carretera","carretera"),("segons","según"),("ha passat","ha pasado"),("ahir a la nit","anoche")],
+   [("Hi ha hagut un accident a la carretera","Ha habido un accidente en la carretera"),("Segons la ràdio, hi ha molt de trànsit","Según la radio, hay mucho tráfico"),("No hi ha ferits","No hay heridos"),("La tempesta ha tallat la carretera","La tormenta ha cortado la carretera")]),
+  ("Opinar sobre noticias", [("crec que","creo que"),("estic d'acord","estoy de acuerdo"),("no estic d'acord","no estoy de acuerdo"),("tens raó","tienes razón"),("és veritat","es verdad"),("és mentida","es mentira"),("potser","quizás"),("segur","seguro"),("per a mi","para mí")],
+   [("Crec que és mentida","Creo que es mentira"),("Tens raó, és veritat","Tienes razón, es verdad"),("No estic d'acord amb el titular","No estoy de acuerdo con el titular"),("Potser té raó","Quizás tiene razón")]),
+ ]),
+ "eines": ("Herramientas y aparatos", "#ff9600", [
+  ("Herramientas", [("eina","herramienta"),("martell","martillo"),("tornavís","destornillador"),("tisores","tijeras"),("clau","clavo / llave"),("cargol","tornillo / caracol"),("cinta","cinta"),("caixa d'eines","caja de herramientas"),("penjar","colgar"),("arreglar","arreglar")],
+   [("Em deixes el martell?","¿Me dejas el martillo?"),("Necessite un tornavís per a arreglar-ho","Necesito un destornillador para arreglarlo"),("Les tisores són al calaix","Las tijeras están en el cajón"),("Per a què servix això?","¿Para qué sirve esto?","«Servir» → servix.")]),
+  ("Aparatos de casa", [("aparell","aparato"),("microones","microondas"),("rentaplats","lavavajillas"),("assecador","secador"),("planxa","plancha"),("endoll","enchufe"),("carregador","cargador"),("encendre","encender"),("apagar","apagar"),("funcionar","funcionar")],
+   [("El microones no funciona","El microondas no funciona"),("Apaga la planxa, per favor","Apaga la plancha, por favor"),("On és el carregador del mòbil?","¿Dónde está el cargador del móvil?"),("Encén el rentaplats","Enciende el lavavajillas")]),
+ ]),
+ "cotxe": ("Coches y reclamaciones", "#ce82ff", [
+  ("El coche y la bici", [("cotxe","coche"),("roda","rueda"),("volant","volante"),("fre","freno"),("gasolina","gasolina"),("conduir","conducir"),("aparcar","aparcar"),("carnet de conduir","carné de conducir"),("taller","taller"),("avaria","avería")],
+   [("El cotxe té una avaria","El coche tiene una avería"),("No sé on aparcar","No sé dónde aparcar"),("He portat el cotxe al taller","He llevado el coche al taller"),("La bicicleta no té fre","La bicicleta no tiene freno")]),
+  ("Hacer una reclamación", [("reclamació","reclamación"),("queixa","queja"),("full de reclamacions","hoja de reclamaciones"),("factura","factura"),("tiquet","tique"),("garantia","garantía"),("canviar","cambiar"),("tornar els diners","devolver el dinero"),("trencat","roto","Femenino: trencada."),("responsable","responsable")],
+   [("Vull fer una reclamació","Quiero hacer una reclamación"),("Este aparell està trencat","Este aparato está roto"),("Encara té garantia","Todavía tiene garantía"),("Em poden tornar els diners?","¿Me pueden devolver el dinero?")]),
+ ]),
+ "medi": ("Medio ambiente", "#58cc02", [
+  ("Reciclar", [("medi ambient","medio ambiente"),("reciclar","reciclar"),("contenidor","contenedor"),("vidre","vidrio"),("paper","papel"),("plàstic","plástico"),("envàs","envase","Plural: envasos."),("residus","residuos"),("reutilitzar","reutilizar"),("reduir","reducir")],
+   [("El vidre va al contenidor verd","El vidrio va al contenedor verde"),("Hem de reciclar més","Tenemos que reciclar más"),("Reutilitze les bosses","Reutilizo las bolsas"),("Cal reduir el plàstic","Hay que reducir el plástico")]),
+  ("Cuidar el planeta", [("contaminació","contaminación"),("energia","energía"),("estalviar","ahorrar"),("aigua","agua"),("llum","luz"),("arbre","árbol"),("natura","naturaleza"),("transport públic","transporte público"),("calor","calor"),("canvi climàtic","cambio climático")],
+   [("Estalvia aigua i llum","Ahorra agua y luz"),("Vaig a la feina en transport públic","Voy al trabajo en transporte público","DNV: «faena» o «feina»."),("La contaminació és un problema","La contaminación es un problema"),("Si plantem arbres, hi haurà menys calor","Si plantamos árboles, habrá menos calor")]),
+ ]),
+}
+# placement: (level, insert before the existing unit with this title or None = append at end of level)
+PLACE = [("A1","lletres","Números"),("A1","dades","Números"),("A1","gram1","Comida"),("A1","mercat",None),("A1","aficions",None),
+         ("A2","receptes","Verbos y preguntas"),("A2","perfet",None),("A2","mitjans",None),("A2","eines",None),("A2","cotxe",None),("A2","medi",None)]
+for lv, slug, before in PLACE:
+    units = C[lv][1]; u = NEW[slug] + (slug,)
+    if before is None: units.append(u)
+    else: units.insert([x[0] for x in units].index(before), u)

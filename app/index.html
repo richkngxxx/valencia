@@ -426,6 +426,9 @@ function updateHeader() {
   $("heartsN").textContent = state.hearts; $("hearts").setAttribute("aria-label", state.hearts + " vidas");
 }
 const currentIndex = () => ALL.findIndex(l => lvlOf(l.id) === 0);
+// Lessons inserted before a learner's frontier (new units) must not lock what they already reached:
+// everything up to the first untouched lesson after their furthest started lesson stays open.
+const reachIndex = () => { let last = -1; ALL.forEach((l, i) => { if (lvlOf(l.id) > 0) last = i; }); const nx = ALL.findIndex((l, i) => i > last && lvlOf(l.id) === 0); return Math.max(currentIndex(), nx === -1 ? ALL.length - 1 : nx); };
 const $ = id => document.getElementById(id);
 const esc = s => String(s).replace(/[&<>"']/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 function toast(msg) { const t = document.createElement("div"); t.className = "toast"; t.textContent = msg; document.body.appendChild(t); setTimeout(() => t.remove(), 1800); }
@@ -465,7 +468,7 @@ function showHome() {
   state.inLesson = false;
   document.querySelectorAll(".confetti").forEach(c => c.remove());
   updateHeader();
-  const cur = currentIndex();
+  const cur = currentIndex(), reach = reachIndex();
   let h = "";
   if (state.hearts <= 0) h += `<div class="sleep-card">${mascot("sad", "m-idle")}<span>Sin vidas. Se recupera 1 ❤️ cada 20 min.</span></div><div class="hearts-box"> Se recupera 1 ❤️ cada 20 min.<button class="btn secondary" onclick="refill()">Recargar vidas</button></div>`;
   reconcileStreak();
@@ -484,9 +487,9 @@ function showHome() {
       h += `<div class="unit-banner" style="background:${u.color}"><div class="u">${lv.id} · Unidad ${ui + 1}</div><div class="t">${esc(u.title)}</div></div><div class="path">`;
       u.lessons.forEach((l, li) => {
         const i = idx++, n = lvlOf(l.id), isCur = i === cur, x = Math.round(Math.sin(i * 0.9) * 70);
-        const open = n > 0 || isCur, done = n >= 3;
-        const cls = done ? "done" : isCur ? "current" : n > 0 ? "progress" : "locked";
-        const icon = done ? leafSVG(true, "gold-leaf") : isCur || n > 0 ? "★" : "🔒";
+        const open = n > 0 || isCur || (cur !== -1 && i <= reach), done = n >= 3;
+        const cls = done ? "done" : isCur ? "current" : open ? "progress" : "locked";
+        const icon = done ? leafSVG(true, "gold-leaf") : open ? "★" : "🔒";
         const fresh = state.lastEarned && state.lastEarned.id === l.id ? state.lastEarned.level : 0;
         const C = 2 * Math.PI * 41, ring = `<svg class="ring" viewBox="0 0 90 90" aria-hidden="true"><circle cx="45" cy="45" r="41" class="ring-bg"/>${n ? "" : "<!--"}<circle cx="45" cy="45" r="41" class="ring-fg${fresh ? " ring-new" : ""}" style="stroke:${done ? "#ffc800" : u.color};stroke-dasharray:${C * n / 3} ${C};--from:${C * Math.max(0, n - 1) / 3}px;--to:${C * n / 3}px"/>${n ? "" : "-->"}</svg>`;
         h += `<div class="node-wrap" style="transform:translateX(${x}px)" ${isCur ? 'id="current"' : ""}>${isCur ? '<div class="bubble">Empezar</div>' + (!pathMascot ? "" : mascot("neutral", "m-idle").replace('class="m', `style="${x > 0 ? "left" : "right"}:-62px" class="m`)) : ""}<div class="node-ring">${open ? ring : ""}<button class="node ${cls}" style="${!done && open ? "background:" + u.color : ""}" onclick="tapNode(${i})" aria-label="${esc(l.title)}: ${open ? `nivel ${n} de 3` : "bloqueada"}">${icon}</button></div>${leaves(n, fresh, "node-leaves")}<div class="node-title">${esc(l.title)}</div></div>`;
@@ -502,7 +505,7 @@ function showHome() {
 }
 function tapNode(i) {
   const cur = currentIndex();
-  if (cur !== -1 && i > cur) { toast("🔒 Completa las lecciones anteriores para desbloquearla"); return; }
+  if (cur !== -1 && i > reachIndex()) { toast("🔒 Completa las lecciones anteriores para desbloquearla"); return; }
   if (state.hearts <= 0) { toast("Sin vidas: recárgalas para seguir"); showHome(); return; }
   const l = ALL[i]; startLesson(l.id, Math.min(3, lvlOf(l.id) + 1));
 }

@@ -58,13 +58,46 @@ def no_adjacent(seq, rnd):
         rnd.shuffle(seq)
     raise SystemExit("could not avoid adjacent duplicates")
 
+# v18: accept valid AVL/DNV alternative forms in typed Valencian answers (token swap, both directions).
+ALT = [("este","aquest"),("esta","aquesta"),("estos","aquests"),("estes","aquestes"),("eixe","aqueix"),("eixa","aqueixa"),
+       ("eixos","aqueixos"),("eixes","aqueixes"),("feina","faena"),("feines","faenes"),("febre","febra"),("huit","vuit"),
+       ("huitanta","vuitanta"),("dèsset","disset"),("díhuit","divuit"),("dènou","dinou"),("tomaca","tomata"),("tomaques","tomates"),
+       ("eixir","sortir"),("nàixer","néixer"),("vesprada","tarda"),("anglés","anglès"),("francés","francès"),("servix","serveix"),("fregix","fregeix")]
+ALTM = {}
+for a, b in ALT: ALTM.setdefault(a, set()).add(b); ALTM.setdefault(b, set()).add(a)
+def variants(t):
+    import itertools
+    toks = re.split(r"([\s,.?!¿¡'’-]+)", t); opts = []
+    for x in toks:
+        k = x.lower()
+        if k in ALTM: opts.append([x] + [y if x[:1].islower() else cap(y) for y in sorted(ALTM[k])])
+        else: opts.append([x])
+    return ["".join(c) for c in itertools.islice(itertools.product(*opts), 16)]
+def alts(level):
+    for e in level:
+        if e["type"] == "type" and e.get("lang") != "es":
+            acc = list(e["accept"])
+            for a in list(acc):
+                for v in variants(a):
+                    if v not in acc: acc.append(v)
+            e["accept"] = acc
+    return level
+
 out = []
 for lv, (ltitle, units) in C.items():
     rnd = random.Random(lv)
-    pool = [w for u in units for l in u[2] for w in l[1]]
-    earlier_w1 = []   # words taught in level 1 of earlier lessons of this level
-    U = []
-    for ui, (utitle, color, lessons) in enumerate(units):
+    # v18: units with a 4th element (slug) are new: stable ids "<lv>-<slug>-<n>", own RNG and a pool that
+    # includes the new words. Old units keep exactly the same pool/RNG/earlier lists, so their ids and
+    # generated exercises do not change.
+    pool_old = [w for u in units if len(u) < 4 for l in u[2] for w in l[1]]
+    pool_all = [w for u in units for l in u[2] for w in l[1]]
+    earlier_w1 = []   # words taught in level 1 of earlier (old) lessons of this level
+    earlier_all = []  # same, including new units (used by new units only)
+    U = []; old_ui = 0; rnd_old = rnd
+    for unit in units:
+        utitle, color, lessons = unit[:3]; slug = unit[3] if len(unit) > 3 else None
+        if slug: rnd = random.Random(f"{lv}-{slug}"); pool = pool_all; ew = earlier_all
+        else: rnd = rnd_old; pool = pool_old; ew = earlier_w1; old_ui += 1
         L = []
         for li, (title, words, phrases) in enumerate(lessons):
             n = len(words); k = max(4, round(n * 0.6))
@@ -89,7 +122,7 @@ for lv, (ltitle, units) in C.items():
             l2tests = [mc(w, pool, rnd, to_val=True) for w in W2]
             p2 = phrases[:max(2, len(phrases) - 1)]; p3 = phrases[len(p2):]
             for p in p2: l2.append(learn(p, "Frase nueva"))
-            m1 = pick_pairs(rnd.sample(words, len(words)) + earlier_w1[::-1], rnd)
+            m1 = pick_pairs(rnd.sample(words, len(words)) + ew[::-1], rnd)
             l2tests += [match(m1, rnd)] + [order(p, pool, rnd) for p in p2]
             if len(words) >= 8: l2tests.append(match(pick_pairs(rnd.sample(words, len(words)), rnd), rnd))
             l2tests += [mc(w, pool, rnd, to_val=True) for w in rnd.sample(W1, 2)]
@@ -103,12 +136,14 @@ for lv, (ltitle, units) in C.items():
             l3tests += [type_val(w) for w in byshort[:min(6, n)]]
             es_ok = [w for w in words if len(w[1]) <= 22 and not w[1][:1].isupper()]
             l3tests += [type_es(w) for w in rnd.sample(es_ok, min(3, len(es_ok)))]
-            l3tests += [type_phrase(rnd.choice(p2)), order(rnd.choice(p2), pool, rnd), match(pick_pairs(rnd.sample(words, len(words)) + earlier_w1, rnd), rnd)]
+            l3tests += [type_phrase(rnd.choice(p2)), order(rnd.choice(p2), pool, rnd), match(pick_pairs(rnd.sample(words, len(words)) + ew, rnd), rnd)]
             extra = [w for w in words if w not in byshort[:6]]
             while len(l3) + len(l3tests) < 12 and extra: l3tests.append(type_val(extra.pop(rnd.randrange(len(extra)))))
             rnd.shuffle(l3tests); l3 += no_adjacent(l3tests, rnd)
-            L.append({"id": f"{lv.lower()}-{ui+1}-{li+1}", "title": title, "xp": 10, "levels": [l1, l2, l3]})
-            earlier_w1 += W1
+            lid = f"{lv.lower()}-{slug}-{li+1}" if slug else f"{lv.lower()}-{old_ui}-{li+1}"
+            L.append({"id": lid, "title": title, "xp": 10, "levels": [alts(l1), alts(l2), alts(l3)]})
+            if not slug: earlier_w1 += W1
+            earlier_all += W1
         U.append({"title": utitle, "color": color, "lessons": L})
     out.append({"id": lv, "title": ltitle, "units": U})
 open(sys.argv[1], "w").write("// Generado por tools/build.py desde tools/content.py\nconst COURSE = " + json.dumps(out, ensure_ascii=False, separators=(",", ":")) + ";\nif (typeof module !== 'undefined') module.exports = COURSE;\n")

@@ -13,7 +13,7 @@ def pron_hints(va):
         if re.search(rx, v) and h not in out: out.append(h)
     return out[:3]
 items, idx = {}, {}
-lessons = [(lv, ut, l) for lv, (lt, units) in C.items() for ut, col, ls in units for l in ls]
+lessons = [(lv, ut, l) for lv, (lt, units) in C.items() for ut, col, ls, *_ in units for l in ls]
 allphr = [(p[0], p[1]) for _, _, l in lessons for p in l[2]]
 def examples(va, own):
     toks = set(ikey(va).split()) - {"el", "la", "de", "i", "a", "un", "una", "es", "em", "et"}

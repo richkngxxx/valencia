@@ -4,7 +4,7 @@ Q = [
 ("¿Se dice «em dic» o «em crido»?","Se dice «em dic» (verbo dir-se): em dic Anna. «Em crido» es un calco del castellano «me llamo» y no es correcto.",["presentarse","calcos"],["me llamo","em crido","como digo me llamo","dir-se"]),
 ("¿Cómo pregunto el nombre a alguien?","«Com et dius?» (tú) o «Com es diu vosté?» (usted).",["presentarse"],["como te llamas","preguntar nombre"]),
 ("¿Cómo digo de dónde soy?","«Soc de València». Para preguntar: «D'on eres?».",["presentarse"],["de donde eres","soy de"]),
-("¿«Soc» lleva acento?","No. Desde la reforma ortográfica (AVL 2017) se escribe «soc» sin acento (antes «sóc»).",["acentos","ortografia"],["soc sóc","acento soc"]),
+("¿«Soc» lleva acento?","No. Desde la reforma ortográfica de la AVL (2018), que redujo los acentos diacríticos a 15 palabras, se escribe «soc» sin acento (antes «sóc»). El DNV ya no recoge «sóc».",["acentos","ortografia"],["soc sóc","acento soc"]),
 ("¿Por qué se dice «visc a València» y no «en València»?","Con nombres de ciudad y lugares concretos se usa «a»: visc a València, vaig a Alacant. «En» aparece delante de artículos indeterminados o demostrativos: visc en un poble.",["preposiciones"],["a o en","visc en","preposicion a en"]),
 ("¿Cómo se dice «encantado» en femenino?","«Encantada». En masculino «encantat».",["presentarse","genero"],["encantada","encantat"]),
 ("¿Cómo saludo por la tarde?","«Bona vesprada». En Valencia «vesprada» es la forma habitual para la tarde.",["saludos"],["buenas tardes","vesprada tarda"]),
