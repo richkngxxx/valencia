@@ -41,7 +41,7 @@ Observa que en valenciano el signo de interrogación solo se pone al final de la
 
 ### Tú o vosté
 
-Como en castellano, existe una forma de confianza (**tu**) y una de respeto (**vosté**, en plural **vostés**). *Vosté* se usa con personas mayores, en un contexto profesional o cuando no conoces a alguien. Con amigos, familia y gente joven se usa *tu*. La forma valenciana normativa es *vosté*, con acento agudo.
+Como en castellano, existe una forma de confianza (**tu**) y una de respeto (**vosté**, en plural **vostés**). *Vosté* se usa con personas mayores, en un contexto profesional o cuando no conoces a alguien. Con amigos, familia y gente joven se usa *tu*. Si quieres saber cómo se dice padre, abuela o primo, tienes el vocabulario completo de [la familia en valenciano](/blog/la-familia-en-valenciano.html). La forma valenciana normativa es *vosté*, con acento agudo.
 
 ## Despedidas en valenciano
 
