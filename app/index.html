@@ -436,6 +436,26 @@ function toast(msg) { const t = document.createElement("div"); t.className = "to
 const RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
 const mascot = (pose, cls = "") => `<img class="m ${cls}" src="mascot/${pose}.png" alt="" aria-hidden="true">`;
 function buzz(p) { if (/Android/i.test(navigator.userAgent) && navigator.vibrate) navigator.vibrate(p); }
+// ---- feedback sounds (synthesized with WebAudio, no files, work offline) ----
+let ACTX = null;
+function sfx(ok) {
+  try {
+    if (ls.getItem("valencia_sound") === "0") return;
+    const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+    ACTX = ACTX || new AC(); if (ACTX.state === "suspended") ACTX.resume();
+    const t0 = ACTX.currentTime + 0.01;
+    const tone = (f, st, d, type, vol) => {
+      const o = ACTX.createOscillator(), g = ACTX.createGain();
+      o.type = type; o.frequency.setValueAtTime(f, t0 + st);
+      g.gain.setValueAtTime(0.0001, t0 + st);
+      g.gain.exponentialRampToValueAtTime(vol, t0 + st + 0.02);
+      g.gain.exponentialRampToValueAtTime(0.0001, t0 + st + d);
+      o.connect(g); g.connect(ACTX.destination); o.start(t0 + st); o.stop(t0 + st + d + 0.05);
+    };
+    if (ok) { tone(659.25, 0, 0.16, "sine", 0.28); tone(880, 0.1, 0.18, "sine", 0.28); tone(1318.5, 0.2, 0.32, "sine", 0.22); }
+    else { tone(220, 0, 0.22, "triangle", 0.3); tone(164.8, 0.16, 0.38, "triangle", 0.3); }
+  } catch (e) {}
+}
 function confetti() {
   if (RM) return;
   const cols = ["#58cc02", "#ffc800", "#1cb0f6", "#ff9600", "#ce82ff", "#ff4b4b"];
@@ -604,12 +624,12 @@ function onCheck() {
   bar.insertAdjacentHTML("afterbegin", mascot(ok ? "cheer" : "sad", "fb-mascot " + (ok ? "m-pop" : "m-shake")));
   const fbs = () => (ex.type !== "match" && !promptVa(ex) && spk(ex.key)) ? `<div class="fb-spk">${spk(ex.key, true)}<span>${esc(ex.key)}</span></div>` : "";
   setTimeout(() => { const f = $("feedback"); if (f && state.answered && !f.querySelector(".fb-spk")) f.insertAdjacentHTML("beforeend", fbs()); }, 0);
-  if (ok) { fb.innerHTML = "✅ ¡Correcto! " + esc(ex.explanation || ""); state.correctInLesson++; bar.classList.add("ok"); buzz(30); }
-  else if (ex.type === "match") { fb.innerHTML = "👍 ¡Hecho! Repasa los pares que fallaste."; bar.classList.add("ok"); }
+  if (ok) { fb.innerHTML = "✅ ¡Correcto! " + esc(ex.explanation || ""); state.correctInLesson++; bar.classList.add("ok"); buzz(30); sfx(true); }
+  else if (ex.type === "match") { fb.innerHTML = "👍 ¡Hecho! Repasa los pares que fallaste."; bar.classList.add("ok"); sfx(!state.match.miss); }
   else {
     fb.innerHTML = "❌ Solución: <strong>" + esc(ex.answer) + "</strong>" + (ex.explanation ? "<br>" + esc(ex.explanation) : "");
     if (state.hearts === MAX_HEARTS) state.heartTs = Date.now();
-    state.hearts = Math.max(0, state.hearts - 1); save(); bar.classList.add("bad"); buzz([60, 40, 60]);
+    state.hearts = Math.max(0, state.hearts - 1); save(); bar.classList.add("bad"); buzz([60, 40, 60]); sfx(false);
     const hs = $("hearts"); hs.classList.remove("lose"); void hs.offsetWidth; hs.classList.add("lose");
   }
   updateHeader();
