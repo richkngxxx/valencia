@@ -102,4 +102,4 @@ Si te preguntas por qué a veces encuentras *avui* en lugar de *hui*, o *nen* en
 - **Día 6:** pedir algo en un bar.
 - **Día 7:** repasa todo y ten una mini conversación en voz alta.
 
-La forma más sencilla de seguir este plan es con una herramienta que lo organice por ti. [Diu sí al valencià](/app/) es gratuita, no necesita cuenta, funciona sin conexión y tiene audio con acento valenciano en cada palabra. Diu sí al valencià!
+La forma más sencilla de seguir este plan es con una herramienta que lo organice por ti. [Diu sí al valencià](/app/) es gratuita, no necesita cuenta, funciona sin conexión y tiene audio con acento valenciano en cada palabra. Si estás comparando opciones, te explicamos [qué buscar en una app para aprender valenciano gratis](/blog/app-para-aprender-valenciano-gratis.html). Diu sí al valencià!

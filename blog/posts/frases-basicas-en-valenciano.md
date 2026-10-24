@@ -114,4 +114,4 @@ Atención a **per què** (separado y con acento), que es la pregunta "¿por qué
 3. **Úsalas el mismo día.** Pedir el café en valenciano mañana fijará *per favor* y *gràcies* mejor que cualquier lista.
 4. **Repasa poco y a menudo.** Cinco minutos al día funcionan mejor que una hora el domingo.
 
-Si quieres un plan completo para empezar, lee [cómo aprender valenciano desde cero](/blog/como-aprender-valenciano-desde-cero.html). Y para practicar estas frases con audio y ejercicios, abre [Diu sí al valencià](/app/), una herramienta gratuita y sin registro.
+Si quieres un plan completo para empezar, lee [cómo aprender valenciano desde cero](/blog/como-aprender-valenciano-desde-cero.html). Y para practicar estas frases con audio y ejercicios, abre [Diu sí al valencià](/app/), una herramienta gratuita y sin registro. Si estás comparando opciones, te explicamos [qué buscar en una app para aprender valenciano gratis](/blog/app-para-aprender-valenciano-gratis.html).
