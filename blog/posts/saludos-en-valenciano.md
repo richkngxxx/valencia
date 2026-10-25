@@ -89,6 +89,8 @@ Hay momentos del año y situaciones concretas con su propia fórmula:
 - **Feliç aniversari!** – ¡Feliz cumpleaños!
 - **Molts anys!** – ¡Que cumplas muchos más! (se dice en cumpleaños y santos)
 
+Para felicitar con un toque más cariñoso, mira cómo se dice [te quiero en valenciano](/blog/te-quiero-en-valenciano.html).
+
 ## Una conversación de ejemplo
 
 Así podría ser un primer encuentro en una cafetería:
