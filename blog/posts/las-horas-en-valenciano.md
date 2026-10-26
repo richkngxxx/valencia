@@ -133,8 +133,9 @@ Un error frecuente es usar *tarde* con los dos sentidos. En valenciano son dos p
 - **La botiga tanca a les huit de la vesprada.**: La tienda cierra a las ocho de la tarde.
 - **Perdona, arribe tard.**: Perdona, llego tarde.
 - **Només falta mitja hora.**: Solo falta media hora.
+- **A quina hora dinem?**: ¿A qué hora comemos?
 
-Para indicar un intervalo se usa **de... a...** o **des de... fins a...**: *De dilluns a divendres, de nou a dues*. Los días de la semana los tienes en la guía de los [días de la semana y los meses en valenciano](/blog/dias-de-la-semana-y-meses-en-valenciano.html).
+Para indicar un intervalo se usa **de... a...** o **des de... fins a...**: *De dilluns a divendres, de nou a dues*. Los días de la semana los tienes en la guía de los [días de la semana y los meses en valenciano](/blog/dias-de-la-semana-y-meses-en-valenciano.html). Y si quieres saber cómo se llaman las comidas del día (*esmorzar*, *dinar*, *berenar*, *sopar*), lo explicamos en [la comida en valenciano](/blog/la-comida-en-valenciano.html).
 
 ### Un diálogo en la parada del autobús
 

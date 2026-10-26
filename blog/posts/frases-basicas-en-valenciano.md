@@ -56,7 +56,7 @@ Precisamente para estas dudas, la app incluye la sección **«¿Cómo se dice…
 - **El compte, per favor.** – La cuenta, por favor.
 - **Bon profit!** – ¡Que aproveche!
 
-*Café* se escribe con acento agudo en el valenciano normativo de la AVL. *Got* es "vaso" y *aigua* es "agua".
+*Café* se escribe con acento agudo en el valenciano normativo de la AVL. *Got* es "vaso" y *aigua* es "agua". Si quieres pedir la comida completa, tienes frutas, platos y frases para el restaurante en la guía de [la comida en valenciano](/blog/la-comida-en-valenciano.html).
 
 ## De compras
 
