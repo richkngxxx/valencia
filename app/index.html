@@ -100,6 +100,10 @@ main { overflow-x: hidden; padding: 16px calc(16px + env(safe-area-inset-right))
 .check-bar > * { max-width: 440px; margin-left: auto; margin-right: auto; }
 .check-bar.ok { background: #d7ffb8; border-top-color: #d7ffb8; } .check-bar.ok .feedback { color: #58a700; }
 .check-bar.bad { background: #ffdfe0; border-top-color: #ffdfe0; } .check-bar.bad .feedback { color: #ea2b2b; }
+.speak-box { text-align: center; padding: 10px 0; } .speak-word { font-size: 1.6rem; font-weight: 900; margin: 8px 0 4px; } .speak-mean { color: #777; margin-bottom: 14px; }
+.mic-btn { width: 96px; height: 96px; border-radius: 50%; border: none; background: #1cb0f6; color: #fff; font-size: 2.4rem; box-shadow: 0 5px 0 #1899d6; cursor: pointer; touch-action: manipulation; }
+.mic-btn.listening { background: #ff4b4b; box-shadow: 0 5px 0 #ea2b2b; animation: micpulse 1s infinite; } @keyframes micpulse { 50% { transform: scale(1.08); } }
+.speak-heard { min-height: 1.4em; margin-top: 12px; color: #555; font-style: italic; } .skip-speak { background: none; border: none; color: #1cb0f6; font-weight: 800; margin-top: 14px; cursor: pointer; text-transform: uppercase; font-size: .9rem; }
 .check-bar .feedback { margin: 0 0 10px; font-weight: 700; } .check-bar .feedback:empty { display: none; }
 .check-bar .btn { margin-top: 0; } .check-bar.bad .btn { background: #ff4b4b; box-shadow: 0 4px 0 #ea2b2b; }
 .exercise-pad { height: 190px; }
@@ -531,10 +535,75 @@ function tapNode(i) {
   if (state.hearts <= 0) { toast("Sin vidas: recárgalas para seguir"); showHome(); return; }
   const l = ALL[i]; startLesson(l.id, Math.min(3, lvlOf(l.id) + 1));
 }
+// ---- Speaking exercise (Web Speech API on the web; @capacitor-community/speech-recognition inside the iOS app) ----
+const NATIVE_SR = () => window.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform() && Capacitor.Plugins && Capacitor.Plugins.SpeechRecognition;
+const WEB_SR = () => !(window.Capacitor && Capacitor.isNativePlatform && Capacitor.isNativePlatform()) && (window.SpeechRecognition || window.webkitSpeechRecognition);
+const speakSnoozed = () => +(ls.getItem("valencia_nospeak_until") || 0) > Date.now();
+const speechOK = () => !speakSnoozed() && !!(NATIVE_SR() || WEB_SR());
+let SR_LANG = "ca-ES";
+function lev(a, b) { const d = Array.from({ length: b.length + 1 }, (_, i) => i); for (let i = 1; i <= a.length; i++) { let p = d[0]; d[0] = i; for (let j = 1; j <= b.length; j++) { const t = d[j]; d[j] = Math.min(d[j] + 1, d[j - 1] + 1, p + (a[i - 1] === b[j - 1] ? 0 : 1)); p = t; } } return d[b.length]; }
+const snorm = t => norm(String(t)).replace(/['’·-]/g, " ").replace(/[^\p{L}\p{N} ]/gu, "").replace(/\s+/g, " ").trim();
+function speechMatch(heard, targets) {
+  return heard.some(h => targets.some(t => { const a = snorm(h), b = snorm(t); if (!a || !b) return false; if (a === b || a.includes(b)) return true; return 1 - lev(a, b) / Math.max(a.length, b.length) >= 0.7; }));
+}
+async function listenOnce() {
+  const N = NATIVE_SR();
+  if (N) {
+    const perm = await N.requestPermissions().catch(() => null);
+    if (perm && perm.speechRecognition && perm.speechRecognition !== "granted") throw new Error("permiso");
+    try { const l = await N.getSupportedLanguages(); const ls_ = (l && l.languages) || []; if (ls_.length && !ls_.some(x => /^ca[-_]ES/i.test(x))) SR_LANG = "es-ES"; } catch (e) {}
+    const r = await N.start({ language: SR_LANG, maxResults: 5, partialResults: false, popup: false });
+    return (r && r.matches) || [];
+  }
+  const C = WEB_SR();
+  return new Promise((res, rej) => {
+    const rec = new C(); rec.lang = SR_LANG; rec.interimResults = false; rec.maxAlternatives = 5; let got = [];
+    rec.onresult = e => { got = Array.from(e.results[0] || []).map(a => a.transcript); };
+    rec.onerror = e => { if (e.error === "language-not-supported" && SR_LANG !== "es-ES") { SR_LANG = "es-ES"; listenOnce().then(res, rej); } else rej(new Error(e.error)); };
+    rec.onend = () => res(got);
+    try { rec.start(); } catch (e) { rej(e); }
+    setTimeout(() => { try { rec.stop(); } catch (e) {} }, 7000);
+  });
+}
+async function tapMic() {
+  const ex = state.session[state.currentExercise], b = $("micBtn"), out = $("heard");
+  if (state.answered || !b || b.classList.contains("listening")) return;
+  stopAudio(); b.classList.add("listening"); out.textContent = "Escuchando…";
+  let heard = [];
+  try { heard = await listenOnce(); } catch (e) { b.classList.remove("listening"); out.textContent = e.message === "permiso" || e.message === "not-allowed" ? "Sin permiso de micrófono. Puedes saltar este ejercicio." : "No te he oído bien. Vuelve a intentarlo."; return; }
+  b.classList.remove("listening");
+  if (state.currentExercise >= state.session.length || state.session[state.currentExercise] !== ex) return;
+  out.textContent = heard.length ? "«" + heard[0] + "»" : "No te he oído. Vuelve a intentarlo.";
+  if (!heard.length) return;
+  ex.tries = (ex.tries || 0) + 1;
+  if (speechMatch(heard, [ex.answer].concat(ex.accept || []))) speakResult(true);
+  else if (ex.tries >= 3) speakResult(false);
+  else { const fb = $("feedback"); fb.innerHTML = "🔁 Casi. ¡Inténtalo otra vez!"; $("checkBar").classList.add("bad"); setTimeout(() => { const bar = $("checkBar"); if (bar && !state.answered) { bar.classList.remove("bad"); fb.innerHTML = ""; } }, 1600); }
+}
+function speakResult(ok) {
+  const ex = state.session[state.currentExercise]; state.answered = true;
+  const bar = $("checkBar"), fb = $("feedback"); bar.classList.remove("bad");
+  if (ok) { fb.innerHTML = "✅ ¡Muy bien dicho!"; state.correctInLesson++; bar.classList.add("ok"); buzz(30); sfx(true); }
+  else { fb.innerHTML = "👂 Escucha y repítelo más tarde: <strong>" + esc(ex.answer) + "</strong>"; bar.classList.add("ok"); sfx(false); }
+  const sk = $("skipSpeak"); if (sk) sk.remove();
+  const btn = $("checkBtn"); btn.textContent = "Continuar"; btn.disabled = false;
+}
+function skipSpeak() {
+  ls.setItem("valencia_nospeak_until", String(Date.now() + 15 * 60 * 1000));
+  const ex = state.session[state.currentExercise]; ex.skipped = true; state.answered = true; next();
+}
+function withSpeaking(levels) {
+  const s = levels.slice(); if (!speechOK()) return s;
+  const learn = s.filter(e => e.type === "learn" && e.word && e.word.length <= 40);
+  if (!learn.length) return s;
+  const src = learn[Math.floor(Math.random() * learn.length)];
+  s.splice(Math.max(1, s.length - 1), 0, { type: "speak", key: src.word, answer: src.word, meaning: src.meaning, question: "Di en voz alta" });
+  return s;
+}
 function startLesson(id, level) {
   const lesson = ALL.find(l => l.id === id); if (!lesson) return;
   level = level || Math.min(3, lvlOf(id) + 1);
-  Object.assign(state, { inLesson: true, currentLesson: lesson, playLevel: level, session: lesson.levels[level - 1], currentExercise: 0, correctInLesson: 0 });
+  Object.assign(state, { inLesson: true, currentLesson: lesson, playLevel: level, session: withSpeaking(lesson.levels[level - 1]), currentExercise: 0, correctInLesson: 0 });
   window.scrollTo(0, 0); showExercise();
 }
 function showExercise() {
@@ -552,6 +621,7 @@ function showExercise() {
       h += `<div class="match">${L.map((pi, r) => `<button class="option mt" data-side="0" data-p="${pi}" onclick="tapMatch(this)">${esc(ex.pairs[pi][0])}</button><button class="option mt" data-side="1" data-p="${Rr[r]}" onclick="tapMatch(this)">${esc(ex.pairs[Rr[r]][1])}</button>`).join("")}</div>`;
     }
     else if (ex.type === "type") h += `<textarea rows="3" class="input-answer" id="answerInput" placeholder="${ex.lang === "es" ? "Escribe en castellano…" : "Escribe en valenciano…"}" autocomplete="off" autocapitalize="off" spellcheck="false" oninput="$('checkBtn').disabled=!this.value.trim()" enterkeyhint="done" onkeydown="if(event.key==='Enter'){event.preventDefault();if(this.value.trim())onCheck()}"></textarea>`;
+    else if (ex.type === "speak") h += `<div class="speak-box"><div class="speak-word">${esc(ex.answer)}</div>${spk(ex.answer)}<div class="speak-mean">${esc(ex.meaning || "")}</div><button class="mic-btn" id="micBtn" onclick="tapMic()" aria-label="Pulsa y habla">🎤</button><div class="speak-heard" id="heard">Pulsa el micrófono y dilo en valenciano</div><button class="skip-speak" id="skipSpeak" onclick="skipSpeak()">No puedo hablar ahora</button></div>`;
     else if (ex.type === "order") {
       const bank = ex.words.concat(ex.distractors).map((w, i) => ({ w, i }));
       for (let i = bank.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [bank[i], bank[j]] = [bank[j], bank[i]]; }
@@ -602,6 +672,7 @@ const norm = t => t.trim().toLowerCase().normalize("NFD").replace(/[\u0300-\u036
 function onCheck() {
   if (state.answered) { next(); return; }
   const ex = state.session[state.currentExercise];
+  if (ex.type === "speak") return;
   let ok;
   if (ex.type === "mc") {
     if (state.selected === null) return;
@@ -646,7 +717,7 @@ function next() {
   if (state.currentExercise >= state.session.length) finishLesson(); else showExercise();
 }
 function finishLesson() {
-  const lesson = state.currentLesson, graded = state.session.filter(e => e.type !== "learn").length;
+  const lesson = state.currentLesson, graded = Math.max(1, state.session.filter(e => e.type !== "learn" && !e.skipped).length);
   const earned = Math.max(1, Math.round(lesson.xp * state.correctInLesson / graded));
   state.xp += earned;
   const prevLvl = lvlOf(lesson.id);
