@@ -125,7 +125,7 @@ Fíjate en *bona vesprada*: en valenciano es el saludo habitual de la tarde. Tie
 ## Cómo aprender el vocabulario de la familia
 
 1. **Dibuja tu árbol genealógico en valenciano.** Escribe el nombre de cada persona y debajo su relación contigo: *mon pare*, *la meua cosina*, *el meu cunyat*. Es el ejercicio clásico de los cursos de nivel A1 y funciona.
-2. **Describe una foto familiar.** Elige una foto y di en voz alta quién es quién: *A l'esquerra està ma mare, i al costat, el meu oncle Vicent*.
+2. **Describe una foto familiar.** Elige una foto y di en voz alta quién es quién: *A l'esquerra està ma mare, i al costat, el meu oncle Vicent*. Si quieres ir un paso más allá, describe también cómo son con [las partes del cuerpo en valenciano](/blog/las-partes-del-cuerpo-en-valenciano.html): *La meua germana té els cabells llargs*.
 3. **Aprende las parejas de palabras.** Memoriza siempre masculino y femenino juntos: *avi / àvia*, *nét / néta*, *nebot / neboda*, *gendre / nora*.
 4. **Practica preguntas y respuestas.** *Tens germans? Quants cosins tens? Com es diuen els teus avis?* Contestarlas tú mismo te prepara para la parte oral de los exámenes.
 
