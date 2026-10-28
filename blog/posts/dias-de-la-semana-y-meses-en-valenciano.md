@@ -106,6 +106,8 @@ Con *fins* puedes despedirte usando cualquier día: *fins dilluns!*, *fins dissa
 
 *Estiu* y *hivern* son masculinos y llevan artículo apostrofado: *l'estiu*, *l'hivern*. *Tardor* es femenino: *la tardor*.
 
+Para describir cada estación (*a l'hivern fa fred*, *a la tardor plou*), mira nuestra guía sobre [el tiempo en valenciano](/blog/el-tiempo-en-valenciano.html).
+
 ## Ejemplos para practicar
 
 - *Els dissabtes anem a la platja.* – Los sábados vamos a la playa.
