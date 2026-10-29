@@ -4,7 +4,7 @@ description: Aprende los colores en valenciano con su femenino y plural, los ton
 slug: colores-en-valenciano
 date: 2026-10-22
 ---
-Los colores son de lo primero que se aprende en cualquier idioma, y en valenciano los vas a usar a diario: para describir la ropa, pedir algo en una tienda, hablar del tiempo o ayudar a los niños con los deberes. En esta guía tienes los colores en valenciano con su forma femenina y plural, cómo decir "claro" y "oscuro", frases listas para usar y algunas expresiones típicas.
+Los colores son de lo primero que se aprende en cualquier idioma, y en valenciano los vas a usar a diario: para describir [la ropa](/blog/la-ropa-en-valenciano.html), pedir algo en una tienda, hablar del tiempo o ayudar a los niños con los deberes. En esta guía tienes los colores en valenciano con su forma femenina y plural, cómo decir "claro" y "oscuro", frases listas para usar y algunas expresiones típicas.
 
 Todas las formas siguen el *Diccionari normatiu valencià* de l'Acadèmia Valenciana de la Llengua (AVL). Si acabas de empezar, te vendrá bien repasar antes las [frases básicas en valenciano](/blog/frases-basicas-en-valenciano.html).
 

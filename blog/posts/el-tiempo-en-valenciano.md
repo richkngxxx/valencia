@@ -160,6 +160,6 @@ Para decir que hace viento también puedes usar el verbo *bufar*: **Bufa molt de
 1. **Describe el día al despertarte.** Mira por la ventana y di una frase: *Hui fa sol i fa fresc.*
 2. **Mira la previsión en valenciano.** Los espacios del tiempo de los medios en valenciano repiten mucho el mismo vocabulario y son ideales para entrenar el oído.
 3. **Úsalo para romper el hielo.** *Quin fred fa hui, eh?* es una forma natural de empezar una conversación en valenciano.
-4. **Combina con lo que ya sabes.** Junta el tiempo con la ropa o los [colores](/blog/colores-en-valenciano.html): *Fa fred, em pose l'abric negre.*
+4. **Combina con lo que ya sabes.** Junta el tiempo con [la ropa](/blog/la-ropa-en-valenciano.html) o los [colores](/blog/colores-en-valenciano.html): *Fa fred, em pose l'abric negre.*
 
 Hablar del tiempo es una de las formas más fáciles de empezar a usar el valenciano en la vida real. Si quieres más frases para el día a día, mira las [frases básicas en valenciano](/blog/frases-basicas-en-valenciano.html), y para practicar cada día con audio con acento valenciano y lecciones cortas, prueba la [app gratuita Diu sí al valencià](/app/).
