@@ -156,4 +156,4 @@ El valenciano tiene muchas expresiones con el cuerpo. Estas son fáciles de reco
 3. **Describe a alguien.** Elige a una persona de tu [familia](/blog/la-familia-en-valenciano.html) y descríbela: *El meu germà té els cabells curts i els ulls marrons.*
 4. **Usa las frases del médico.** La próxima vez que te duela algo, piénsalo primero en valenciano: *Em fa mal el coll.*
 
-Si quieres más vocabulario para el día a día, mira las [frases básicas en valenciano](/blog/frases-basicas-en-valenciano.html), y para repasar cada día con audio con acento valenciano y lecciones cortas, practica con la [app gratuita Diu sí al valencià](/app/).
+Si quieres más vocabulario para el día a día, mira las [frases básicas en valenciano](/blog/frases-basicas-en-valenciano.html) o [los animales en valenciano](/blog/los-animales-en-valenciano.html) (*la pota*, *la cua*), y para repasar cada día con audio con acento valenciano y lecciones cortas, practica con la [app gratuita Diu sí al valencià](/app/).
