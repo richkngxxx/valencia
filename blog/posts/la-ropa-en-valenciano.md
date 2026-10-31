@@ -168,5 +168,6 @@ Muchos de estos errores vienen de cambios de género entre las dos lenguas, igua
 2. **Etiqueta tu armario.** Unos pósits con *abric*, *calcetins* o *bufanda* funcionan mejor de lo que parece.
 3. **Mira el tiempo antes de vestirte.** Junta los dos temas: *Fa fred, em pose la bufanda.* Tienes el vocabulario en [el tiempo en valenciano](/blog/el-tiempo-en-valenciano.html).
 4. **Habla en valenciano en la tienda.** Un *Bon dia* y un *Quant val?* bastan para empezar.
+5. **Ordena el armario en valenciano.** Nombra cada prenda mientras la guardas en *l'armari* o *la calaixera*; el resto del vocabulario del hogar lo tienes en [la casa en valenciano](/blog/la-casa-en-valenciano.html).
 
 La ropa es un vocabulario muy agradecido: lo usas todos los días y enseguida se queda. Para seguir sumando palabras con lecciones cortas, audio con acento valenciano y rachas diarias, prueba la [app gratuita Diu sí al valencià](/app/).
