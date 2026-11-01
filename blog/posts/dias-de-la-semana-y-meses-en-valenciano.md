@@ -116,7 +116,7 @@ Para describir cada estación (*a l'hivern fa fred*, *a la tardor plou*), mira n
 - *Treballe de dilluns a divendres.* – Trabajo de lunes a viernes.
 - *Demà és diumenge.* – Mañana es domingo.
 
-Fíjate en *treballe*: en valenciano la primera persona del presente de este tipo de verbos acaba en **-e**.
+Fíjate en *treballe*: en valenciano la primera persona del presente de este tipo de verbos acaba en **-e**. Y si quieres felicitar a alguien el día de su aniversari, mira cómo se dice [feliz cumpleaños en valenciano](/blog/feliz-cumpleanos-en-valenciano.html).
 
 ## Un pequeño reto
 
