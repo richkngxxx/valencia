@@ -89,7 +89,7 @@ Hay momentos del año y situaciones concretas con su propia fórmula:
 - **Feliç aniversari!** – ¡Feliz cumpleaños!
 - **Molts anys!** – ¡Que cumplas muchos más! (se dice en cumpleaños y santos)
 
-Si quieres más formas de felicitar, tienes una guía completa sobre cómo decir [feliz cumpleaños en valenciano](/blog/feliz-cumpleanos-en-valenciano.html). Y para felicitar con un toque más cariñoso, mira cómo se dice [te quiero en valenciano](/blog/te-quiero-en-valenciano.html).
+Si quieres más formas de felicitar, tienes una guía completa sobre cómo decir [feliz cumpleaños en valenciano](/blog/feliz-cumpleanos-en-valenciano.html) y otra sobre cómo decir [feliz Navidad en valenciano](/blog/feliz-navidad-en-valenciano.html). Y para felicitar con un toque más cariñoso, mira cómo se dice [te quiero en valenciano](/blog/te-quiero-en-valenciano.html).
 
 ## Una conversación de ejemplo
 

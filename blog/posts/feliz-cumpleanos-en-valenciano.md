@@ -146,7 +146,7 @@ Algunas frases para usar este vocabulario:
 - *Dissabte faig una festa d'aniversari. Estàs convidat!*: El sábado hago una fiesta de cumpleaños. ¡Estás invitado!
 - *Qui ha fet el pastís?*: ¿Quién ha hecho la tarta?
 
-**Per molts anys** y **moltes felicitats** también se usan para el santo. Si quieres contar quién viene a la fiesta, el vocabulario de [la familia en valenciano](/blog/la-familia-en-valenciano.html) te será útil.
+**Per molts anys** y **moltes felicitats** también se usan para el santo. Y para las fiestas de diciembre, tienes todas las fórmulas en [feliz Navidad en valenciano](/blog/feliz-navidad-en-valenciano.html). Si quieres contar quién viene a la fiesta, el vocabulario de [la familia en valenciano](/blog/la-familia-en-valenciano.html) te será útil.
 
 ## Errores frecuentes al felicitar en valenciano
 
