@@ -120,6 +120,6 @@ Fíjate en *treballe*: en valenciano la primera persona del presente de este tip
 
 ## Un pequeño reto
 
-Durante una semana, escribe cada mañana la fecha en valenciano en tu agenda o en el móvil: *Hui és dijous, 22 d'octubre*. En siete días habrás practicado todos los días de la semana sin darte cuenta, y repasado los números. Si además quieres apuntar la hora de tus citas, mira cómo decir [las horas en valenciano](/blog/las-horas-en-valenciano.html).
+Durante una semana, escribe cada mañana la fecha en valenciano en tu agenda o en el móvil: *Hui és dijous, 22 d'octubre*. En siete días habrás practicado todos los días de la semana sin darte cuenta, y repasado los números. Si además quieres apuntar la hora de tus citas, mira cómo decir [las horas en valenciano](/blog/las-horas-en-valenciano.html). Y si escribes el horario escolar (*dilluns: Matemàtiques*), completa el vocabulario con [la escuela en valenciano](/blog/la-escuela-en-valenciano.html).
 
 Para seguir construyendo vocabulario, consulta las [frases básicas en valenciano](/blog/frases-basicas-en-valenciano.html) o lee [cómo aprender valenciano desde cero](/blog/como-aprender-valenciano-desde-cero.html). Y si quieres practicar con audio y mantener una racha diaria, abre [Diu sí al valencià](/app/), gratis y sin registro.

@@ -120,7 +120,7 @@ Para decir la edad de cada uno vas a necesitar los [números en valenciano](/blo
 - **Ah, sí? Com es diu?**: ¿Ah, sí? ¿Cómo se llama?
 - **Jordi. Hui l'ha vingut a buscar sa iaia.**: Jordi. Hoy ha venido a buscarlo su abuela.
 
-Fíjate en *bona vesprada*: en valenciano es el saludo habitual de la tarde. Tienes más ejemplos en la guía de [saludos en valenciano](/blog/saludos-en-valenciano.html).
+Fíjate en *bona vesprada*: en valenciano es el saludo habitual de la tarde. Tienes más ejemplos en la guía de [saludos en valenciano](/blog/saludos-en-valenciano.html). Y si quieres el vocabulario completo del colegio (aula, deures, motxilla…), mira [la escuela en valenciano](/blog/la-escuela-en-valenciano.html).
 
 ## Cómo aprender el vocabulario de la familia
 
