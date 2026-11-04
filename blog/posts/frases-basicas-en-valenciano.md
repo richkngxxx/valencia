@@ -92,7 +92,7 @@ Para entender la respuesta del precio necesitarás los números. Los tienes todo
 - **No ho sé.** – No lo sé.
 - **Tens raó.** – Tienes razón.
 
-Si lo que buscas es expresar cariño, en la guía de [te quiero en valenciano](/blog/te-quiero-en-valenciano.html) tienes *t'estime*, *t'enyore* y otras frases de amor.
+Si lo que buscas es expresar cariño, en la guía de [te quiero en valenciano](/blog/te-quiero-en-valenciano.html) tienes *t'estime*, *t'enyore* y otras frases de amor. Y si necesitas presentarte en el trabajo (*soc…*, *treballe de…*), tienes el vocabulario completo en [el trabajo en valenciano](/blog/el-trabajo-en-valenciano.html).
 
 ## Preguntas útiles
 

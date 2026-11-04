@@ -83,7 +83,7 @@ El *quadern de nivell* te dice exactamente qué gramática y vocabulario entran.
 
 ### 3. Construye una base diaria
 
-Lo que más se nota en el examen es la soltura, y eso solo se gana con práctica frecuente. Diez o quince minutos al día rinden más que una tarde a la semana. Empieza por lo básico: [saludos](/blog/saludos-en-valenciano.html), [frases de uso diario](/blog/frases-basicas-en-valenciano.html), [números](/blog/numeros-en-valenciano.html) y [días y meses](/blog/dias-de-la-semana-y-meses-en-valenciano.html). Si partes de cero, sigue nuestra guía para [aprender valenciano desde cero](/blog/como-aprender-valenciano-desde-cero.html).
+Lo que más se nota en el examen es la soltura, y eso solo se gana con práctica frecuente. Diez o quince minutos al día rinden más que una tarde a la semana. Empieza por lo básico: [saludos](/blog/saludos-en-valenciano.html), [frases de uso diario](/blog/frases-basicas-en-valenciano.html), [números](/blog/numeros-en-valenciano.html) y [días y meses](/blog/dias-de-la-semana-y-meses-en-valenciano.html). Si partes de cero, sigue nuestra guía para [aprender valenciano desde cero](/blog/como-aprender-valenciano-desde-cero.html). Si el examen o las oposiciones te piden hablar de tu empleo, repasa también [el trabajo en valenciano](/blog/el-trabajo-en-valenciano.html): professió, faena, reunió y frases de entrevista.
 
 [[cta]]
 

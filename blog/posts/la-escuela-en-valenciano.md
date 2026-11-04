@@ -46,7 +46,7 @@ Fíjate en **col·legi**: lleva **l·l** (ela geminada). Escribir *colegi* sin e
 | el niño / la niña | el xiquet / la xiqueta |
 | el adolescente | l'adolescent |
 
-En primaria se usa mucho **mestre** y **mestra**; en secundaria e instituto, **professor** y **professora**. Las dos formas son normativas.
+En primaria se usa mucho **mestre** y **mestra**; en secundaria e instituto, **professor** y **professora**. Las dos formas son normativas. Si quieres el léxico de más oficios (metge, bomber, cambrer…), mira [el trabajo en valenciano](/blog/el-trabajo-en-valenciano.html).
 
 - *La meua mestra es diu Rosa.*: Mi maestra se llama Rosa.
 - *El tutor ens ha enviat un missatge.*: El tutor nos ha enviado un mensaje.
