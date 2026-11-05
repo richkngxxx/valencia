@@ -145,6 +145,8 @@ Para indicar un intervalo se usa **de... a...** o **des de... fins a...**: *De d
 - **Passa cada mitja hora. El pròxim és a les cinc i deu.**: Pasa cada media hora. El próximo es a las cinco y diez.
 - **Uf, encara falta un quart d'hora!**: ¡Uf, todavía falta un cuarto de hora!
 
+Para preguntar por paradas, líneas y billetes, completa el diálogo con [el transporte en valenciano](/blog/el-transporte-en-valenciano.html): *parada*, *bitllet*, *metro* y *autobús*.
+
 ## Cómo practicar la hora en valenciano
 
 1. **Di la hora en voz alta cada vez que mires el móvil.** Es el ejercicio más sencillo y el que más funciona: *Són les deu i vint*.

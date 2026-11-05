@@ -136,6 +136,8 @@ Del quinto en adelante, la normativa recoge formas con el sufijo **-é / -ena**,
 - **Quant costa?** – ¿Cuánto cuesta?
 - **Costa dotze euros.** – Cuesta doce euros.
 
+Los precios también salen al comprar un *bitllet* de metro o autobús; el léxico del viaje está en [el transporte en valenciano](/blog/el-transporte-en-valenciano.html).
+
 ### Dar un número de teléfono
 
 Se suele decir cifra a cifra o en grupos de dos: *sis, dos, u…* o *seixanta-dos, quinze…*.

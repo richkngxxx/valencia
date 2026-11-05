@@ -81,6 +81,8 @@ Para entender la respuesta del precio necesitarás los números. Los tienes todo
 
 *Ací* es la forma valenciana habitual para "aquí". Para situar algo en el espacio, en valenciano se usa *on és…?* cuando preguntas dónde se encuentra un lugar.
 
+Si vas a pedir una parada, un bitllet o el horario del metro, tienes el vocabulario completo en [el transporte en valenciano](/blog/el-transporte-en-valenciano.html).
+
 ## Expresar gustos y opiniones
 
 - **M'agrada.** – Me gusta.
