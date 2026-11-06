@@ -66,7 +66,7 @@ Precisamente para estas dudas, la app incluye la sección **«¿Cómo se dice…
 - **Només estic mirant.** – Solo estoy mirando.
 - **Me l'emporte.** – Me lo llevo.
 
-Para entender la respuesta del precio necesitarás los números. Los tienes todos en la guía de [los números en valenciano](/blog/numeros-en-valenciano.html).
+Para entender la respuesta del precio necesitarás los números. Los tienes todos en la guía de [los números en valenciano](/blog/numeros-en-valenciano.html). Y si quieres el vocabulario completo del súper y del mercado (*supermercat*, *quilo*, *caixa*, *targeta*), mira [la compra en valenciano](/blog/la-compra-en-valenciano.html).
 
 ## Orientarte por la ciudad
 

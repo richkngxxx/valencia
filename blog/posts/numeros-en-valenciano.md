@@ -136,7 +136,7 @@ Del quinto en adelante, la normativa recoge formas con el sufijo **-é / -ena**,
 - **Quant costa?** – ¿Cuánto cuesta?
 - **Costa dotze euros.** – Cuesta doce euros.
 
-Los precios también salen al comprar un *bitllet* de metro o autobús; el léxico del viaje está en [el transporte en valenciano](/blog/el-transporte-en-valenciano.html).
+Los precios también salen al comprar un *bitllet* de metro o autobús; el léxico del viaje está en [el transporte en valenciano](/blog/el-transporte-en-valenciano.html). Y si vas al mercat o al supermercat (*quant costa el quilo?*, *pague amb targeta*), completa con [la compra en valenciano](/blog/la-compra-en-valenciano.html).
 
 ### Dar un número de teléfono
 
