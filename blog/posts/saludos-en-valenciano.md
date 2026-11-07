@@ -30,6 +30,8 @@ Después del saludo casi siempre viene la pregunta de cortesía. Estas son las m
 - **Què tal?** – ¿Qué tal?
 - **Com està vosté?** – ¿Cómo está usted?
 
+Para saber por qué aquí se dice *estàs* y no *eres*, mira la guía de [ser y estar en valenciano](/blog/ser-y-estar-en-valenciano.html).
+
 Y para responder:
 
 - **Molt bé, gràcies.** – Muy bien, gracias.

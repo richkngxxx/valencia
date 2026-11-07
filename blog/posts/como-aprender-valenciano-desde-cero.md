@@ -69,7 +69,7 @@ No hace falta leerlas de principio a fin. Úsalas como consulta cuando te surja 
 Cuando ya tengas unas cuantas frases, empieza a entender cómo funcionan. Un orden razonable para principiantes:
 
 1. Los artículos (*el*, *la*, *els*, *les*) y el apóstrofo (*l'aigua*, *l'home*).
-2. Los verbos *ser*, *estar* y *tindre* en presente.
+2. Los verbos *ser*, *estar* y *tindre* en presente (tienes una guía de [ser y estar en valenciano](/blog/ser-y-estar-en-valenciano.html)).
 3. El presente de los verbos regulares, con la primera persona en **-e**: *parle*, *cante*.
 4. Los pronombres personales y los posesivos (*meu*, *meua*).
 5. El pasado más habitual en el habla, el perfet perifràstic: *vaig parlar* (hablé).
